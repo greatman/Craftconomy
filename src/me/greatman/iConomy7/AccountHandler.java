@@ -13,19 +13,20 @@ public class AccountHandler {
 
 	public static List<Account> accounts = new ArrayList<Account>();
 	
+	private TimerTask saveAccounts() {
+		for (Account playerAccount : accounts) {
+			DatabaseHandler.saveAccount(playerAccount.getPlayerName(),playerAccount.getBalance());
+		}
+	return null;
+}
 	public AccountHandler(iConomy thePlugin)
 	{
 		//Initialise the auto 10s saves
 		Timer thread = new Timer();
-		Long time = 10 * 1000L;
+		long time = 10 * 1000L;
 		thread.scheduleAtFixedRate(saveAccounts(), time, time);
 	}
-	private TimerTask saveAccounts() {
-			for (Account playerAccount : accounts) {
-				DatabaseHandler.saveAccount(playerAccount.getPlayerName(),playerAccount.getBalance());
-			}
-		return null;
-	}
+	
 	public static Account getAccount(Player player)
 	{
 		Account playerAccount = new Account(player);

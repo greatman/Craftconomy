@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.greatman.iConomy7.commands.*;
+import me.greatman.iConomy7.listeners.iConomyPlayerListener;
 import me.greatman.iConomy7.utils.Config;
 import me.greatman.iConomy7.utils.DatabaseHandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class iConomy extends JavaPlugin{
@@ -19,13 +22,15 @@ public class iConomy extends JavaPlugin{
 							version;
 	public List<iConomyBaseCommand> commands = new ArrayList<iConomyBaseCommand>();
 	
+	public iConomyPlayerListener playerListener = new iConomyPlayerListener();
+	
 	public void onEnable() {
 		name = this.getDescription().getName();
 		version = this.getDescription().getVersion();
 		
 		Config.load(this);
 		
-		if (!DatabaseHandler.load())
+		if (!DatabaseHandler.load(this))
 		{
 			ILogger.error("A error occured while trying to open the database. Please check your configuration.");
 			onDisable();
@@ -43,6 +48,8 @@ public class iConomy extends JavaPlugin{
 		//commands.add(new iConomySetCommand());
 		//commands.add(new iConomyPurgeCommand());
 		//commands.add(new iConomyEmptyCommand());
+		PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
 	}
 	
 	@Override

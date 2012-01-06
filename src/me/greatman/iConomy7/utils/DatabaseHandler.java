@@ -1,5 +1,6 @@
 package me.greatman.iConomy7.utils;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,20 +12,18 @@ public class DatabaseHandler {
 
 	private static MySQL mysql;
 	private static SQLite sqlite;
-	
-	public static boolean load()
+	public static boolean load(iConomy thePlugin)
 	{
 		boolean result = false;
-		if (Config.databaseType.equalsIgnoreCase("sqlite"))
+		if (Config.databaseType.equalsIgnoreCase("sqlite") || Config.databaseType.equalsIgnoreCase("minidb"))
 		{
-			sqlite = new SQLite(ILogger.log,ILogger.prefix,"database","plugins/" + iConomy.name + "/");
+			sqlite = new SQLite(ILogger.log,ILogger.prefix,"iconomy",thePlugin.getDataFolder().getAbsolutePath());
 			if (sqlite != null)
 			{
-				ResultSet queryResult = sqlite.query("CREATE TABLE " + Config.databaseTable + " (" +
+				if(sqlite.query("CREATE TABLE " + Config.databaseTable + " (" +
 						"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 						"username VARCHAR(30)  UNIQUE NOT NULL, " +
-						"balance FLOAT DEFAULT '0.00' UNIQUE NOT NULL)");
-				if (queryResult == null)
+						"balance FLOAT DEFAULT '0.00' UNIQUE NOT NULL)") != null);
 					result = true;
 			}
 			
