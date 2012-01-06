@@ -48,13 +48,15 @@ public class DatabaseHandler {
 	public static double getAccountAmount(String account)
 	{
 		ResultSet result;
+		double balance = 0.00;
+		String query = "SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'";
 		if (sqlite != null)
 		{
-			result = sqlite.query("SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'; ");
+			result = sqlite.query(query);
 			try {
 				if (result.next())
 				{
-						return result.getDouble("balance");
+						balance = result.getDouble("balance");
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -62,16 +64,88 @@ public class DatabaseHandler {
 			}
 		}
 		else
-			result = mysql.query("SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'; ");
-		try {
-			if (result.next())
-			{
-					return result.getDouble("balance");
+		{
+			result = mysql.query(query);
+			try {
+				if (result.next())
+				{
+						balance = result.getDouble("balance");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		return 0.00;
+			
+		return balance;
+	}
+
+	public static boolean exists(String account) 
+	{
+		ResultSet result;
+		boolean exists = false;
+		String query = "SELECT * FROM " + Config.databaseTable + " WHERE username='" + account + "'";
+		if (sqlite != null)
+		{
+			result = sqlite.query(query);
+			try {
+				if (result.next())
+					exists = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			result = mysql.query(query);
+			try {
+				if (result.next())
+					exists = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return exists;
+	}
+	
+	public static void create(String account)
+	{
+		String query = "INSERT INTO " + Config.databaseTable + " VALUES('','" + account +"',0.00)";
+		if (sqlite != null)
+			sqlite.query(query);
+		else
+			mysql.query(query);
+	}
+	
+	public static boolean saveAccount(String account, double balance)
+	{
+		ResultSet result;
+		boolean status = false;
+		String query = "UPDATE " + Config.databaseTable + " SET balance=" + balance + " WHERE username='" + account + "'";
+		if (sqlite != null)
+		{
+			result = sqlite.query(query);
+			try {
+				if (result.rowUpdated())
+					status = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			result = mysql.query(query);
+			try {
+				if (result.rowUpdated())
+					status = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return status;
 	}
 }

@@ -1,7 +1,5 @@
 package me.greatman.iConomy7;
 
-import CHBaseCommand;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,16 +31,18 @@ public class iConomy extends JavaPlugin{
 			onDisable();
 			return;
 		}
-		commands.add("help", new iConomyHelpCommand());
-		commands.add("pay", new iConomyPayCommand());
-		commands.add("create", new iConomyCreateCommand());
-		commands.add("remove", new iConomyRemoveCommand());
-		commands.add("give", new iConomyGiveCommand());
-		commands.add("take", new iConomyTakeCommand());
-		commands.add("set", new iConomySetCommand());
-		commands.add("status", new iConomySetCommand());
-		commands.add("purge", new iConomyPurgeCommand());
-		commands.add("empty", new iConomyEmptyCommand());
+		
+		new AccountHandler(this);
+		//commands.add(new iConomyHelpCommand());
+		commands.add(new iConomyPayCommand());
+		//commands.add(new iConomyCreateCommand());
+		//commands.add(new iConomyRemoveCommand());
+		//commands.add(new iConomyGiveCommand());
+		//commands.add(new iConomyTakeCommand());
+		//commands.add(new iConomySetCommand());
+		//commands.add(new iConomySetCommand());
+		//commands.add(new iConomyPurgeCommand());
+		//commands.add(new iConomyEmptyCommand());
 	}
 	
 	@Override
