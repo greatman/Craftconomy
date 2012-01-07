@@ -1,5 +1,8 @@
 package me.greatman.iConomy7;
 
+import java.util.List;
+
+import me.greatman.iConomy7.utils.Config;
 import me.greatman.iConomy7.utils.DatabaseHandler;
 
 import org.bukkit.entity.Player;
@@ -7,13 +10,25 @@ import org.bukkit.entity.Player;
 public class Account {
 
 	private String playerName;
-	private double balance;
+	private double balance = Config.defaultHoldings;
+	private Player player = null;
+	public Account(String user){
+		playerName = user;
+		if (!DatabaseHandler.exists(playerName))
+			DatabaseHandler.create(playerName);
+		else
+			balance = DatabaseHandler.getAccountAmount(playerName);
+		List<Player> playerList = iConomy.plugin.getServer().matchPlayer(user);
+		if (playerList.size() == 1)
+			player = playerList.get(0);
+	}
 	public Account(Player user){
 		playerName = user.getName();
 		if (!DatabaseHandler.exists(playerName))
 			DatabaseHandler.create(playerName);
 		else
 			balance = DatabaseHandler.getAccountAmount(playerName);
+		player = user;
 	}
 	
 	public double getBalance()
@@ -24,6 +39,11 @@ public class Account {
 	public String getPlayerName()
 	{
 		return playerName;
+	}
+	
+	public Player getPlayer()
+	{
+		return player;
 	}
 	/**
 	 * Add money in the player account

@@ -1,6 +1,5 @@
 package me.greatman.iConomy7.utils;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,11 +19,24 @@ public class DatabaseHandler {
 			sqlite = new SQLite(ILogger.log,ILogger.prefix,"iconomy",thePlugin.getDataFolder().getAbsolutePath());
 			if (sqlite != null)
 			{
-				if(sqlite.query("CREATE TABLE " + Config.databaseTable + " (" +
-						"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
-						"username VARCHAR(30)  UNIQUE NOT NULL, " +
-						"balance FLOAT DEFAULT '0.00' UNIQUE NOT NULL)") != null);
+				if (sqlite.query("SELECT * FROM " + Config.databaseTable) == null)
+				{
+					if(sqlite.query("CREATE TABLE " + Config.databaseTable + " (" +
+							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+							"username VARCHAR(30)  UNIQUE NOT NULL, " +
+							"balance DOUBLE DEFAULT '0.00' NOT NULL)") != null);
+					{
+						ILogger.info("SQLite database created!");
+						result = true;
+					}
+						
+				}
+				else
+				{
+					ILogger.info("SQLite database loaded!");
 					result = true;
+				}
+				
 			}
 			
 		}
@@ -33,11 +45,16 @@ public class DatabaseHandler {
 			mysql = new MySQL(ILogger.log,ILogger.prefix,Config.databaseAddress,Config.databasePort,Config.databaseDb,Config.databaseUsername,Config.databasePassword);
 			if (mysql != null)
 			{
-				if (mysql.createTable("CREATE TABLE `" + Config.databaseTable + "` (" +
-						"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
-						"`username` VARCHAR( 30 ) NOT NULL ," +
-						"`balance` DOUBLE NOT NULL " +
-						") ENGINE = InnoDB;"));
+				if (!mysql.checkTable(Config.databaseTable))
+				{
+					if (mysql.createTable("CREATE TABLE `" + Config.databaseTable + "` (" +
+							"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+							"`username` VARCHAR( 30 ) NOT NULL ," +
+							"`balance` DOUBLE NOT NULL " +
+							") ENGINE = InnoDB;"));
+						result = true;
+				}
+				else
 					result = true;
 			}
 		}
@@ -87,13 +104,13 @@ public class DatabaseHandler {
 		if (sqlite != null)
 		{
 			result = sqlite.query(query);
-			try {
-				if (result.next())
-					exists = true;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					if (result.next())
+						exists = true;
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 		else
 		{
@@ -111,11 +128,16 @@ public class DatabaseHandler {
 	
 	public static void create(String account)
 	{
-		String query = "INSERT INTO " + Config.databaseTable + " VALUES('','" + account +"',0.00)";
+		String query = "INSERT INTO " + Config.databaseTable + "(username,balance) VALUES('" + account +"'," + Config.defaultHoldings + ")";
 		if (sqlite != null)
+		{
 			sqlite.query(query);
+		}	
 		else
+		{
 			mysql.query(query);
+		}
+			
 	}
 	
 	public static boolean saveAccount(String account, double balance)
@@ -125,14 +147,9 @@ public class DatabaseHandler {
 		String query = "UPDATE " + Config.databaseTable + " SET balance=" + balance + " WHERE username='" + account + "'";
 		if (sqlite != null)
 		{
-			result = sqlite.query(query);
-			try {
-				if (result.rowUpdated())
-					status = true;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//sqlite.query(query);
+			status = true;
+					
 		}
 		else
 		{

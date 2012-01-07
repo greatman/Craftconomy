@@ -7,23 +7,23 @@ public class Config {
 
 	static iConomy plugin;
 	
-	static String 	currencyMajorSingle,
-					currencyMajorPlural,
-					currencyMinorSingle,
-					currencyMinorPlural,
-					databaseType,
-					databaseTable,
-					databaseUsername,
-					databasePassword,
-					databaseAddress,
-					databasePort,
-					databaseDb;
+	public static String 	currencyMajorSingle,
+							currencyMajorPlural,
+							currencyMinorSingle,
+							currencyMinorPlural,
+							databaseType,
+							databaseTable,
+							databaseUsername,
+							databasePassword,
+							databaseAddress,
+							databasePort,
+							databaseDb;
 					
-	static double	defaultHoldings,
+	public static double	defaultHoldings,
 					interestCutOff,
 					interestPercent;
 	
-	static boolean	minorFormatting,
+	public static boolean	minorFormatting,
 					seperateFormatting,
 					singleFormatting,
 					transactionLogging,
@@ -31,7 +31,7 @@ public class Config {
 					interestOnlyOnline,
 					interestAnnounce;
 					
-	static int 		interestInterval;
+	public static int 		interestInterval;
 					
 	
 	public static void load(iConomy thePlugin)

@@ -3,6 +3,7 @@ package me.greatman.iConomy7.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.greatman.iConomy7.ILogger;
 import me.greatman.iConomy7.utils.TextUtil;
 
 import org.bukkit.ChatColor;
@@ -33,19 +34,18 @@ public class iConomyBaseCommand {
 		
 		helpNameAndParams = "fail!";
 		helpDescription = "no description";
+		
 	}
 	public void execute(CommandSender sender, List<String> parameters) {
 		this.sender = sender;
+		parameters.remove(0);
 		this.parameters = parameters;
-		
 		if ( ! validateCall()) {
 			return;
 		}
-		
 		if (sender instanceof Player) {
 			this.player = (Player)sender;
 		}
-		
 		perform();
 	}
 	
@@ -107,5 +107,14 @@ public class iConomyBaseCommand {
 	public boolean hasPermission(CommandSender sender)
 	{
 		return sender.hasPermission(this.permFlag);
+	}
+	public void sendMessage(Player player, String message)
+	{
+		if (player != null)
+			player.sendMessage(ChatColor.GREEN + "[" + ChatColor.YELLOW + "Money" + ChatColor.GREEN + "] " + message);
+	}
+	public void sendMessage(String message)
+	{
+		sender.sendMessage(ChatColor.GREEN + "[" + ChatColor.YELLOW + "Money" + ChatColor.GREEN + "] " + message);
 	}
 }

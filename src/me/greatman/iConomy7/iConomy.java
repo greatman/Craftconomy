@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,12 +25,13 @@ public class iConomy extends JavaPlugin{
 	
 	public iConomyPlayerListener playerListener = new iConomyPlayerListener();
 	
+	public static iConomy plugin;
+	
 	public void onEnable() {
 		name = this.getDescription().getName();
 		version = this.getDescription().getVersion();
-		
 		Config.load(this);
-		
+		plugin = this;
 		if (!DatabaseHandler.load(this))
 		{
 			ILogger.error("A error occured while trying to open the database. Please check your configuration.");
@@ -40,7 +42,7 @@ public class iConomy extends JavaPlugin{
 		new AccountHandler(this);
 		//commands.add(new iConomyHelpCommand());
 		commands.add(new iConomyPayCommand());
-		//commands.add(new iConomyCreateCommand());
+		commands.add(new iConomyCreateCommand());
 		//commands.add(new iConomyRemoveCommand());
 		//commands.add(new iConomyGiveCommand());
 		//commands.add(new iConomyTakeCommand());
@@ -58,21 +60,31 @@ public class iConomy extends JavaPlugin{
 		//Nulling every variables
 		name = null;
 		version = null;
+		AccountHandler.thread.cancel();
+		commands.clear();
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));
-		
-		if (cmd.equals("money"))
+		if (cmd.getLabel().equals("money"))
+		{
 			this.handleCommand(cmd, sender, parameters);
+		}
+			
 		
 		return true;
 		
 	}
 	
 	public void handleCommand(Command cmd, CommandSender sender, List<String> parameters) {
-		String commandName = cmd.getName();
-		for (iConomyBaseCommand iConomyCommand : this.commands) {
+		if (parameters.size() == 0)
+		{
 			
+			return;
+		}
+		Account account = AccountHandler.getAccount((Player) sender);
+		sender.sendMessage(account.getBalance() + "");
+		String commandName = parameters.get(0);
+		for (iConomyBaseCommand iConomyCommand : this.commands) {
 			if (iConomyCommand.getCommands().contains(commandName)) {
 				iConomyCommand.execute(sender, parameters);
 				return;
