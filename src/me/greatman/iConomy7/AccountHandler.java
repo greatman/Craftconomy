@@ -36,16 +36,15 @@ public class AccountHandler {
 		{
 			for (Account playerAccount : accounts)
 			{
-				if (playerAccount.getPlayerName() == playerList.get(0).getName())
+				if (playerAccount.getPlayerName().equals(playerList.get(0).getName()))
 					return playerAccount;
 			}
 		}
 		for (Account playerAccount : accounts)
 		{
-			if (playerAccount.getPlayerName() == player)
+			if (playerAccount.getPlayerName().equals(player))
 				return playerAccount;
 		}
-		
 		Account playerAccount = new Account(player);
 		accounts.add(playerAccount);
 		return playerAccount;
@@ -54,7 +53,7 @@ public class AccountHandler {
 	{
 		for (Account playerAccount : accounts)
 		{
-			if (playerAccount.getPlayerName() == player.getName())
+			if (playerAccount.getPlayerName().equals(player.getName()))
 				return playerAccount;
 		}
 		

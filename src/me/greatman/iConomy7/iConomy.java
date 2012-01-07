@@ -52,6 +52,13 @@ public class iConomy extends JavaPlugin{
 		//commands.add(new iConomyEmptyCommand());
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
+		Player[] playerList = iConomy.plugin.getServer().getOnlinePlayers();
+		if (playerList.length != 0)
+		{
+			for (int i = 0; playerList.length >= i; i++)
+				AccountHandler.getAccount(playerList[i]);
+		}
+		
 	}
 	
 	@Override
@@ -62,6 +69,7 @@ public class iConomy extends JavaPlugin{
 		version = null;
 		AccountHandler.thread.cancel();
 		commands.clear();
+		ILogger.info("Iconomy unloaded!");
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));

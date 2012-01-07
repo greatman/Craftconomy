@@ -4,39 +4,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import lib.PatPeter.SQLibrary.MySQL;
-import lib.PatPeter.SQLibrary.SQLite;
 import me.greatman.iConomy7.*;
 
 public class DatabaseHandler {
 
+	enum databaseType {
+		MYSQL,
+		SQLITE;
+	}
 	private static MySQL mysql;
-	private static SQLite sqlite;
+	public static databaseType type = null;
 	public static boolean load(iConomy thePlugin)
 	{
 		boolean result = false;
-		if (Config.databaseType.equalsIgnoreCase("sqlite") || Config.databaseType.equalsIgnoreCase("minidb"))
+		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
 		{
-			sqlite = new SQLite(ILogger.log,ILogger.prefix,"iconomy",thePlugin.getDataFolder().getAbsolutePath());
-			if (sqlite != null)
+			type = databaseType.SQLITE;
+			//SQLite = new Db(thePlugin,thePlugin.getDataFolder().getAbsolutePath() + "database.db")
+			//SQLite = new SQLite(ILogger.log,ILogger.prefix,"iconomy",thePlugin.getDataFolder().getAbsolutePath());
+			if (type == databaseType.SQLITE)
 			{
-				if (sqlite.query("SELECT * FROM " + Config.databaseTable) == null)
+				try{
+					SQLite.query("SELECT * FROM " + Config.databaseTable, true);
+					ILogger.info("SQLite database loaded!");
+					result = true;
+				}
+				catch (SQLException e)
 				{
-					if(sqlite.query("CREATE TABLE " + Config.databaseTable + " (" +
+					if(SQLite.query("CREATE TABLE " + Config.databaseTable + " (" +
 							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 							"username VARCHAR(30)  UNIQUE NOT NULL, " +
-							"balance DOUBLE DEFAULT '0.00' NOT NULL)") != null);
+							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false) != null);
 					{
 						ILogger.info("SQLite database created!");
 						result = true;
 					}
-						
 				}
-				else
-				{
-					ILogger.info("SQLite database loaded!");
-					result = true;
-				}
-				
 			}
 			
 		}
@@ -65,15 +68,20 @@ public class DatabaseHandler {
 	{
 		ResultSet result;
 		double balance = 0.00;
+		ILogger.info(account);
 		String query = "SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'";
-		if (sqlite != null)
+		if (type == databaseType.SQLITE)
 		{
-			result = sqlite.query(query);
+			ILogger.info("Wow");
+			result = SQLite.query(query, true);
 			try {
+				ILogger.info("Wow");
 				if (result.next())
 				{
+					ILogger.info("Wow");
 						balance = result.getDouble("balance");
 				}
+				ILogger.info("" + balance);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,9 +109,9 @@ public class DatabaseHandler {
 		ResultSet result;
 		boolean exists = false;
 		String query = "SELECT * FROM " + Config.databaseTable + " WHERE username='" + account + "'";
-		if (sqlite != null)
+		if (type == databaseType.SQLITE)
 		{
-			result = sqlite.query(query);
+			result = SQLite.query(query,true);
 				try {
 					if (result.next())
 						exists = true;
@@ -129,9 +137,9 @@ public class DatabaseHandler {
 	public static void create(String account)
 	{
 		String query = "INSERT INTO " + Config.databaseTable + "(username,balance) VALUES('" + account +"'," + Config.defaultHoldings + ")";
-		if (sqlite != null)
+		if (type == databaseType.SQLITE)
 		{
-			sqlite.query(query);
+			SQLite.query(query,false);
 		}	
 		else
 		{
@@ -145,9 +153,9 @@ public class DatabaseHandler {
 		ResultSet result;
 		boolean status = false;
 		String query = "UPDATE " + Config.databaseTable + " SET balance=" + balance + " WHERE username='" + account + "'";
-		if (sqlite != null)
+		if (type == databaseType.SQLITE)
 		{
-			//sqlite.query(query);
+			SQLite.query(query,false);
 			status = true;
 					
 		}

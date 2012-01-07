@@ -128,21 +128,19 @@ public class SQLite extends DatabaseHandler {
 			switch (this.getStatement(query)) {
 				case SELECT:
 					result = statement.executeQuery(query);
-					connection.close();
 					return result;
 					
 				default:
 					statement.executeQuery(query);
-					connection.close();
 					return result;	
 			}
 		} catch (SQLException ex) {
-			if (ex.getMessage().toLowerCase().contains("locking") || ex.getMessage().toLowerCase().contains("locked")) {
-				return retryResult(query);
+			//if (ex.getMessage().toLowerCase().contains("locking") || ex.getMessage().toLowerCase().contains("locked")) {
+			//	return retryResult(query);
 				//this.writeError("",false);
-			} else {
+			//} else {
 				this.writeError("Error at SQL Query: " + ex.getMessage(), false);
-			}
+			//}
 			
 		}
 		return null;

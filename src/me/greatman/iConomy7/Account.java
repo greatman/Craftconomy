@@ -27,7 +27,10 @@ public class Account {
 		if (!DatabaseHandler.exists(playerName))
 			DatabaseHandler.create(playerName);
 		else
+		{
 			balance = DatabaseHandler.getAccountAmount(playerName);
+		}
+			
 		player = user;
 	}
 	
