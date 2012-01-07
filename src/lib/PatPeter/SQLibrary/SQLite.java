@@ -122,18 +122,18 @@ public class SQLite extends DatabaseHandler {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet result = null;
-		
 		try {
 			connection = this.open();
 			statement = connection.createStatement();
-			
 			switch (this.getStatement(query)) {
 				case SELECT:
 					result = statement.executeQuery(query);
+					connection.close();
 					return result;
 					
 				default:
 					statement.executeQuery(query);
+					connection.close();
 					return result;	
 			}
 		} catch (SQLException ex) {
