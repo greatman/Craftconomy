@@ -89,10 +89,8 @@ public class iConomy extends JavaPlugin{
 			command.execute(sender,parameters);
 			return;
 		}
-			parameters.set(0, "");
-		Account account = AccountHandler.getAccount((Player) sender);
-		sender.sendMessage(account.getBalance() + "");
 		String commandName = parameters.get(0);
+		ILogger.info(commandName);
 		for (iConomyBaseCommand iConomyCommand : this.commands) {
 			if (iConomyCommand.getCommands().contains(commandName)) {
 				iConomyCommand.execute(sender, parameters);

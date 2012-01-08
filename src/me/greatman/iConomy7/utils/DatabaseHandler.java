@@ -25,14 +25,14 @@ public class DatabaseHandler {
 			if (type == databaseType.SQLITE)
 			{
 				try{
-					SQLite.query("SELECT * FROM " + Config.databaseTable, true);
-					ILogger.info("SQLite database loaded!");
-					result = true;
-				}
-				catch (java.sql.SQLException e)
-				{
-					ILogger.info("Here");
-					try {
+					ResultSet queryResult = SQLite.query("SELECT * FROM " + Config.databaseTable, true);
+					if (queryResult != null)
+					{
+						ILogger.info("SQLite database loaded!");
+						result = true;
+					}
+					else
+					{
 						if(SQLite.query("CREATE TABLE " + Config.databaseTable + " (" +
 								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 								"username VARCHAR(30)  UNIQUE NOT NULL, " +
@@ -41,11 +41,12 @@ public class DatabaseHandler {
 							ILogger.info("SQLite database created!");
 							result = true;
 						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
 					}
-					
+				}
+				catch (java.sql.SQLException e)
+				{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 				}
 			}
 			

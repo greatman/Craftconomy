@@ -37,8 +37,11 @@ public class iConomyBaseCommand {
 	}
 	public void execute(CommandSender sender, List<String> parameters) {
 		this.sender = sender;
-		if (this.getCommands().contains(parameters.get(0)))
-			parameters.remove(0);
+		if (parameters.size() > 0)
+		{
+			if (this.getCommands().contains(parameters.get(0)))
+				parameters.remove(0);
+		}
 		this.parameters = parameters;
 		if ( ! validateCall()) {
 			return;
