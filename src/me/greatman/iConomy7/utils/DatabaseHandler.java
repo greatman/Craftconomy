@@ -31,14 +31,20 @@ public class DatabaseHandler {
 				}
 				catch (SQLException e)
 				{
-					if(SQLite.query("CREATE TABLE " + Config.databaseTable + " (" +
-							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
-							"username VARCHAR(30)  UNIQUE NOT NULL, " +
-							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false) != null);
-					{
-						ILogger.info("SQLite database created!");
-						result = true;
+					try {
+						if(SQLite.query("CREATE TABLE " + Config.databaseTable + " (" +
+								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+								"username VARCHAR(30)  UNIQUE NOT NULL, " +
+								"balance DOUBLE DEFAULT '0.00' NOT NULL)", false) != null)
+						{
+							ILogger.info("SQLite database created!");
+							result = true;
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
+					
 				}
 			}
 			
@@ -66,14 +72,19 @@ public class DatabaseHandler {
 	
 	public static double getAccountAmount(String account)
 	{
-		ResultSet result;
+		ResultSet result = null;
 		double balance = 0.00;
 		ILogger.info(account);
 		String query = "SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'";
 		if (type == databaseType.SQLITE)
 		{
 			ILogger.info("Wow");
-			result = SQLite.query(query, true);
+			try {
+				result = SQLite.query(query, true);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				ILogger.info("Wow");
 				if (result.next())
@@ -106,12 +117,17 @@ public class DatabaseHandler {
 
 	public static boolean exists(String account) 
 	{
-		ResultSet result;
+		ResultSet result = null;
 		boolean exists = false;
 		String query = "SELECT * FROM " + Config.databaseTable + " WHERE username='" + account + "'";
 		if (type == databaseType.SQLITE)
 		{
-			result = SQLite.query(query,true);
+			try {
+				result = SQLite.query(query,true);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 				try {
 					if (result.next())
 						exists = true;
@@ -139,7 +155,12 @@ public class DatabaseHandler {
 		String query = "INSERT INTO " + Config.databaseTable + "(username,balance) VALUES('" + account +"'," + Config.defaultHoldings + ")";
 		if (type == databaseType.SQLITE)
 		{
-			SQLite.query(query,false);
+			try {
+				SQLite.query(query,false);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}	
 		else
 		{
@@ -155,7 +176,12 @@ public class DatabaseHandler {
 		String query = "UPDATE " + Config.databaseTable + " SET balance=" + balance + " WHERE username='" + account + "'";
 		if (type == databaseType.SQLITE)
 		{
-			SQLite.query(query,false);
+			try {
+				SQLite.query(query,false);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			status = true;
 					
 		}

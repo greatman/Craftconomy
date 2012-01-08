@@ -24,7 +24,7 @@ public class SQLite {
 		  return conn;
 		}
 
-	public static ResultSet query(String query, boolean result)
+	public static ResultSet query(String query, boolean result) throws SQLException
 	{
 		ResultSet rs = null;
 		Connection conn = createConnection();
