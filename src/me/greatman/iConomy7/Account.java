@@ -91,4 +91,15 @@ public class Account {
 		balance /= amount;
 		return balance;
 	}
+	
+	/**
+	 * Set the player account to the balance received
+	 * @param amount The balance we want to set the account to
+	 * @return The current balance after the change.
+	 */
+	public double setBalance(double amount)
+	{
+		balance = amount;
+		return balance;
+	}
 }

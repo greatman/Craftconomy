@@ -29,8 +29,9 @@ public class DatabaseHandler {
 					ILogger.info("SQLite database loaded!");
 					result = true;
 				}
-				catch (SQLException e)
+				catch (java.sql.SQLException e)
 				{
+					ILogger.info("Here");
 					try {
 						if(SQLite.query("CREATE TABLE " + Config.databaseTable + " (" +
 								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
@@ -197,5 +198,73 @@ public class DatabaseHandler {
 			}
 		}
 		return status;
+	}
+
+	public static void deleteAll() {
+		String query = "DELETE FROM " + Config.databaseTable;
+		if (type == databaseType.SQLITE)
+		{
+			try {
+				SQLite.query(query, false);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			mysql.query(query);
+		}
+		
+	}
+
+	public static void deleteAllInitialAccounts() {
+		String query = "DELETE FROM " + Config.databaseTable + " WHERE balance=" + Config.defaultHoldings;
+		if (type == databaseType.SQLITE)
+		{
+			try {
+				SQLite.query(query, false);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			mysql.query(query);
+		}
+	}
+
+	public static ResultSet getAllInitialAccounts() {
+		// TODO Auto-generated method stub
+		String query = "SELECT * FROM " + Config.databaseTable + " WHERE balance=" + Config.defaultHoldings;
+		if (type == databaseType.SQLITE)
+		{
+			try {
+				return SQLite.query(query, true);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+			return mysql.query(query);
+		return null;
+	}
+
+	public static void delete(String playerName) {
+		// TODO Auto-generated method stub
+		String query = "DELETE FROM " + Config.databaseTable + " WHERE username=" + playerName;
+		if (type == databaseType.SQLITE)
+		{
+			try {
+				SQLite.query(query, false);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+			mysql.query(query);
 	}
 }

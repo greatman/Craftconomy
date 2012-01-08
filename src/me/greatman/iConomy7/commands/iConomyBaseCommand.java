@@ -3,7 +3,6 @@ package me.greatman.iConomy7.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.greatman.iConomy7.ILogger;
 import me.greatman.iConomy7.utils.TextUtil;
 
 import org.bukkit.ChatColor;
@@ -38,7 +37,8 @@ public class iConomyBaseCommand {
 	}
 	public void execute(CommandSender sender, List<String> parameters) {
 		this.sender = sender;
-		parameters.remove(0);
+		if (this.getCommands().contains(parameters.get(0)))
+			parameters.remove(0);
 		this.parameters = parameters;
 		if ( ! validateCall()) {
 			return;
@@ -77,7 +77,7 @@ public class iConomyBaseCommand {
 		String ret = "";
 		
 		ret += ChatColor.AQUA;
-		
+		ret += "/money";
 		ret += TextUtil.implode(this.getCommands(), ",")+" ";
 		
 		List<String> parts = new ArrayList<String>();

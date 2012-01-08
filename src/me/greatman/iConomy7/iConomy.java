@@ -39,23 +39,22 @@ public class iConomy extends JavaPlugin{
 			return;
 		}
 		
-		new AccountHandler(this);
+		new AccountHandler();
 		//commands.add(new iConomyHelpCommand());
 		commands.add(new iConomyPayCommand());
 		commands.add(new iConomyCreateCommand());
-		//commands.add(new iConomyRemoveCommand());
-		//commands.add(new iConomyGiveCommand());
-		//commands.add(new iConomyTakeCommand());
-		//commands.add(new iConomySetCommand());
-		//commands.add(new iConomySetCommand());
-		//commands.add(new iConomyPurgeCommand());
-		//commands.add(new iConomyEmptyCommand());
+		commands.add(new iConomyRemoveCommand());
+		commands.add(new iConomyGiveCommand());
+		commands.add(new iConomyTakeCommand());
+		commands.add(new iConomySetCommand());
+		commands.add(new iConomyPurgeCommand());
+		commands.add(new iConomyEmptyCommand());
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
 		Player[] playerList = iConomy.plugin.getServer().getOnlinePlayers();
 		if (playerList.length != 0)
 		{
-			for (int i = 0; playerList.length >= i; i++)
+			for (int i = 0; i < playerList.length; i++)
 				AccountHandler.getAccount(playerList[i]);
 		}
 		
@@ -86,9 +85,11 @@ public class iConomy extends JavaPlugin{
 	public void handleCommand(Command cmd, CommandSender sender, List<String> parameters) {
 		if (parameters.size() == 0)
 		{
-			
+			iConomyOwnMoneyCommand command = new iConomyOwnMoneyCommand();
+			command.execute(sender,parameters);
 			return;
 		}
+			parameters.set(0, "");
 		Account account = AccountHandler.getAccount((Player) sender);
 		sender.sendMessage(account.getBalance() + "");
 		String commandName = parameters.get(0);
@@ -98,7 +99,7 @@ public class iConomy extends JavaPlugin{
 				return;
 			}
 		}
-		
-		sender.sendMessage(ChatColor.YELLOW+"Unknown command \""+commandName+"\".");
+		iConomyOtherMoneyCommand command = new iConomyOtherMoneyCommand();
+		command.execute(sender,parameters);
 	}
 }

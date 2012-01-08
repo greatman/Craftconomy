@@ -1,5 +1,7 @@
 package me.greatman.iConomy7;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -13,6 +15,12 @@ public class AccountHandler {
 
 	public static List<Account> accounts = new ArrayList<Account>();
 	public static Timer thread;
+	
+	/**
+	 * Auto-save class
+	 * @author greatman
+	 *
+	 */
 	class saveAccounts extends TimerTask{
 		public void run() {
 			for (Account playerAccount : AccountHandler.accounts) {
@@ -20,7 +28,8 @@ public class AccountHandler {
 			}
 		}
 	}
-	public AccountHandler(iConomy thePlugin)
+	
+	public AccountHandler()
 	{
 		//Initialise the auto 10s saves
 		thread = new Timer();
@@ -29,6 +38,11 @@ public class AccountHandler {
 		
 	}
 	
+	/**
+	 * Get a account
+	 * @param player The player name we want to get the account
+	 * @return The Account
+	 */
 	public static Account getAccount(String player)
 	{
 		List<Player> playerList = iConomy.plugin.getServer().matchPlayer(player);
@@ -49,6 +63,12 @@ public class AccountHandler {
 		accounts.add(playerAccount);
 		return playerAccount;
 	}
+	
+	/**
+	 * Get a account
+	 * @param player The player we want to get the account
+	 * @return The Account
+	 */
 	public static Account getAccount(Player player)
 	{
 		for (Account playerAccount : accounts)
@@ -62,14 +82,54 @@ public class AccountHandler {
 		return playerAccount;
 	}
 	
-	
+	public static void deleteAllAccounts() {
+		DatabaseHandler.deleteAll();
+		accounts.clear();
+	}
+	/**
+	 * Checks if a account exists
+	 * @param player The player name we want to get the account
+	 * @return True if the account exists else false.
+	 */
 	public static boolean exists(String player)
 	{
 		return DatabaseHandler.exists(player);
 	}
+	/**
+	 * Checks if a account exists
+	 * @param player The player we want to get the account
+	 * @return True if the account exists else false.
+	 */
 	public static boolean exists(Player player)
 	{
 		return DatabaseHandler.exists(player.getName());
+	}
+
+	public static void deleteAllInitialAccounts() {
+		ResultSet result = DatabaseHandler.getAllInitialAccounts();
+		try {
+			if (result.next())
+			{
+				do
+				{
+					if (accounts.contains(result.getString("username")))
+						accounts.remove(result.getString("username"));
+				}
+				while(result.next());
+			}
+			DatabaseHandler.deleteAllInitialAccounts();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	public static void delete(Account account) {
+		// TODO Auto-generated method stub
+		DatabaseHandler.delete(account.getPlayerName());
+		accounts.remove(account);
 	}
 	
 }

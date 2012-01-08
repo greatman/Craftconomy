@@ -5,23 +5,21 @@ import me.greatman.iConomy7.AccountHandler;
 import me.greatman.iConomy7.utils.Config;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-public class iConomyPayCommand extends iConomyBaseCommand{
-
-	public iConomyPayCommand() {
-		this.command.add("pay");
+public class iConomyTakeCommand extends iConomyBaseCommand{
+	
+	public iConomyTakeCommand() {
+		this.command.add("take");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
-		permFlag = ("iConomy.payment");
-		helpDescription = "Send money to others.";
+		permFlag = ("iConomy.accounts.take");
+		helpDescription = "Take money";
 	}
 	
 	public void perform() {
 		double amount;
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
-			Account senderAccount = AccountHandler.getAccount((Player) sender);
 			Account receiverAccount = AccountHandler.getAccount(this.parameters.get(0));
 			try{
 				amount = Double.parseDouble(this.parameters.get(1));
@@ -31,15 +29,9 @@ public class iConomyPayCommand extends iConomyBaseCommand{
 				sendMessage("Number excepted as the amount. String received instead");
 				return;
 			}
-			if (senderAccount.getBalance() < amount)
-			{
-				sendMessage(ChatColor.RED + "You don't have " + amount + " " + Config.currencyMajorPlural);
-				return;
-			}
-			senderAccount.substractMoney(amount);
-			receiverAccount.addMoney(amount);
-			sendMessage("You sended " + amount + " " + Config.currencyMajorPlural + " to " + receiverAccount.getPlayerName());
-			sendMessage(receiverAccount.getPlayer(), "You received " + amount + " " + Config.currencyMajorPlural + " from " + senderAccount.getPlayerName());
+			receiverAccount.substractMoney(amount);
+			sendMessage("You removed " + amount + " " + Config.currencyMajorPlural + " from " + receiverAccount.getPlayerName() + " account!");
+			sendMessage(receiverAccount.getPlayer(),  "" + ChatColor.RED + amount + " " + Config.currencyMajorPlural + " has been removed from your account!");
 		}
 		else
 			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + " does not exists!");

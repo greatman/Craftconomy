@@ -5,9 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
-import me.greatman.iConomy7.ILogger;
 import me.greatman.iConomy7.iConomy;
 
 public class SQLite {
