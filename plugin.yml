@@ -1,6 +1,7 @@
 name: iConomy
 main: me.greatman.iConomy7.iConomy
 version: 7.0.0 Alpha1
+load: startup
 commands:
     money:
       aliases: [iConomy, iCo]

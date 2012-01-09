@@ -102,4 +102,17 @@ public class Account {
 		balance = amount;
 		return balance;
 	}
+	
+	/**
+	 * Checks if the player has enough money in his account
+	 * @param amount The amount we want to check
+	 * @return True if the player has enough else false
+	 */
+	public boolean hasEnough(double amount)
+	{
+		boolean result = false;
+		if (balance >= amount)
+			result = true;
+		return result;
+	}
 }

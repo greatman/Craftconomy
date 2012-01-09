@@ -99,4 +99,18 @@ public class iConomy extends JavaPlugin{
 		iConomyOtherMoneyCommand command = new iConomyOtherMoneyCommand();
 		command.execute(sender,parameters);
 	}
+	
+	public static String format(double amount)
+	{
+		String result;
+		if (amount >= 2)
+		{
+			result = amount + " " + Config.currencyMajorPlural;
+		}
+		else
+		{
+			result = amount + " " + Config.currencyMajorSingle;
+		}
+		return result;
+	}
 }
