@@ -63,7 +63,7 @@ public class Config {
 		databaseAddress = plugin.getConfig().getString("System.Database.Address");
 		databasePort = plugin.getConfig().getString("System.Database.Port");
 		databaseUsername = plugin.getConfig().getString("System.Database.Username");
-		databasePassword = plugin.getConfig().getString("System.Database.password");
+		databasePassword = plugin.getConfig().getString("System.Database.Password");
 		databaseDb = plugin.getConfig().getString("System.Database.Db");
 	}
 }
