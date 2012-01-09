@@ -132,4 +132,11 @@ public class AccountHandler {
 		accounts.remove(account);
 	}
 	
+	public static void save(Player player)
+	{
+		Account playerAccount = getAccount(player);
+		DatabaseHandler.saveAccount(player.getName(), playerAccount.getBalance());
+		accounts.remove(playerAccount);
+	}
+	
 }

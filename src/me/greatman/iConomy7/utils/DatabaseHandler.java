@@ -76,28 +76,21 @@ public class DatabaseHandler {
 	{
 		ResultSet result = null;
 		double balance = 0.00;
-		ILogger.info(account);
 		String query = "SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'";
 		if (type == databaseType.SQLITE)
 		{
-			ILogger.info("Wow");
 			try {
 				result = SQLite.query(query, true);
+				if (result.isBeforeFirst())
+				{
+					result.next();
+					balance = result.getDouble("balance");
+					
+				}
+				
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
-			try {
-				ILogger.info("Wow");
-				if (result.next())
-				{
-					ILogger.info("Wow");
-						balance = result.getDouble("balance");
-				}
-				ILogger.info("" + balance);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		else

@@ -1,5 +1,6 @@
 package me.greatman.iConomy7.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.greatman.iConomy7.Account;
@@ -17,6 +18,6 @@ public class iConomyOwnMoneyCommand extends iConomyBaseCommand{
 	public void perform() {
 		
 		Account playerAccount = AccountHandler.getAccount((Player) sender);
-		sendMessage(playerAccount.getBalance() + " " + Config.currencyMajorPlural);
+		sendMessage("Balance: " + ChatColor.WHITE + playerAccount.getBalance() + " " + Config.currencyMajorPlural);
 	}
 }

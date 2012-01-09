@@ -9,7 +9,6 @@ import me.greatman.iConomy7.listeners.iConomyPlayerListener;
 import me.greatman.iConomy7.utils.Config;
 import me.greatman.iConomy7.utils.DatabaseHandler;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
@@ -51,6 +50,7 @@ public class iConomy extends JavaPlugin{
 		commands.add(new iConomyEmptyCommand());
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener ,Event.Priority.Normal, this);
 		Player[] playerList = iConomy.plugin.getServer().getOnlinePlayers();
 		if (playerList.length != 0)
 		{
@@ -90,7 +90,6 @@ public class iConomy extends JavaPlugin{
 			return;
 		}
 		String commandName = parameters.get(0);
-		ILogger.info(commandName);
 		for (iConomyBaseCommand iConomyCommand : this.commands) {
 			if (iConomyCommand.getCommands().contains(commandName)) {
 				iConomyCommand.execute(sender, parameters);

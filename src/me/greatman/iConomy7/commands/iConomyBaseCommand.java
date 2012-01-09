@@ -40,7 +40,9 @@ public class iConomyBaseCommand {
 		if (parameters.size() > 0)
 		{
 			if (this.getCommands().contains(parameters.get(0)))
+			{
 				parameters.remove(0);
+			}
 		}
 		this.parameters = parameters;
 		if ( ! validateCall()) {
