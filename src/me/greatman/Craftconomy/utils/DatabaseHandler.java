@@ -24,24 +24,22 @@ public class DatabaseHandler {
 				try{
 					ResultSet queryResult = SQLLibrary.query("SELECT * FROM " + Config.databaseTable, true);
 					if (queryResult != null)
-					{
 						ILogger.info("SQLite database loaded!");
 						result = true;
-					}
-					else
-					{
+				}
+				catch (java.sql.SQLException e)
+				{
+					try {
 						SQLLibrary.query("CREATE TABLE " + Config.databaseTable + " (" +
 								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 								"username VARCHAR(30)  UNIQUE NOT NULL, " +
 								"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
-						ILogger.info("SQLite database created!");
-						result = true;
-					}
-				}
-				catch (java.sql.SQLException e)
-				{
+					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
+					}
+					ILogger.info("SQLite database created!");
+					result = true;
 				}
 			
 		}
