@@ -1,22 +1,3 @@
-# iConomy 6.0.8b
-# @author     Nijikokun <nijikokun@gmail.com>
-# @license    GPLv2
-# @copyright  Copyright AniGaiku LLC (C) 2010-2011
-##
-# Setup Notes
-#   - Seconds
-#         Basic Table:
-#           1 minute = 60 seconds
-#           1 hour = 1 minute * 60 = 3600 seconds
-#           1 day = 1 hour * 24 = 86400 seconds
-#           1 week = 1 day * 7 = 604800 seconds
-#   - Database
-#           Do not use remote databases from free sites, please use either a
-#           remote database from a personal hosted VPS or DEDI or a local
-#           database. This will prevent any 'timeout' or 'invalid settings'
-#           or 'cannot connect to database' issues. Thank you :)!
-##
-
 System:
   Permissions:
     Use:
@@ -99,22 +80,20 @@ System:
 
   Database:
     # Databases Supported:
-    # minidb
-    #  - These all equate to miniDB (Flatfile)
     ##
     # mysql
     #  - These will attempt to connect to MySQL
     ##
     # sqlite
     #  - These will attempt to create & connect to SQLite
-    Type: 'minidb'
+    Type: 'sqlite'
 
     # This controls the database name, by default it is iConomy
-    Table: 'iConomy'
+    Table: 'Craftconomy'
 
     #Modify if using MySQL
     Address: 'localhost'
     Port: 3306
     Username: 'root'
     Password: ''
-    Db: 'iConomy'
+    Db: 'Craftconomy'
