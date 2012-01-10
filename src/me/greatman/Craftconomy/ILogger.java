@@ -1,4 +1,4 @@
-package me.greatman.iConomy7;
+package me.greatman.Craftconomy;
 
 import java.util.logging.Logger;
 
@@ -6,7 +6,7 @@ public class ILogger {
 
 	public static Logger log = Logger.getLogger("Minecraft");
 	
-	public static String prefix = "["+ iConomy.name + " " + iConomy.version + "]";
+	public static String prefix = "["+ Craftconomy.name + " " + Craftconomy.version + "]";
 	
 	
     public static void info(String message) {

@@ -1,4 +1,4 @@
-package me.greatman.iConomy7.utils;
+package me.greatman.Craftconomy.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,10 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 import com.sun.rowset.CachedRowSetImpl;
-
-import me.greatman.iConomy7.iConomy;
 
 @SuppressWarnings("restriction")
 public class SQLLibrary {

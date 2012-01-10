@@ -1,4 +1,4 @@
-package me.greatman.iConomy7;
+package me.greatman.Craftconomy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.greatman.iConomy7.utils.DatabaseHandler;
+import me.greatman.Craftconomy.utils.DatabaseHandler;
 
 import org.bukkit.entity.Player;
 
@@ -45,7 +45,7 @@ public class AccountHandler {
 	 */
 	public static Account getAccount(String player)
 	{
-		List<Player> playerList = iConomy.plugin.getServer().matchPlayer(player);
+		List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(player);
 		if (playerList.size() == 1)
 		{
 			for (Account playerAccount : accounts)

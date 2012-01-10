@@ -1,12 +1,12 @@
-package me.greatman.iConomy7.commands;
+package me.greatman.Craftconomy.commands;
 
 import org.bukkit.ChatColor;
 
-import me.greatman.iConomy7.AccountHandler;
+import me.greatman.Craftconomy.AccountHandler;
 
-public class iConomyCreateCommand extends iConomyBaseCommand{
+public class CreateCommand extends BaseCommand{
 
-	public iConomyCreateCommand() {
+	public CreateCommand() {
 		this.command.add("create");
 		this.requiredParameters.add("Player Name");
 		permFlag = ("iConomy.create");

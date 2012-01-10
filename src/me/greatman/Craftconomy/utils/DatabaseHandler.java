@@ -1,10 +1,11 @@
-package me.greatman.iConomy7.utils;
+package me.greatman.Craftconomy.utils;
 
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import me.greatman.iConomy7.*;
+import me.greatman.Craftconomy.Craftconomy;
+import me.greatman.Craftconomy.ILogger;
 
 public class DatabaseHandler {
 
@@ -13,13 +14,13 @@ public class DatabaseHandler {
 		SQLITE;
 	}
 	public static databaseType type = null;
-	public static boolean load(iConomy thePlugin)
+	public static boolean load(Craftconomy thePlugin)
 	{
 		boolean result = false;
 		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
 		{
 			type = databaseType.SQLITE;
-			SQLLibrary.setUrl("jdbc:sqlite:" + iConomy.plugin.getDataFolder().getAbsolutePath() + File.separator + "database.db");
+			SQLLibrary.setUrl("jdbc:sqlite:" + Craftconomy.plugin.getDataFolder().getAbsolutePath() + File.separator + "database.db");
 				try{
 					ResultSet queryResult = SQLLibrary.query("SELECT * FROM " + Config.databaseTable, true);
 					if (queryResult != null)

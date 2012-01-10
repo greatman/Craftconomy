@@ -1,14 +1,14 @@
-package me.greatman.iConomy7.commands;
+package me.greatman.Craftconomy.commands;
 
-import me.greatman.iConomy7.Account;
-import me.greatman.iConomy7.AccountHandler;
-import me.greatman.iConomy7.utils.Config;
+import me.greatman.Craftconomy.Account;
+import me.greatman.Craftconomy.AccountHandler;
+import me.greatman.Craftconomy.utils.Config;
 
 import org.bukkit.ChatColor;
 
-public class iConomyGiveCommand extends iConomyBaseCommand{
+public class GiveCommand extends BaseCommand{
 	
-	public iConomyGiveCommand() {
+	public GiveCommand() {
 		this.command.add("give");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");

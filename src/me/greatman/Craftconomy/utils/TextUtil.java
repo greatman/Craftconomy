@@ -1,4 +1,4 @@
-package me.greatman.iConomy7.utils;
+package me.greatman.Craftconomy.utils;
 import java.util.*;
 
 import org.bukkit.ChatColor;

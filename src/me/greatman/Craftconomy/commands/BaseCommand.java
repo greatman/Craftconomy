@@ -1,15 +1,15 @@
-package me.greatman.iConomy7.commands;
+package me.greatman.Craftconomy.commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.greatman.iConomy7.utils.TextUtil;
+import me.greatman.Craftconomy.utils.TextUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class iConomyBaseCommand {
+public class BaseCommand {
 
 	public List<String> command,
 						requiredParameters,
@@ -24,7 +24,7 @@ public class iConomyBaseCommand {
 	
 	public List<String> parameters;
 	
-	public iConomyBaseCommand() {
+	public BaseCommand() {
 		command = new ArrayList<String>();
 		requiredParameters = new ArrayList<String>();
 		optionalParameters = new ArrayList<String>();

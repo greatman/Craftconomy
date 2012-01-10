@@ -1,6 +1,6 @@
-package me.greatman.iConomy7.listeners;
+package me.greatman.Craftconomy.listeners;
 
-import me.greatman.iConomy7.AccountHandler;
+import me.greatman.Craftconomy.AccountHandler;
 
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;

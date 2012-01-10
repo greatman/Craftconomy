@@ -1,14 +1,14 @@
-package me.greatman.iConomy7.commands;
+package me.greatman.Craftconomy.commands;
 
 import org.bukkit.entity.Player;
 
-import me.greatman.iConomy7.Account;
-import me.greatman.iConomy7.AccountHandler;
-import me.greatman.iConomy7.utils.Config;
+import me.greatman.Craftconomy.Account;
+import me.greatman.Craftconomy.AccountHandler;
+import me.greatman.Craftconomy.utils.Config;
 
-public class iConomyOtherMoneyCommand extends iConomyBaseCommand{
+public class OtherMoneyCommand extends BaseCommand{
 
-	public iConomyOtherMoneyCommand() {
+	public OtherMoneyCommand() {
 		permFlag = ("iConomy.holdings.others");
 		this.requiredParameters.add("Player Name");
 		helpDescription = "Check others balance";

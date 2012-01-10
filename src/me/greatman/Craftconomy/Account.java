@@ -1,9 +1,9 @@
-package me.greatman.iConomy7;
+package me.greatman.Craftconomy;
 
 import java.util.List;
 
-import me.greatman.iConomy7.utils.Config;
-import me.greatman.iConomy7.utils.DatabaseHandler;
+import me.greatman.Craftconomy.utils.Config;
+import me.greatman.Craftconomy.utils.DatabaseHandler;
 
 import org.bukkit.entity.Player;
 
@@ -18,7 +18,7 @@ public class Account {
 			DatabaseHandler.create(playerName);
 		else
 			balance = DatabaseHandler.getAccountAmount(playerName);
-		List<Player> playerList = iConomy.plugin.getServer().matchPlayer(user);
+		List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(user);
 		if (playerList.size() == 1)
 			player = playerList.get(0);
 	}

@@ -1,11 +1,11 @@
-package me.greatman.iConomy7.utils;
+package me.greatman.Craftconomy.utils;
 
-import me.greatman.iConomy7.iConomy;
+import me.greatman.Craftconomy.Craftconomy;
 
 
 public class Config {
 
-	static iConomy plugin;
+	static Craftconomy plugin;
 	
 	public static String 	currencyMajorSingle,
 							currencyMajorPlural,
@@ -34,7 +34,7 @@ public class Config {
 	public static int 		interestInterval;
 					
 	
-	public static void load(iConomy thePlugin)
+	public static void load(Craftconomy thePlugin)
 	{
 		plugin = thePlugin;
 		plugin.getConfig().options().copyDefaults(true);

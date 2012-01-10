@@ -1,11 +1,11 @@
-package me.greatman.iConomy7.commands;
+package me.greatman.Craftconomy.commands;
 
-import me.greatman.iConomy7.AccountHandler;
+import me.greatman.Craftconomy.AccountHandler;
 
-public class iConomyPurgeCommand extends iConomyBaseCommand{
+public class PurgeCommand extends BaseCommand{
 
 	
-	public iConomyPurgeCommand() {
+	public PurgeCommand() {
 		this.command.add("purge");
 		permFlag = ("iConomy.accounts.purge");
 		helpDescription = "Purge all accounts with initial holdings.";
