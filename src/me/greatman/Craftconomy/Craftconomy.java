@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.greatman.Craftconomy.commands.*;
-import me.greatman.Craftconomy.listeners.iConomyPlayerListener;
+import me.greatman.Craftconomy.commands.bank.*;
+import me.greatman.Craftconomy.commands.money.*;
+import me.greatman.Craftconomy.listeners.CCPlayerListener;
 import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
 
@@ -21,8 +23,9 @@ public class Craftconomy extends JavaPlugin{
 	public static String 	name,
 							version;
 	public List<BaseCommand> commands = new ArrayList<BaseCommand>();
+	public List<BaseCommand> bankCommands = new ArrayList<BaseCommand>();
 	
-	public iConomyPlayerListener playerListener = new iConomyPlayerListener();
+	public CCPlayerListener playerListener = new CCPlayerListener();
 	
 	public static Craftconomy plugin;
 	
@@ -39,6 +42,8 @@ public class Craftconomy extends JavaPlugin{
 		}
 		
 		new AccountHandler();
+		
+		//Insert all /money commands
 		//commands.add(new iConomyHelpCommand());
 		commands.add(new PayCommand());
 		commands.add(new CreateCommand());
@@ -48,6 +53,14 @@ public class Craftconomy extends JavaPlugin{
 		commands.add(new SetCommand());
 		commands.add(new PurgeCommand());
 		commands.add(new EmptyCommand());
+		
+		//Insert all /bank commands
+		bankCommands.add(new BankGiveCommand());
+		bankCommands.add(new BankTakeCommand());
+		bankCommands.add(new BankOwnBalanceCommand());
+		bankCommands.add(new BankOtherBalanceCommand());
+		bankCommands.add(new BankSetCommand());
+		
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener ,Event.Priority.Normal, this);
@@ -63,26 +76,27 @@ public class Craftconomy extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		
-		//Nulling every variables
-		name = null;
-		version = null;
-		AccountHandler.thread.cancel();
+		if (name != null)
+			name = null;
+		if (version != null)
+			version = null;
+		if (AccountHandler.thread != null)
+			AccountHandler.thread.cancel();
 		commands.clear();
 		ILogger.info("Iconomy unloaded!");
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));
 		if (cmd.getLabel().equals("money"))
-		{
-			this.handleCommand(cmd, sender, parameters);
-		}
-			
+			this.handleMoneyCommand(cmd, sender, parameters);
+		if (cmd.getLabel().equals("bank"))
+			this.handleBankCommand(cmd,sender, parameters);
 		
 		return true;
 		
 	}
 	
-	public void handleCommand(Command cmd, CommandSender sender, List<String> parameters) {
+	public void handleMoneyCommand(Command cmd, CommandSender sender, List<String> parameters) {
 		if (parameters.size() == 0)
 		{
 			OwnMoneyCommand command = new OwnMoneyCommand();
@@ -100,8 +114,27 @@ public class Craftconomy extends JavaPlugin{
 		command.execute(sender,parameters);
 	}
 	
+	public void handleBankCommand(Command cmd, CommandSender sender, List<String> parameters) {
+		if (parameters.size() == 0)
+		{
+			BankOwnBalanceCommand command = new BankOwnBalanceCommand();
+			command.execute(sender,parameters);
+			return;
+		}
+		String commandName = parameters.get(0);
+		for (BaseCommand iConomyCommand : this.commands) {
+			if (iConomyCommand.getCommands().contains(commandName)) {
+				iConomyCommand.execute(sender, parameters);
+				return;
+			}
+		}
+		BankOtherBalanceCommand command = new BankOtherBalanceCommand();
+		command.execute(sender,parameters);
+	}
+	
 	public static String format(double amount)
 	{
+		//TODO: Use all the stuff we need.
 		String result;
 		if (amount >= 2)
 		{
@@ -112,5 +145,21 @@ public class Craftconomy extends JavaPlugin{
 			result = amount + " " + Config.currencyMajorSingle;
 		}
 		return result;
+	}
+	
+	public static boolean isValidAmount(String amount)
+	{
+		
+			try{
+				double amountParsed = Double.parseDouble(amount);
+				if (amountParsed > 0.00)
+					return true;
+				else
+					return false;
+			}
+			catch (NumberFormatException e)
+			{
+				return false;
+			}
 	}
 }

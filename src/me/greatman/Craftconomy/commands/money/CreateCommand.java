@@ -1,15 +1,16 @@
-package me.greatman.Craftconomy.commands;
+package me.greatman.Craftconomy.commands.money;
 
 import org.bukkit.ChatColor;
 
 import me.greatman.Craftconomy.AccountHandler;
+import me.greatman.Craftconomy.commands.BaseCommand;
 
 public class CreateCommand extends BaseCommand{
 
 	public CreateCommand() {
 		this.command.add("create");
 		this.requiredParameters.add("Player Name");
-		permFlag = ("iConomy.create");
+		permFlag = ("Craftconomy.create");
 		helpDescription = "Create a account";
 	}
 	

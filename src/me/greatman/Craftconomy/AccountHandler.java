@@ -3,6 +3,7 @@ package me.greatman.Craftconomy;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,7 +16,8 @@ public class AccountHandler {
 
 	public static List<Account> accounts = new ArrayList<Account>();
 	public static Timer thread;
-	
+	public static HashMap<Account,Double> saveAccountArray = new HashMap<Account, Double>();
+	public static HashMap<Account,Double> saveBankArray = new HashMap<Account, Double>();
 	/**
 	 * Auto-save class
 	 * @author greatman
@@ -23,15 +25,31 @@ public class AccountHandler {
 	 */
 	class saveAccounts extends TimerTask{
 		public void run() {
-			for (Account playerAccount : AccountHandler.accounts) {
-				DatabaseHandler.saveAccount(playerAccount.getPlayerName(),playerAccount.getBalance());
+			//TODO: Only if the amount changed somewhere
+			//TODO: Remove player from the list if not online
+			for (Account playerAccount : accounts) {
+				if (saveAccountArray.get(playerAccount) != playerAccount.getBalance() || saveBankArray.get(playerAccount) != playerAccount.getBank().getBalance())
+				{
+					DatabaseHandler.saveAccount(playerAccount);
+					saveAccountArray.remove(playerAccount);
+					saveAccountArray.put(playerAccount, playerAccount.getBalance());
+					saveBankArray.remove(playerAccount);
+					saveBankArray.put(playerAccount, playerAccount.getBalance());
+				}
+				if (playerAccount.getPlayer() == null || !playerAccount.getPlayer().isOnline())	
+				{
+					saveAccountArray.remove(playerAccount);
+					saveBankArray.remove(playerAccount);
+					accounts.remove(playerAccount);
+				}
+					
 			}
 		}
 	}
 	
 	public AccountHandler()
 	{
-		//Initialise the auto 10s saves
+		//Initialize the auto 10s saves
 		thread = new Timer();
 		long time = 10 * 1000L;
 		thread.scheduleAtFixedRate(new saveAccounts(), time, time);
@@ -61,6 +79,8 @@ public class AccountHandler {
 		}
 		Account playerAccount = new Account(player);
 		accounts.add(playerAccount);
+		saveAccountArray.put(playerAccount, playerAccount.getBalance());
+		saveBankArray.put(playerAccount, playerAccount.getBank().getBalance());
 		return playerAccount;
 	}
 	
@@ -79,6 +99,8 @@ public class AccountHandler {
 		
 		Account playerAccount = new Account(player);
 		accounts.add(playerAccount);
+		saveAccountArray.put(playerAccount, playerAccount.getBalance());
+		saveBankArray.put(playerAccount, playerAccount.getBank().getBalance());
 		return playerAccount;
 	}
 	
@@ -127,16 +149,19 @@ public class AccountHandler {
 	}
 
 	public static void delete(Account account) {
-		// TODO Auto-generated method stub
 		DatabaseHandler.delete(account.getPlayerName());
 		accounts.remove(account);
+		saveAccountArray.remove(account);
+		saveBankArray.remove(account);
 	}
 	
 	public static void save(Player player)
 	{
 		Account playerAccount = getAccount(player);
-		DatabaseHandler.saveAccount(player.getName(), playerAccount.getBalance());
+		DatabaseHandler.saveAccount(playerAccount);
 		accounts.remove(playerAccount);
+		saveAccountArray.remove(playerAccount);
+		saveBankArray.remove(playerAccount);
 	}
 	
 }

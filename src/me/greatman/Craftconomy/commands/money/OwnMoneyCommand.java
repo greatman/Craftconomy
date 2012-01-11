@@ -1,23 +1,24 @@
-package me.greatman.Craftconomy.commands;
+package me.greatman.Craftconomy.commands.money;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
-import me.greatman.Craftconomy.utils.Config;
+import me.greatman.Craftconomy.Craftconomy;
+import me.greatman.Craftconomy.commands.BaseCommand;
 
 public class OwnMoneyCommand extends BaseCommand{
 
 	public OwnMoneyCommand() {
 		this.command.add("");
-		permFlag = ("iConomy.holdings");
+		permFlag = ("Craftconomy.holdings");
 		helpDescription = "Check your balance";
 	}
 	
 	public void perform() {
 		
 		Account playerAccount = AccountHandler.getAccount((Player) sender);
-		sendMessage("Balance: " + ChatColor.WHITE + playerAccount.getBalance() + " " + Config.currencyMajorPlural);
+		sendMessage("Balance: " + ChatColor.WHITE + Craftconomy.format(playerAccount.getBalance()));
 	}
 }

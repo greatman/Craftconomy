@@ -7,11 +7,22 @@ import me.greatman.Craftconomy.utils.DatabaseHandler;
 
 import org.bukkit.entity.Player;
 
+/**
+ * Money account handling. Please use AccountHandler to access this class.
+ * @author greatman
+ * @see me.greatman.Craftconomy.AccountHandler
+ */
 public class Account {
 
 	private String playerName;
 	private double balance = Config.defaultHoldings;
 	private Player player = null;
+	private Bank bankAccount;
+	private int playerId;
+	/**
+	 * Load or create a account
+	 * @param user The user we want to load or create a account
+	 */
 	public Account(String user){
 		playerName = user;
 		if (!DatabaseHandler.exists(playerName))
@@ -21,7 +32,14 @@ public class Account {
 		List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(user);
 		if (playerList.size() == 1)
 			player = playerList.get(0);
+		bankAccount = new Bank(this);
+		playerId = DatabaseHandler.getAccountId(playerName);
 	}
+	
+	/**
+	 * Load or create a account
+	 * @param user The user we want to load or create a account
+	 */
 	public Account(Player user){
 		playerName = user.getName();
 		if (!DatabaseHandler.exists(playerName))
@@ -34,20 +52,33 @@ public class Account {
 		player = user;
 	}
 	
+	/**
+	 * Get the player balance.
+	 * @return The balance
+	 */
 	public double getBalance()
 	{
 		return balance;
 	}
 	
+	/**
+	 * Get the player name.
+	 * @return The player name
+	 */
 	public String getPlayerName()
 	{
 		return playerName;
 	}
 	
+	/**
+	 * Get the player Entity.
+	 * @return The player entity
+	 */
 	public Player getPlayer()
 	{
 		return player;
 	}
+	
 	/**
 	 * Add money in the player account
 	 * @param amount The amount we want to add.
@@ -114,5 +145,13 @@ public class Account {
 		if (balance >= amount)
 			result = true;
 		return result;
+	}
+	
+	public Bank getBank(){
+		return bankAccount;
+	}
+	
+	public int getPlayerId() {
+		return playerId;
 	}
 }

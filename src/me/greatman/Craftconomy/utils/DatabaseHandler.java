@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.ILogger;
 
@@ -22,7 +23,7 @@ public class DatabaseHandler {
 			type = databaseType.SQLITE;
 			SQLLibrary.setUrl("jdbc:sqlite:" + Craftconomy.plugin.getDataFolder().getAbsolutePath() + File.separator + "database.db");
 				try{
-					ResultSet queryResult = SQLLibrary.query("SELECT * FROM " + Config.databaseTable, true);
+					ResultSet queryResult = SQLLibrary.query("SELECT * FROM " + Config.databaseMoneyTable, true);
 					if (queryResult != null)
 						ILogger.info("SQLite database loaded!");
 						result = true;
@@ -30,16 +31,21 @@ public class DatabaseHandler {
 				catch (java.sql.SQLException e)
 				{
 					try {
-						SQLLibrary.query("CREATE TABLE " + Config.databaseTable + " (" +
+						SQLLibrary.query("CREATE TABLE " + Config.databaseMoneyTable + " (" +
 								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 								"username VARCHAR(30)  UNIQUE NOT NULL, " +
 								"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
+						SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
+								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+								"username_id INTEGER  UNIQUE NOT NULL, " +
+								"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
+						ILogger.info("SQLite database created!");
+						result = true;
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					ILogger.info("SQLite database created!");
-					result = true;
+					
 				}
 			
 		}
@@ -49,10 +55,15 @@ public class DatabaseHandler {
 			SQLLibrary.setUrl("jdbc:mysql://" + Config.databaseAddress + ":" + Config.databasePort + "/" + Config.databaseDb);
 			SQLLibrary.setUsername(Config.databaseUsername);
 			SQLLibrary.setPassword(Config.databasePassword);
-			if (!SQLLibrary.checkTable(Config.databaseTable))
+			if (!SQLLibrary.checkTable(Config.databaseMoneyTable))
 			{
 					try {
-						SQLLibrary.query("CREATE TABLE `" + Config.databaseTable + "` (" +
+						SQLLibrary.query("CREATE TABLE `" + Config.databaseMoneyTable + "` (" +
+								"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+								"`username` VARCHAR( 30 ) NOT NULL ," +
+								"`balance` DOUBLE NOT NULL " +
+								") ENGINE = InnoDB;",false);
+						SQLLibrary.query("CREATE TABLE `" + Config.databaseBankTable + "` (" +
 								"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
 								"`username` VARCHAR( 30 ) NOT NULL ," +
 								"`balance` DOUBLE NOT NULL " +
@@ -77,9 +88,7 @@ public class DatabaseHandler {
 	{
 		ResultSet result = null;
 		double balance = 0.00;
-		String query = "SELECT balance FROM " + Config.databaseTable + " WHERE username='" + account + "'";
-		if (type == databaseType.SQLITE)
-		{
+		String query = "SELECT balance FROM " + Config.databaseMoneyTable + " WHERE username='" + account + "'";
 			try {
 				result = SQLLibrary.query(query, true);
 				if (result.isBeforeFirst())
@@ -93,20 +102,6 @@ public class DatabaseHandler {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}
-		else
-		{
-			try {
-				result = SQLLibrary.query(query, true);
-				if (result.next())
-				{
-						balance = result.getDouble("balance");
-				}
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
 			
 		return balance;
 	}
@@ -115,7 +110,7 @@ public class DatabaseHandler {
 	{
 		ResultSet result = null;
 		boolean exists = false;
-		String query = "SELECT * FROM " + Config.databaseTable + " WHERE username='" + account + "'";
+		String query = "SELECT * FROM " + Config.databaseMoneyTable + " WHERE username='" + account + "'";
 		try {
 			result = SQLLibrary.query(query,true);
 			if (result.next())
@@ -129,28 +124,36 @@ public class DatabaseHandler {
 	
 	public static void create(String account)
 	{
-		String query = "INSERT INTO " + Config.databaseTable + "(username,balance) VALUES('" + account +"'," + Config.defaultHoldings + ")";
+		String query = "INSERT INTO " + Config.databaseMoneyTable + "(username,balance) VALUES('" + account +"'," + Config.defaultHoldings + ")";
 		try {
 			SQLLibrary.query(query,false);
+			
+			query = "INSERT INTO " + Config.databaseMoneyTable +"(username) VALUES('" + getAccountId(account) + "')";
+			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public static void saveAccount(String account, double balance)
+	public static void saveAccount(Account moneyAccount)
 	{
-		String query = "UPDATE " + Config.databaseTable + " SET balance=" + balance + " WHERE username='" + account + "'";
+		String query = "UPDATE " + Config.databaseMoneyTable + " SET balance=" + moneyAccount.getBalance() + " WHERE username='" + moneyAccount.getPlayerName() + "'";
 		try {
 			SQLLibrary.query(query,false);
+			
+			query = "UPDATE bank SET balance=" + moneyAccount.getBank().getBalance() + " WHERE username_id=" + moneyAccount.getPlayerId();
+			SQLLibrary.query(query,false);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public static void deleteAll() {
-		String query = "DELETE FROM " + Config.databaseTable;
+	public static void deleteAll() 
+	{
+		String query = "DELETE FROM " + Config.databaseMoneyTable;
 		try {
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
@@ -160,8 +163,9 @@ public class DatabaseHandler {
 		
 	}
 
-	public static void deleteAllInitialAccounts() {
-		String query = "DELETE FROM " + Config.databaseTable + " WHERE balance=" + Config.defaultHoldings;
+	public static void deleteAllInitialAccounts() 
+	{
+		String query = "DELETE FROM " + Config.databaseMoneyTable + " WHERE balance=" + Config.defaultHoldings;
 		try {
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
@@ -170,8 +174,9 @@ public class DatabaseHandler {
 		}
 	}
 
-	public static ResultSet getAllInitialAccounts() {
-		String query = "SELECT * FROM " + Config.databaseTable + " WHERE balance=" + Config.defaultHoldings;
+	public static ResultSet getAllInitialAccounts() 
+	{
+		String query = "SELECT * FROM " + Config.databaseMoneyTable + " WHERE balance=" + Config.defaultHoldings;
 		try {
 			return SQLLibrary.query(query, true);
 		} catch (SQLException e) {
@@ -181,13 +186,57 @@ public class DatabaseHandler {
 		return null;
 	}
 
-	public static void delete(String playerName) {
-		String query = "DELETE FROM " + Config.databaseTable + " WHERE username=" + playerName;
+	public static void delete(String playerName) 
+	{
+		String query = "DELETE FROM " + Config.databaseMoneyTable + " WHERE username=" + playerName;
 			try {
 				SQLLibrary.query(query, false);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	}
+	
+	public static int getAccountId(String playerName)
+	{
+		int accountId = 0;
+		try {
+			ResultSet result = SQLLibrary.query("SELECT id FROM " + Config.databaseMoneyTable + " WHERE username=" + playerName, true);
+			if (result != null)
+			{
+				result.next();
+				accountId =  result.getInt("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return accountId;
+	}
+	
+	/*
+	 * 
+	 * Bank functions
+	 */
+	public static double getBankAmount(Account moneyAccount)
+	{
+		ResultSet result = null;
+		double balance = 0.00;
+		String query = "SELECT balance FROM " + Config.databaseBankTable +" WHERE username_id='" + moneyAccount.getPlayerId() + "'";
+			try {
+				result = SQLLibrary.query(query, true);
+				if (result.isBeforeFirst())
+				{
+					result.next();
+					balance = result.getDouble("balance");
+					
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		return balance;
 	}
 }

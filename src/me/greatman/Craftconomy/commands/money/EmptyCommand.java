@@ -1,12 +1,13 @@
-package me.greatman.Craftconomy.commands;
+package me.greatman.Craftconomy.commands.money;
 
 import me.greatman.Craftconomy.AccountHandler;
+import me.greatman.Craftconomy.commands.BaseCommand;
 
 public class EmptyCommand extends BaseCommand{
 	
 	public EmptyCommand() {
 		this.command.add("empty");
-		permFlag = ("iConomy.accounts.empty");
+		permFlag = ("Craftconomy.accounts.empty");
 		helpDescription = "Empty database of accounts";
 	}
 	

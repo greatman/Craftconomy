@@ -12,7 +12,8 @@ public class Config {
 							currencyMinorSingle,
 							currencyMinorPlural,
 							databaseType,
-							databaseTable,
+							databaseMoneyTable,
+							databaseBankTable,
 							databaseUsername,
 							databasePassword,
 							databaseAddress,
@@ -59,7 +60,8 @@ public class Config {
 		interestPercent = plugin.getConfig().getDouble("System.Interest.Amount.Percent");
 		
 		databaseType = plugin.getConfig().getString("System.Database.Type");
-		databaseTable = plugin.getConfig().getString("System.Database.Table");
+		databaseMoneyTable = plugin.getConfig().getString("System.Database.MoneyTable");
+		databaseBankTable = plugin.getConfig().getString("System.Database.BankTable");
 		databaseAddress = plugin.getConfig().getString("System.Database.Address");
 		databasePort = plugin.getConfig().getString("System.Database.Port");
 		databaseUsername = plugin.getConfig().getString("System.Database.Username");

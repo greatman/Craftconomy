@@ -6,7 +6,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class iConomyPlayerListener extends PlayerListener{
+public class CCPlayerListener extends PlayerListener{
 
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{

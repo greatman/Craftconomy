@@ -1,7 +1,8 @@
-package me.greatman.Craftconomy.commands;
+package me.greatman.Craftconomy.commands.money;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
+import me.greatman.Craftconomy.commands.BaseCommand;
 
 import org.bukkit.ChatColor;
 
@@ -10,7 +11,7 @@ public class RemoveCommand extends BaseCommand{
 	public RemoveCommand() {
 		this.command.add("set");
 		this.requiredParameters.add("Player Name");
-		permFlag = ("iConomy.accounts.remove");
+		permFlag = ("Craftconomy.accounts.remove");
 		helpDescription = "Remove an account.";
 	}
 	

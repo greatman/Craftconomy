@@ -88,8 +88,11 @@ System:
     #  - These will attempt to create & connect to SQLite
     Type: 'sqlite'
 
-    # This controls the database name, by default it is iConomy
-    Table: 'Craftconomy'
+    # The table used for the money
+    MoneyTable: 'Craftconomy'
+
+    # The table used for the bank
+    BankTable: 'Bank'
 
     #Modify if using MySQL
     Address: 'localhost'

@@ -1,19 +1,20 @@
-package me.greatman.Craftconomy.commands;
+package me.greatman.Craftconomy.commands.money;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
-import me.greatman.Craftconomy.utils.Config;
+import me.greatman.Craftconomy.Craftconomy;
+import me.greatman.Craftconomy.commands.BaseCommand;
 
 import org.bukkit.ChatColor;
 
-public class TakeCommand extends BaseCommand{
+public class GiveCommand extends BaseCommand{
 	
-	public TakeCommand() {
-		this.command.add("take");
+	public GiveCommand() {
+		this.command.add("give");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
-		permFlag = ("iConomy.accounts.take");
-		helpDescription = "Take money";
+		permFlag = ("Craftconomy.accounts.give");
+		helpDescription = "Give money";
 	}
 	
 	public void perform() {
@@ -29,9 +30,9 @@ public class TakeCommand extends BaseCommand{
 				sendMessage("Number excepted as the amount. String received instead");
 				return;
 			}
-			receiverAccount.substractMoney(amount);
-			sendMessage("You removed " + amount + " " + Config.currencyMajorPlural + " from " + receiverAccount.getPlayerName() + " account!");
-			sendMessage(receiverAccount.getPlayer(),  "" + ChatColor.RED + amount + " " + Config.currencyMajorPlural + " has been removed from your account!");
+			receiverAccount.addMoney(amount);
+			sendMessage("You gave " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
+			sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + "!");
 		}
 		else
 			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + " does not exists!");
