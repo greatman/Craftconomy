@@ -32,6 +32,8 @@ public class BankWithdrawCommand extends BaseCommand{
 					receiverAccount.addMoney(amount);
 					sendMessage("You put " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " into your pocket!");
 				}
+				else
+					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + "!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");

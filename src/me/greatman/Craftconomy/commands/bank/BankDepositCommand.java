@@ -31,6 +31,8 @@ public class BankDepositCommand extends BaseCommand{
 					receiverAccount.getBank().addMoney(amount);
 					sendMessage("You put " + ChatColor.WHITE + Craftconomy.format(amount) + " into your bank account!");
 				}
+				else
+					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + "!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
