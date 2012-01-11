@@ -182,13 +182,11 @@ public class DatabaseHandler {
 			else
 			{
 				List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(account);
-				ILogger.info(playerList.size() + "");
 				if (playerList.size() == 1)
 					exists = true;
 			}
 		} catch (SQLException e) {
 			List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(account);
-			ILogger.info(playerList.size() + "");
 			if (playerList.size() == 1)
 				exists = true;
 		}
