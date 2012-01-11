@@ -26,7 +26,7 @@ public class BankGiveCommand extends BaseCommand{
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
 				receiverAccount.getBank().addMoney(amount);
-				sendMessage("You gave " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName() + " bank account!");
+				sendMessage("You gave " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " bank account!");
 				sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + " in your bank account!!");
 			}
 			else

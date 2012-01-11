@@ -1,5 +1,7 @@
 package me.greatman.Craftconomy.commands.money;
 
+import org.bukkit.ChatColor;
+
 import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.commands.BaseCommand;
 
@@ -13,7 +15,7 @@ public class EmptyCommand extends BaseCommand{
 	
 	public void perform() {
 		AccountHandler.deleteAllAccounts();
-		sendMessage("All accounts has been deleted.");
+		sendMessage(ChatColor.RED + "All accounts has been deleted.");
 	}
 	
 

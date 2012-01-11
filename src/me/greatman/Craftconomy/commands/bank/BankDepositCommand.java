@@ -29,14 +29,12 @@ public class BankDepositCommand extends BaseCommand{
 				{
 					receiverAccount.substractMoney(amount);
 					receiverAccount.getBank().addMoney(amount);
-					sendMessage("You put " + Craftconomy.format(amount) + " into your bank account!");
+					sendMessage("You put " + ChatColor.WHITE + Craftconomy.format(amount) + " into your bank account!");
 				}
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 			
 		}
-		else
-			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exists!");
 	}
 }

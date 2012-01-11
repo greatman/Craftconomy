@@ -26,8 +26,8 @@ public class TakeCommand extends BaseCommand{
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
 				receiverAccount.substractMoney(amount);
-				sendMessage("You removed " + Craftconomy.format(amount) + " from " + receiverAccount.getPlayerName() + " account!");
-				sendMessage(receiverAccount.getPlayer(),  "" + ChatColor.RED + Craftconomy.format(amount) + " has been removed from your account!");
+				sendMessage("You removed " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " from " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account!");
+				sendMessage(receiverAccount.getPlayer(),  ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.RED + " has been removed from your account!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");

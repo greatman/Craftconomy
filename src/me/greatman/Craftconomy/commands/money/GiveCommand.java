@@ -26,8 +26,8 @@ public class GiveCommand extends BaseCommand{
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
 				receiverAccount.addMoney(amount);
-				sendMessage("You gave " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
-				sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + "!");
+				sendMessage("You gave " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(), "You received " + ChatColor.WHITE + Craftconomy.format(amount) + "!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");

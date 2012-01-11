@@ -27,8 +27,8 @@ public class BankSetCommand extends BaseCommand{
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
 				receiverAccount.getBank().setBalance(amount);
-				sendMessage("You set "+ receiverAccount.getPlayerName() + " bank account to " + Craftconomy.format(amount) + "!");
-				sendMessage(receiverAccount.getPlayer(),  "Your bank account has been set to " + Craftconomy.format(amount) + "!");
+				sendMessage("You set " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " bank account to " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + "!");
+				sendMessage(receiverAccount.getPlayer(),  "Your bank account has been set to " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + "!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");

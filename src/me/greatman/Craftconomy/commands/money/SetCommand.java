@@ -26,8 +26,8 @@ public class SetCommand extends BaseCommand{
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
 				receiverAccount.setBalance(amount);
-				sendMessage("You set "+ receiverAccount.getPlayerName() + " account to " + Craftconomy.format(amount) + "!");
-				sendMessage(receiverAccount.getPlayer(),  "Your account has been set to " + Craftconomy.format(amount) + "!");
+				sendMessage("You set " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account to " + ChatColor.WHITE + Craftconomy.format(amount) + "!");
+				sendMessage(receiverAccount.getPlayer(),  "Your account has been set to " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + "!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");

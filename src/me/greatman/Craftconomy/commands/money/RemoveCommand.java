@@ -20,7 +20,7 @@ public class RemoveCommand extends BaseCommand{
 		{
 			Account receiverAccount = AccountHandler.getAccount(this.parameters.get(0));
 			AccountHandler.delete(receiverAccount);
-			sendMessage(ChatColor.RED + receiverAccount.getPlayerName() + " account has been deleted!");
+			sendMessage(ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.RED + " account has been deleted!");
 			sendMessage(receiverAccount.getPlayer(),  "Your account has been deleted!");
 		}
 		else

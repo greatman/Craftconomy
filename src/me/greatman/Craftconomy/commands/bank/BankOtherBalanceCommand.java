@@ -20,7 +20,7 @@ public class BankOtherBalanceCommand extends BaseCommand{
 		if (AccountHandler.exists(parameters.get(0)))
 		{
 			Account playerAccount = AccountHandler.getAccount(parameters.get(0));
-			sendMessage(playerAccount.getPlayerName() + " bank account: " + Craftconomy.format(playerAccount.getBank().getBalance()));
+			sendMessage(ChatColor.WHITE + playerAccount.getPlayerName() + ChatColor.GREEN + " bank account: " + ChatColor.WHITE + Craftconomy.format(playerAccount.getBank().getBalance()));
 		}
 		else
 			sendMessage(ChatColor.RED + "This account doesn't exists!");

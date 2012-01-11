@@ -27,10 +27,15 @@ public class PayCommand extends BaseCommand{
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
+				if (!senderAccount.hasEnough(amount))
+				{
+					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + "!");
+					return;
+				}
 				senderAccount.substractMoney(amount);
 				receiverAccount.addMoney(amount);
-				sendMessage("You sended " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
-				sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + " from " + senderAccount.getPlayerName());
+				sendMessage("You sended " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(), "You received " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " from " + ChatColor.WHITE + senderAccount.getPlayerName());
 			}
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
