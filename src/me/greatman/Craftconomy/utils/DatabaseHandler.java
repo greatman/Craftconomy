@@ -3,6 +3,9 @@ package me.greatman.Craftconomy.utils;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
+import org.bukkit.entity.Player;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
@@ -176,9 +179,18 @@ public class DatabaseHandler {
 			result = SQLLibrary.query(query,true);
 			if (result.next())
 				exists = true;
+			else
+			{
+				List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(account);
+				ILogger.info(playerList.size() + "");
+				if (playerList.size() == 1)
+					exists = true;
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(account);
+			ILogger.info(playerList.size() + "");
+			if (playerList.size() == 1)
+				exists = true;
 		}
 		return exists;
 	}
@@ -282,7 +294,7 @@ public class DatabaseHandler {
 
 	public static void delete(String playerName) 
 	{
-		String query = "DELETE FROM " + Config.databaseMoneyTable + " WHERE username=" + playerName;
+		String query = "DELETE FROM " + Config.databaseMoneyTable + " WHERE username='" + playerName + "'";
 			try {
 				SQLLibrary.query(query, false);
 			} catch (SQLException e) {

@@ -36,6 +36,6 @@ public class PayCommand extends BaseCommand{
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 		}
 		else
-			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + " does not exists!");
+			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exists!");
 	}
 }
