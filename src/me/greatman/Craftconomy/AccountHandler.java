@@ -26,6 +26,7 @@ public class AccountHandler {
 	class saveAccounts extends TimerTask{
 		public void run() {
 			List<Account> accountsToRemove = new ArrayList<Account>();
+			DatabaseHandler.getWaitingSaveAccount();
 			for (Account playerAccount : accounts) {
 				if (saveAccountArray.get(playerAccount) != playerAccount.getBalance() || saveBankArray.get(playerAccount) != playerAccount.getBank().getBalance())
 				{
@@ -92,6 +93,14 @@ public class AccountHandler {
 	 * @param player The player we want to get the account
 	 * @return The Account
 	 */
+	public static Account getAccount(int databaseId)
+	{
+		if (DatabaseHandler.accountIdExists(databaseId))
+		{
+			return getAccount(DatabaseHandler.getAccountNameById(databaseId));
+		}
+		return null;
+	}
 	public static Account getAccount(Player player)
 	{
 		for (Account playerAccount : accounts)

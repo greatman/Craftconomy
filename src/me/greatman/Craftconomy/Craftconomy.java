@@ -1,5 +1,6 @@
 package me.greatman.Craftconomy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +11,7 @@ import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
 import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
+import me.greatman.Craftconomy.utils.Metrics;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,6 +34,7 @@ public class Craftconomy extends JavaPlugin{
 	public void onEnable() {
 		name = this.getDescription().getName();
 		version = this.getDescription().getVersion();
+		ILogger.info("Starting");
 		Config.load(this);
 		plugin = this;
 		if (!DatabaseHandler.load(this))
@@ -43,6 +46,17 @@ public class Craftconomy extends JavaPlugin{
 		
 		new AccountHandler();
 		
+		//Enable the plugin stats Metrics
+		try {
+		    // create a new metrics object
+		    Metrics metrics = new Metrics();
+
+		    // 'this' in this context is the Plugin object
+		    metrics.beginMeasuringPlugin(this);
+		} catch (IOException e) {
+		    ILogger.error("A error occured while starting the plugin stats");
+		}
+		//TODO: Help commands
 		//Insert all /money commands
 		//commands.add(new iConomyHelpCommand());
 		commands.add(new PayCommand());
@@ -72,6 +86,7 @@ public class Craftconomy extends JavaPlugin{
 			for (int i = 0; i < playerList.length; i++)
 				AccountHandler.getAccount(playerList[i]);
 		}
+		ILogger.info("Started!");
 		
 	}
 	

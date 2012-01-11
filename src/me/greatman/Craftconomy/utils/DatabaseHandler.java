@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import me.greatman.Craftconomy.Account;
+import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.ILogger;
 
@@ -17,37 +18,63 @@ public class DatabaseHandler {
 	public static databaseType type = null;
 	public static boolean load(Craftconomy thePlugin)
 	{
-		boolean result = false;
 		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
 		{
 			type = databaseType.SQLITE;
 			SQLLibrary.setUrl("jdbc:sqlite:" + Craftconomy.plugin.getDataFolder().getAbsolutePath() + File.separator + "database.db");
-				try{
-					ResultSet queryResult = SQLLibrary.query("SELECT * FROM " + Config.databaseMoneyTable, true);
-					if (queryResult != null)
-						ILogger.info("SQLite database loaded!");
-						result = true;
+			if (!SQLLibrary.checkTable(Config.databaseMoneyTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseMoneyTable + " (" +
+							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+							"username VARCHAR(30)  UNIQUE NOT NULL, " +
+							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
+					ILogger.info(Config.databaseMoneyTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
 				}
-				catch (java.sql.SQLException e)
-				{
-					try {
-						SQLLibrary.query("CREATE TABLE " + Config.databaseMoneyTable + " (" +
-								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
-								"username VARCHAR(30)  UNIQUE NOT NULL, " +
-								"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
-						SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
-								"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
-								"username_id INTEGER  UNIQUE NOT NULL, " +
-								"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
-						ILogger.info("SQLite database created!");
-						result = true;
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
+			}
+			if (!SQLLibrary.checkTable(Config.databaseBankTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
+							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+							"username_id INTEGER  UNIQUE NOT NULL, " +
+							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
+					ILogger.info(Config.databaseBankTable + " created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
 				}
-			
+			}
+			if (!SQLLibrary.checkTable(Config.databaseMoneyTable + "_waiting"))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseMoneyTable + "_waiting (" +
+							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+							"username_id INTEGER NOT NULL, " +
+							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
+					ILogger.info(Config.databaseBankTable + " created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
+			}
+			if (!SQLLibrary.checkTable(Config.databaseBankTable + "_waiting"))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + "_waiting (" +
+							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+							"username_id INTEGER NOT NULL, " +
+							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
+					ILogger.info(Config.databaseBankTable + " created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
+			}
+			ILogger.info("SQLite database loaded!");
 		}
 		else if (Config.databaseType.equalsIgnoreCase("mysql"))
 		{
@@ -63,25 +90,58 @@ public class DatabaseHandler {
 								"`username` VARCHAR( 30 ) NOT NULL ," +
 								"`balance` DOUBLE NOT NULL " +
 								") ENGINE = InnoDB;",false);
-						SQLLibrary.query("CREATE TABLE `" + Config.databaseBankTable + "` (" +
-								"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
-								"`username_id` INT NOT NULL ," +
-								"`balance` DOUBLE NOT NULL " +
-								") ENGINE = InnoDB;",false);
+						ILogger.info(Config.databaseMoneyTable + " table created!");
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						ILogger.error("Unable to create the " + Config.databaseMoneyTable + " table!");
+						return false;
 					}
-					ILogger.info("MySQL table created!");
-					result = true;
 			}
-			else
+			if (!SQLLibrary.checkTable(Config.databaseBankTable))
 			{
-				result = true;
-				ILogger.info("MySQL table loaded!");
+				try {
+					SQLLibrary.query("CREATE TABLE `" + Config.databaseBankTable + "` (" +
+							"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+							"`username_id` INT NOT NULL ," +
+							"`balance` DOUBLE NOT NULL " +
+							") ENGINE = InnoDB;",false);
+					ILogger.info(Config.databaseBankTable + " created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
 			}
+			if (!SQLLibrary.checkTable(Config.databaseMoneyTable + "_waiting"))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE `" + Config.databaseMoneyTable + "_waiting" + "` (" +
+							"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+							"`username_id` INT NOT NULL ," +
+							"`balance` DOUBLE NOT NULL " +
+							") ENGINE = InnoDB;",false);
+					ILogger.info(Config.databaseBankTable + " created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
+			}
+			if (!SQLLibrary.checkTable(Config.databaseBankTable + "_waiting"))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE `" + Config.databaseBankTable + "_waiting` (" +
+							"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+							"`username_id` INT NOT NULL ," +
+							"`balance` DOUBLE NOT NULL " +
+							") ENGINE = InnoDB;",false);
+					ILogger.info(Config.databaseBankTable + " created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
+			}
+			ILogger.info("MySQL table loaded!");
+			return true;
 		}
-		return result;
+		return false;
 	}
 	
 	public static double getAccountAmount(String account)
@@ -128,16 +188,49 @@ public class DatabaseHandler {
 		try {
 			SQLLibrary.query(query,false);
 			
-			query = "INSERT INTO " + Config.databaseBankTable +"(username_id) VALUES('" + getAccountId(account) + "')";
+			query = "INSERT INTO " + Config.databaseBankTable +"(username_id,balance) VALUES('" + getAccountId(account) + "', 0.00)";
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+	public static void getWaitingSaveAccount()
+	{
+		String query = "SELECT * FROM " + Config.databaseMoneyTable + "_waiting";
+		ResultSet result;
+		try {
+			result = SQLLibrary.query(query, true);
+			if (result.next())
+			{
+				do
+				{
+					Account account = AccountHandler.getAccount(result.getInt("username_id"));
+					account.addMoney(result.getDouble("balance"));
+				}
+				while(result.next());
+			}
+			SQLLibrary.query("TRUNCATE TABLE " + Config.databaseMoneyTable + "_waiting", false);
+			query = "SELECT * FROM " + Config.databaseBankTable + "_waiting";
+			result = SQLLibrary.query(query, true);
+			if (result.next())
+			{
+				do
+				{
+					Account account = AccountHandler.getAccount(result.getInt("username_id"));
+					account.getBank().addMoney(result.getDouble("balance"));
+				}
+				while(result.next());
+			}
+			SQLLibrary.query("TRUNCATE TABLE " + Config.databaseBankTable + "_waiting", false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public static void saveAccount(Account moneyAccount)
 	{
+		
 		String query = "UPDATE " + Config.databaseMoneyTable + " SET balance=" + moneyAccount.getBalance() + " WHERE username='" + moneyAccount.getPlayerName() + "'";
 		try {
 			SQLLibrary.query(query,false);
@@ -212,6 +305,36 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		}
 		return accountId;
+	}
+	
+	public static boolean accountIdExists(int id)
+	{
+		try{
+			ResultSet result = SQLLibrary.query("SELECT username FROM " + Config.databaseMoneyTable + " WHERE id=" + id, true);
+			if (result != null)
+				return true;
+			else
+				return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return true;
+		}
+	}
+	public static String getAccountNameById(int id)
+	{
+		String accountName = null;
+		try{
+			ResultSet result = SQLLibrary.query("SELECT username FROM " + Config.databaseMoneyTable + " WHERE id=" + id, true);
+			if (result != null)
+			{
+				result.next();
+				accountName =  result.getString("username");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+		}
+		return accountName;
 	}
 	
 	/*
