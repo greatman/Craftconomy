@@ -42,7 +42,7 @@ public class DatabaseHandler {
 							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 							"username_id INTEGER  UNIQUE NOT NULL, " +
 							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
-					ILogger.info(Config.databaseBankTable + " created!");
+					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
 					return false;
@@ -55,7 +55,7 @@ public class DatabaseHandler {
 							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 							"username_id INTEGER NOT NULL, " +
 							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
-					ILogger.info(Config.databaseBankTable + " created!");
+					ILogger.info(Config.databaseMoneyTable + "_waiting table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
 					return false;
@@ -68,7 +68,7 @@ public class DatabaseHandler {
 							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 							"username_id INTEGER NOT NULL, " +
 							"balance DOUBLE DEFAULT '0.00' NOT NULL)", false);
-					ILogger.info(Config.databaseBankTable + " created!");
+					ILogger.info(Config.databaseBankTable + "_waiting table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
 					return false;
@@ -105,7 +105,7 @@ public class DatabaseHandler {
 							"`username_id` INT NOT NULL ," +
 							"`balance` DOUBLE NOT NULL " +
 							") ENGINE = InnoDB;",false);
-					ILogger.info(Config.databaseBankTable + " created!");
+					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
 					return false;
@@ -119,9 +119,9 @@ public class DatabaseHandler {
 							"`username_id` INT NOT NULL ," +
 							"`balance` DOUBLE NOT NULL " +
 							") ENGINE = InnoDB;",false);
-					ILogger.info(Config.databaseBankTable + " created!");
+					ILogger.info(Config.databaseMoneyTable + "_waiting table created!");
 				} catch (SQLException e) {
-					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					ILogger.error("Unable to create the " + Config.databaseMoneyTable + "_waiting table!");
 					return false;
 				}
 			}
@@ -133,9 +133,9 @@ public class DatabaseHandler {
 							"`username_id` INT NOT NULL ," +
 							"`balance` DOUBLE NOT NULL " +
 							") ENGINE = InnoDB;",false);
-					ILogger.info(Config.databaseBankTable + " created!");
+					ILogger.info(Config.databaseBankTable + "_waiting created!");
 				} catch (SQLException e) {
-					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					ILogger.error("Unable to create the " + Config.databaseBankTable + "_waiting table!");
 					return false;
 				}
 			}

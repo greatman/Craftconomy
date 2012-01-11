@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import me.greatman.Craftconomy.ILogger;
+
 import com.sun.rowset.CachedRowSetImpl;
 
 @SuppressWarnings("restriction")
@@ -74,14 +76,12 @@ public class SQLLibrary {
 			if (query != null)
 				result = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ILogger.info("Table " + table + " does not exist!");
 		}
 		
 		return result;
 	}
 	public static void truncateTable(String string) {
-		// TODO Auto-generated method stub
 		try {
 			
 			if (DatabaseHandler.type == DatabaseHandler.databaseType.MYSQL)
@@ -90,7 +90,6 @@ public class SQLLibrary {
 				query("DELETE FROM " + string, false);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
