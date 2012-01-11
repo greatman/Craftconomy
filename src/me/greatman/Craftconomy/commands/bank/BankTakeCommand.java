@@ -13,7 +13,7 @@ public class BankTakeCommand extends BaseCommand{
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
 		permFlag = ("Craftconomy.banks.take");
-		helpDescription = "Take money";
+		helpDescription = "Take money from a bank account";
 	}
 	
 	public void perform() {
@@ -28,6 +28,8 @@ public class BankTakeCommand extends BaseCommand{
 				sendMessage("You removed " + Craftconomy.format(amount) + " from " + receiverAccount.getPlayerName() + " bank account!");
 				sendMessage(receiverAccount.getPlayer(),  "" + ChatColor.RED + Craftconomy.format(amount) + " has been removed from your bank account!");
 			}
+			else
+				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 		}
 		else
 			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + " does not exists!");

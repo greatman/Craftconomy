@@ -13,7 +13,7 @@ public class BankOtherBalanceCommand extends BaseCommand{
 	public BankOtherBalanceCommand() {
 		permFlag = ("Craftconomy.bank.holdings.others");
 		this.requiredParameters.add("Player Name");
-		helpDescription = "Check others balance";
+		helpDescription = "Check others bank balance";
 	}
 	
 	public void perform() {

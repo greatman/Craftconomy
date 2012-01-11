@@ -25,8 +25,7 @@ public class AccountHandler {
 	 */
 	class saveAccounts extends TimerTask{
 		public void run() {
-			//TODO: Only if the amount changed somewhere
-			//TODO: Remove player from the list if not online
+			List<Account> accountsToRemove = new ArrayList<Account>();
 			for (Account playerAccount : accounts) {
 				if (saveAccountArray.get(playerAccount) != playerAccount.getBalance() || saveBankArray.get(playerAccount) != playerAccount.getBank().getBalance())
 				{
@@ -34,15 +33,19 @@ public class AccountHandler {
 					saveAccountArray.remove(playerAccount);
 					saveAccountArray.put(playerAccount, playerAccount.getBalance());
 					saveBankArray.remove(playerAccount);
-					saveBankArray.put(playerAccount, playerAccount.getBalance());
+					saveBankArray.put(playerAccount, playerAccount.getBank().getBalance());
 				}
 				if (playerAccount.getPlayer() == null || !playerAccount.getPlayer().isOnline())	
 				{
 					saveAccountArray.remove(playerAccount);
 					saveBankArray.remove(playerAccount);
-					accounts.remove(playerAccount);
+					accountsToRemove.add(playerAccount);
 				}
 					
+			}
+			for (Account playerAccount : accountsToRemove)
+			{
+				accounts.remove(playerAccount);
 			}
 		}
 	}
@@ -141,7 +144,6 @@ public class AccountHandler {
 			}
 			DatabaseHandler.deleteAllInitialAccounts();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

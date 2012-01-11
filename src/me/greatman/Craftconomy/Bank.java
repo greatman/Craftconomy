@@ -41,6 +41,12 @@ public class Bank {
 		return balance;
 	}
 	
+	public double setBalance(double amount)
+	{
+		balance = amount;
+		return balance;
+	}
+	
 	public double getBalance()
 	{
 		return balance;

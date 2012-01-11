@@ -32,8 +32,9 @@ public class Account {
 		List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(user);
 		if (playerList.size() == 1)
 			player = playerList.get(0);
-		bankAccount = new Bank(this);
 		playerId = DatabaseHandler.getAccountId(playerName);
+		bankAccount = new Bank(this);
+		
 	}
 	
 	/**
@@ -48,7 +49,8 @@ public class Account {
 		{
 			balance = DatabaseHandler.getAccountAmount(playerName);
 		}
-			
+		playerId = DatabaseHandler.getAccountId(playerName);
+		bankAccount = new Bank(this);
 		player = user;
 	}
 	

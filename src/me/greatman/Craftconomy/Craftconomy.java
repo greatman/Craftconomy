@@ -60,6 +60,8 @@ public class Craftconomy extends JavaPlugin{
 		bankCommands.add(new BankOwnBalanceCommand());
 		bankCommands.add(new BankOtherBalanceCommand());
 		bankCommands.add(new BankSetCommand());
+		bankCommands.add(new BankDepositCommand());
+		bankCommands.add(new BankWithdrawCommand());
 		
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
@@ -104,9 +106,9 @@ public class Craftconomy extends JavaPlugin{
 			return;
 		}
 		String commandName = parameters.get(0);
-		for (BaseCommand iConomyCommand : this.commands) {
-			if (iConomyCommand.getCommands().contains(commandName)) {
-				iConomyCommand.execute(sender, parameters);
+		for (BaseCommand CraftconomyCommand : this.commands) {
+			if (CraftconomyCommand.getCommands().contains(commandName)) {
+				CraftconomyCommand.execute(sender, parameters);
 				return;
 			}
 		}
@@ -122,9 +124,9 @@ public class Craftconomy extends JavaPlugin{
 			return;
 		}
 		String commandName = parameters.get(0);
-		for (BaseCommand iConomyCommand : this.commands) {
-			if (iConomyCommand.getCommands().contains(commandName)) {
-				iConomyCommand.execute(sender, parameters);
+		for (BaseCommand CraftconomyCommand : this.bankCommands) {
+			if (CraftconomyCommand.getCommands().contains(commandName)) {
+				CraftconomyCommand.execute(sender, parameters);
 				return;
 			}
 		}

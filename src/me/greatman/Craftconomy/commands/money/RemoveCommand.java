@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 public class RemoveCommand extends BaseCommand{
 	
 	public RemoveCommand() {
-		this.command.add("set");
+		this.command.add("remove");
 		this.requiredParameters.add("Player Name");
 		permFlag = ("Craftconomy.accounts.remove");
 		helpDescription = "Remove an account.";

@@ -128,7 +128,7 @@ public class DatabaseHandler {
 		try {
 			SQLLibrary.query(query,false);
 			
-			query = "INSERT INTO " + Config.databaseMoneyTable +"(username) VALUES('" + getAccountId(account) + "')";
+			query = "INSERT INTO " + Config.databaseBankTable +"(username_id) VALUES('" + getAccountId(account) + "')";
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -201,7 +201,7 @@ public class DatabaseHandler {
 	{
 		int accountId = 0;
 		try {
-			ResultSet result = SQLLibrary.query("SELECT id FROM " + Config.databaseMoneyTable + " WHERE username=" + playerName, true);
+			ResultSet result = SQLLibrary.query("SELECT id FROM " + Config.databaseMoneyTable + " WHERE username='" + playerName + "'", true);
 			if (result != null)
 			{
 				result.next();

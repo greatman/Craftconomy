@@ -24,23 +24,16 @@ public class PayCommand extends BaseCommand{
 		{
 			Account senderAccount = AccountHandler.getAccount((Player) sender);
 			Account receiverAccount = AccountHandler.getAccount(this.parameters.get(0));
-			try{
+			if (Craftconomy.isValidAmount(this.parameters.get(1)))
+			{
 				amount = Double.parseDouble(this.parameters.get(1));
+				senderAccount.substractMoney(amount);
+				receiverAccount.addMoney(amount);
+				sendMessage("You sended " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + " from " + senderAccount.getPlayerName());
 			}
-			catch (NumberFormatException e)
-			{
-				sendMessage("Number excepted as the amount. String received instead");
-				return;
-			}
-			if (senderAccount.getBalance() < amount)
-			{
-				sendMessage(ChatColor.RED + "You don't have " + Craftconomy.format(amount));
-				return;
-			}
-			senderAccount.substractMoney(amount);
-			receiverAccount.addMoney(amount);
-			sendMessage("You sended " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
-			sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + " from " + senderAccount.getPlayerName());
+			else
+				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 		}
 		else
 			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + " does not exists!");

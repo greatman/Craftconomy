@@ -14,7 +14,7 @@ public class BankGiveCommand extends BaseCommand{
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
 		permFlag = ("Craftconomy.banks.give");
-		helpDescription = "Give money";
+		helpDescription = "Give money in someone bank account";
 	}
 	
 	public void perform() {

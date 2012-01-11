@@ -6,7 +6,8 @@ commands:
     money:
       aliases: [craftconomy]
       description: Check / Distribute currency.
-      
+    bank:
+      description: Check /Distribute money on a Bank.
 permissions:
     Craftconomy.*:
         default: op
@@ -21,10 +22,34 @@ permissions:
             Craftconomy.accounts.give: true
             Craftconomy.accounts.take: true
             Craftconomy.accounts.set: true
-            Craftconomy.accounts.status: true
-            Craftconomy.accounts.status.set: true
             Craftconomy.accounts.purge: true
             Craftconomy.accounts.empty: true
+            Craftconomy.banks.give: true
+            Craftconomy.banks.take: true
+            Craftconomy.banks.set: true
+            Craftconomy.banks.holdings: true
+            Craftconomy.banks.holdings.others: true
+            Craftconomy.bank.deposit: true
+            Craftconomy.bank.withdraw: true
+    Craftconomy.banks.*:
+        description: Give access only to higher level commands for bank
+        children:
+          Craftconomy.banks.give: true
+          Craftconomy.banks.take: true
+          Craftconomy.banks.set: true
+    Craftconomy.bankuser:
+        description: Give access to the player bank account commands
+        children:
+          Craftconomy.banks.holdings: true
+          Craftconomy.bank.deposit: true
+          Craftconomy.bank.withdraw: true
+    Craftconomy.bankplus:
+        description: Give access to the user plus only commands
+        children:
+          Craftconomy.banks.holdings: true
+          Craftconomy.banks.holdings.others: true
+          Craftconomy.bank.deposit: true
+          Craftconomy.bank.withdraw: true
     Craftconomy.accounts.*:
         description: Gives access only to higher level commands
         children:
@@ -33,8 +58,6 @@ permissions:
             Craftconomy.accounts.give: true
             Craftconomy.accounts.take: true
             Craftconomy.accounts.set: true
-            Craftconomy.accounts.status: true
-            Craftconomy.accounts.status.set: true
             Craftconomy.accounts.purge: true
             Craftconomy.accounts.empty: true
     Craftconomy.plus:
@@ -63,56 +86,44 @@ permissions:
         default: op
         command: "/money <account-name>"
         examples:
-          - "/money Nijikokun"
+          - "/money greatman"
     Craftconomy.payment:
         description: Send money to others.
         default: op
         command: "/money pay <account-name> <amount>"
         examples:
-          - "/money pay Nijikokun 30"
+          - "/money pay greatman 30"
     Craftconomy.accounts.create:
         description: Create an account.
         default: op
         command: "/money create <account-name> [amount]"
         examples:
-          - "/money create Nijikokun"
-          - "/money create Nijikokun 30"
+          - "/money create greatman"
+          - "/money create greatman 30"
     Craftconomy.accounts.remove:
         description: Remove an existing account
         default: op
         command: "/money remove <account-name>"
         examples:
-          - "/money remove Nijikokun"
+          - "/money remove greatman"
     Craftconomy.accounts.give:
         description: Give account a certain amount
         default: op
         command: "/money give <account-name> <amount>"
         examples:
-          - "/money give Nijikokun 30"
+          - "/money give greatman 30"
     Craftconomy.accounts.take:
         description: Take a certain amount from an account
         default: op
         command: "/money take <account-name> <amount>"
         examples:
-          - "/money take Nijikokun 30"
+          - "/money take greatman 30"
     Craftconomy.accounts.set:
         description: Set an account's balance to this amount
         default: op
         command: "/money set <account-name> <amount>"
         examples:
-          - "/money set Nijikokun 30"
-    Craftconomy.accounts.status:
-        description: Check to see the status of an account (Visible, Hidden, Etc)
-        default: op
-        command: "/money status <account-name>"
-        examples:
-          - "/money status Nijikokun"
-    Craftconomy.accounts.status.set:
-        description: Set the status of an account (Visible (1), Hidden (0))
-        default: op
-        command: "/money status <account-name>"
-        examples:
-          - "/money status Nijikokun"
+          - "/money set greatman 30"
     Craftconomy.accounts.purge:
         description: Purge all accounts with default creation value.
         default: op
@@ -121,3 +132,31 @@ permissions:
         description: Empty / Drop entire database of accounts.
         default: op
         command: "/money empty"
+    Craftconomy.banks.give:
+        description: Give money in a bank account
+        default: op
+        command: "/bank give <account-name> <amount>"
+    Craftconomy.banks.take:
+        description: Take money in a bank account
+        default: op
+        command: "/bank take <account-name> <amount>"
+    Craftconomy.banks.set:
+        description: Set the bank account to a certain amount
+        default: op
+        command: "/bank set <account-name> <amount>"
+    Craftconomy.banks.holdings:
+        description: Check your bank holding
+        default: op
+        command: "/bank"
+    Craftconomy.banks.holdings.others:
+        description: Check someone else bank holdings
+        default: op
+        command: "/bank <account-name>"
+    Craftconomy.bank.deposit:
+        description: Deposit money in your bank account
+        default: op
+        command: "/bank deposit <amount>"
+    Craftconomy.bank.withdraw:
+        description: Withdraw money from your bank account
+        default: op
+        command: "/bank withdraw <amount>"

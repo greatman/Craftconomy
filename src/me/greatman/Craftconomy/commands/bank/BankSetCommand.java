@@ -14,7 +14,7 @@ public class BankSetCommand extends BaseCommand{
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
 		permFlag = ("Craftconomy.banks.set");
-		helpDescription = "Set account balance";
+		helpDescription = "Set bank account balance";
 	}
 	
 	public void perform() {
@@ -26,7 +26,7 @@ public class BankSetCommand extends BaseCommand{
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
-				receiverAccount.setBalance(amount);
+				receiverAccount.getBank().setBalance(amount);
 				sendMessage("You set "+ receiverAccount.getPlayerName() + " bank account to " + Craftconomy.format(amount) + "!");
 				sendMessage(receiverAccount.getPlayer(),  "Your bank account has been set to " + Craftconomy.format(amount) + "!");
 			}

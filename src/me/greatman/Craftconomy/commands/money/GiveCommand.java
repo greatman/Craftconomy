@@ -22,17 +22,16 @@ public class GiveCommand extends BaseCommand{
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
 			Account receiverAccount = AccountHandler.getAccount(this.parameters.get(0));
-			try{
-				amount = Double.parseDouble(this.parameters.get(1));
-			}
-			catch (NumberFormatException e)
+			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
-				sendMessage("Number excepted as the amount. String received instead");
-				return;
+				amount = Double.parseDouble(this.parameters.get(1));
+				receiverAccount.addMoney(amount);
+				sendMessage("You gave " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + "!");
 			}
-			receiverAccount.addMoney(amount);
-			sendMessage("You gave " + Craftconomy.format(amount) + " to " + receiverAccount.getPlayerName());
-			sendMessage(receiverAccount.getPlayer(), "You received " + Craftconomy.format(amount) + "!");
+			else
+				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
+			
 		}
 		else
 			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + " does not exists!");
