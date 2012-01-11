@@ -75,6 +75,7 @@ public class DatabaseHandler {
 				}
 			}
 			ILogger.info("SQLite database loaded!");
+			return true;
 		}
 		else if (Config.databaseType.equalsIgnoreCase("mysql"))
 		{
@@ -210,7 +211,7 @@ public class DatabaseHandler {
 				}
 				while(result.next());
 			}
-			SQLLibrary.query("TRUNCATE TABLE " + Config.databaseMoneyTable + "_waiting", false);
+			SQLLibrary.truncateTable(Config.databaseMoneyTable + "_waiting");
 			query = "SELECT * FROM " + Config.databaseBankTable + "_waiting";
 			result = SQLLibrary.query(query, true);
 			if (result.next())
@@ -222,7 +223,7 @@ public class DatabaseHandler {
 				}
 				while(result.next());
 			}
-			SQLLibrary.query("TRUNCATE TABLE " + Config.databaseBankTable + "_waiting", false);
+			SQLLibrary.truncateTable(Config.databaseBankTable + "_waiting");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

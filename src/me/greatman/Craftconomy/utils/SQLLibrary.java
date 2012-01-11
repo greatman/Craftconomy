@@ -80,4 +80,18 @@ public class SQLLibrary {
 		
 		return result;
 	}
+	public static void truncateTable(String string) {
+		// TODO Auto-generated method stub
+		try {
+			
+			if (DatabaseHandler.type == DatabaseHandler.databaseType.MYSQL)
+				query("TRUNCATE TABLE " + string, false);
+			else if (DatabaseHandler.type == DatabaseHandler.databaseType.SQLITE)
+				query("DELETE FROM " + string, false);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

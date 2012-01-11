@@ -24,6 +24,8 @@ public class BaseCommand {
 	
 	public List<String> parameters;
 	
+	private String baseCommand;
+	
 	public BaseCommand() {
 		command = new ArrayList<String>();
 		requiredParameters = new ArrayList<String>();
@@ -82,7 +84,7 @@ public class BaseCommand {
 		String ret = "";
 		
 		ret += ChatColor.AQUA;
-		ret += "/money ";
+		ret += baseCommand + " ";
 		ret += TextUtil.implode(this.getCommands(), ",")+" ";
 		
 		List<String> parts = new ArrayList<String>();
@@ -121,5 +123,9 @@ public class BaseCommand {
 	public void sendMessage(String message)
 	{
 		sender.sendMessage(ChatColor.GREEN + "[" + ChatColor.YELLOW + "Money" + ChatColor.GREEN + "] " + message);
+	}
+	public void setBaseCommand(String command)
+	{
+		baseCommand = command;
 	}
 }

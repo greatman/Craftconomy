@@ -56,9 +56,8 @@ public class Craftconomy extends JavaPlugin{
 		} catch (IOException e) {
 		    ILogger.error("A error occured while starting the plugin stats");
 		}
-		//TODO: Help commands
+
 		//Insert all /money commands
-		//commands.add(new iConomyHelpCommand());
 		commands.add(new PayCommand());
 		commands.add(new CreateCommand());
 		commands.add(new RemoveCommand());
@@ -69,15 +68,23 @@ public class Craftconomy extends JavaPlugin{
 		commands.add(new EmptyCommand());
 		commands.add(new MoneyHelpCommand());
 		
+		for (BaseCommand CraftconomyCommand : this.commands) {
+			CraftconomyCommand.setBaseCommand("/money");
+		}
 		//Insert all /bank commands
-		bankCommands.add(new BankGiveCommand());
-		bankCommands.add(new BankTakeCommand());
 		bankCommands.add(new BankOwnBalanceCommand());
 		bankCommands.add(new BankOtherBalanceCommand());
-		bankCommands.add(new BankSetCommand());
 		bankCommands.add(new BankDepositCommand());
 		bankCommands.add(new BankWithdrawCommand());
+		bankCommands.add(new BankGiveCommand());
+		bankCommands.add(new BankTakeCommand());
+		bankCommands.add(new BankSetCommand());
+		bankCommands.add(new BankHelpCommand());
 		
+		for (BaseCommand CraftconomyCommand : this.bankCommands) {
+		
+			CraftconomyCommand.setBaseCommand("/bank");
+		}
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener ,Event.Priority.Normal, this);
@@ -101,7 +108,9 @@ public class Craftconomy extends JavaPlugin{
 		if (AccountHandler.thread != null)
 			AccountHandler.thread.cancel();
 		commands.clear();
-		ILogger.info("Iconomy unloaded!");
+		ILogger.info("Craftconomy unloaded!");
+		getServer().getPluginManager().disablePlugin(this);
+		
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));

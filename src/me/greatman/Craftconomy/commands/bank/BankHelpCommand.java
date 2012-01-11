@@ -1,18 +1,18 @@
-package me.greatman.Craftconomy.commands.money;
+package me.greatman.Craftconomy.commands.bank;
 
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.commands.BaseCommand;
 
-public class MoneyHelpCommand extends BaseCommand{
+public class BankHelpCommand extends BaseCommand{
 	
-	public MoneyHelpCommand() {
+	public BankHelpCommand() {
 		this.command.add("help");
-		permFlag = "Craftconomy.money.help";
-		helpDescription = "Show the help";
+		permFlag = "Craftconomy.bank.help";
+		helpDescription = "Show the bank help";
 	}
 	
 	public void perform() {
-		for (BaseCommand CraftconomyCommand : Craftconomy.plugin.commands) {
+		for (BaseCommand CraftconomyCommand : Craftconomy.plugin.bankCommands) {
 			if (CraftconomyCommand.hasPermission(sender))
 			{
 				sendMessage(CraftconomyCommand.getUseageTemplate(true));
