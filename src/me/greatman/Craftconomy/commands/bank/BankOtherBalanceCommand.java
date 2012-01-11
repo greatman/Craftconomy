@@ -1,7 +1,6 @@
 package me.greatman.Craftconomy.commands.bank;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
