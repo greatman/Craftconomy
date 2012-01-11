@@ -1,6 +1,7 @@
 name: Craftconomy
 main: me.greatman.Craftconomy.Craftconomy
 version: 1.0.0-b${BUILD_NUMBER}
+author: Greatman
 load: startup
 commands:
     money:
