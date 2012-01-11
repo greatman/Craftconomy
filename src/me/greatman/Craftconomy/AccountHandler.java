@@ -127,7 +127,16 @@ public class AccountHandler {
 	 */
 	public static boolean exists(String player)
 	{
-		return DatabaseHandler.exists(player);
+		boolean exists = false;
+		if (!DatabaseHandler.exists(player))
+		{
+			List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(player);
+			if (playerList.size() == 1)
+				exists = true;
+		}
+		else
+			exists = true;
+		return exists;
 	}
 	/**
 	 * Checks if a account exists

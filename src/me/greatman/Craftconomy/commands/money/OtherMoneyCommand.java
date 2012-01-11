@@ -20,7 +20,7 @@ public class OtherMoneyCommand extends BaseCommand{
 		
 		if (AccountHandler.exists(parameters.get(0)))
 		{
-			Account playerAccount = AccountHandler.getAccount((Player) sender);
+			Account playerAccount = AccountHandler.getAccount(parameters.get(0));
 			sendMessage(playerAccount.getPlayerName() + " account: " + Craftconomy.format(playerAccount.getBalance()));
 		}
 		else

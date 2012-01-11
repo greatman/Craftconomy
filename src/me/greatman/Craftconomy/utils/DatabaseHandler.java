@@ -3,9 +3,6 @@ package me.greatman.Craftconomy.utils;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-
-import org.bukkit.entity.Player;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
@@ -179,16 +176,7 @@ public class DatabaseHandler {
 			result = SQLLibrary.query(query,true);
 			if (result.next())
 				exists = true;
-			else
-			{
-				List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(account);
-				if (playerList.size() == 1)
-					exists = true;
-			}
 		} catch (SQLException e) {
-			List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(account);
-			if (playerList.size() == 1)
-				exists = true;
 		}
 		return exists;
 	}
