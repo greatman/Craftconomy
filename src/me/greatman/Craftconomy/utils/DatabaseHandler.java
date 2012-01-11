@@ -65,7 +65,7 @@ public class DatabaseHandler {
 								") ENGINE = InnoDB;",false);
 						SQLLibrary.query("CREATE TABLE `" + Config.databaseBankTable + "` (" +
 								"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
-								"`username` VARCHAR( 30 ) NOT NULL ," +
+								"`username_id` INT NOT NULL ," +
 								"`balance` DOUBLE NOT NULL " +
 								") ENGINE = InnoDB;",false);
 					} catch (SQLException e) {
