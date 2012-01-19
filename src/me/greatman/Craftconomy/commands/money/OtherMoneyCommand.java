@@ -1,5 +1,8 @@
 package me.greatman.Craftconomy.commands.money;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 
 import me.greatman.Craftconomy.Account;
@@ -20,7 +23,11 @@ public class OtherMoneyCommand extends BaseCommand{
 		if (AccountHandler.exists(parameters.get(0)))
 		{
 			Account playerAccount = AccountHandler.getAccount(parameters.get(0));
-			sendMessage(ChatColor.WHITE + playerAccount.getPlayerName() + ChatColor.GREEN + " account: " + ChatColor.WHITE + Craftconomy.format(playerAccount.getBalance()));
+			sendMessage(playerAccount.getPlayerName() + " balance: ");
+			List<String> balance = Craftconomy.format(playerAccount.getBalance());
+			Iterator<String> balanceIterator = balance.iterator();
+			while (balanceIterator.hasNext())
+				sendMessage(ChatColor.WHITE + balanceIterator.next());
 		}
 		else
 			sendMessage(ChatColor.RED + "This account doesn't exists!");

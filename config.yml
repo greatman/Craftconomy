@@ -9,17 +9,8 @@ System:
 
   Default:
     Currency:
-      # Major is the first segment [Major].Minor
-
-      # Major ([Major].Minor) 1.00 Dollar (With Seperate 1 Dollar)
-      Major:
-        Single: 'Dollar'
-        Plural: 'Dollars'
-
-      # Minor (Major.[Minor]) 0.23 Coins  (With Seperate 0 Dollars, 23 Coins)
-      Minor:
-        Single: 'Coin'
-        Plural: 'Coins'
+      Name: Dollar
+      MultiWorld: true
 
     Account:
       # Default account balance when created
@@ -93,6 +84,10 @@ System:
 
     # The table used for the bank
     BankTable: 'Bank'
+    
+    CurrencyTable: 'Currency'
+    
+    BalanceTable: 'Balance'
 
     #Modify if using MySQL
     Address: 'localhost'

@@ -1,5 +1,8 @@
 package me.greatman.Craftconomy.commands.money;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -19,6 +22,10 @@ public class OwnMoneyCommand extends BaseCommand{
 	public void perform() {
 		
 		Account playerAccount = AccountHandler.getAccount((Player) sender);
-		sendMessage("Balance: " + ChatColor.WHITE + Craftconomy.format(playerAccount.getBalance()));
+		sendMessage("Your Balance: ");
+		List<String> balance = Craftconomy.format(playerAccount.getBalance());
+		Iterator<String> balanceIterator = balance.iterator();
+		while (balanceIterator.hasNext())
+			sendMessage(ChatColor.WHITE + balanceIterator.next());
 	}
 }

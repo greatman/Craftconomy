@@ -92,20 +92,19 @@ public class Account {
 	 * Get All the player balance.
 	 * @return The balance
 	 */
-	public HashMap<String, Double> getBalance()
+	public HashMap<String, BalanceCollection> getBalance()
 	{
 		ResultSet result;
-		HashMap<String,Double> map = new HashMap<String,Double>();
-		if (Config.multiWorld)
-			result = DatabaseHandler.getAllBalance(this, player.getWorld());
-		else
-			result = DatabaseHandler.getAllBalance(this);
+		BalanceCollection balance;
+		HashMap<String,BalanceCollection> map = new HashMap<String,BalanceCollection>();
+		result = DatabaseHandler.getAllBalance(this);
 		if (result != null)
 		{
 			try {
 				while (result.next())
 				{
-					map.put(result.getString("name"), result.getDouble("balance"));
+					balance = new BalanceCollection(result.getString("worldName"), result.getDouble("balance"));
+					map.put(result.getString("name"), balance);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

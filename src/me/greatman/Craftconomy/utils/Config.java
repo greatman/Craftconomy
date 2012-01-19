@@ -40,16 +40,17 @@ public class Config {
 		plugin = thePlugin;
 		plugin.getConfig().options().copyDefaults(true);
 		plugin.saveConfig();
-		currencyDefault = plugin.getConfig().getString("System.Default.Currency.Default");
-		//currencyMajorPlural = plugin.getConfig().getString("System.Default.Currency.Major.Plural");
-		//currencyMinorSingle = plugin.getConfig().getString("System.Default.Currency.Minor.Single");
-		//currencyMinorPlural = plugin.getConfig().getString("System.Default.Currency.Minor.Plural");
+		
+		currencyDefault = plugin.getConfig().getString("System.Default.Currency.Name");
+		
 		multiWorld = plugin.getConfig().getBoolean("System.Default.Currency.MultiWorld");
+		
 		defaultHoldings = plugin.getConfig().getDouble("System.Default.Account.Holdings");
 		
 		minorFormatting = plugin.getConfig().getBoolean("System.Formatting.Minor");
 		seperateFormatting = plugin.getConfig().getBoolean("System.Formatting.Seperate");
 		singleFormatting = plugin.getConfig().getBoolean("System.Formatting.Single");
+		
 		transactionLogging = plugin.getConfig().getBoolean("System.Logging.Enabled");
 		
 		interestEnabled = plugin.getConfig().getBoolean("System.Interest.Enabled");
@@ -59,11 +60,12 @@ public class Config {
 		interestCutOff = plugin.getConfig().getDouble("System.Interest.Amount.Cutoff");
 		interestPercent = plugin.getConfig().getDouble("System.Interest.Amount.Percent");
 		
-		databaseType = plugin.getConfig().getString("System.Database.Type");
 		databaseMoneyTable = plugin.getConfig().getString("System.Database.MoneyTable");
 		databaseBankTable = plugin.getConfig().getString("System.Database.BankTable");
 		databaseCurrencyTable = plugin.getConfig().getString("System.Database.CurrencyTable");
 		databaseBalanceTable = plugin.getConfig().getString("System.Database.BalanceTable");
+		
+		databaseType = plugin.getConfig().getString("System.Database.Type");
 		databaseAddress = plugin.getConfig().getString("System.Database.Address");
 		databasePort = plugin.getConfig().getString("System.Database.Port");
 		databaseUsername = plugin.getConfig().getString("System.Database.Username");

@@ -88,7 +88,6 @@ public class Craftconomy extends JavaPlugin{
 		//}
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener ,Event.Priority.Normal, this);
 		Player[] playerList = Craftconomy.plugin.getServer().getOnlinePlayers();
 		if (playerList.length != 0)
 		{
@@ -160,13 +159,14 @@ public class Craftconomy extends JavaPlugin{
 		command.execute(sender,parameters);
 	}*/
 	
-	public static List<String> format(HashMap<String, Double> map)
+	public static List<String> format(HashMap<String, BalanceCollection> hashMap)
 	{
-		//TODO: Use all the stuff we need.
 		List<String> result = new ArrayList<String>();
-		for (Entry<String,Double> e : map.entrySet())
+		if (hashMap == null)
+			return result;
+		for (Entry<String,BalanceCollection> e : hashMap.entrySet())
 		{
-			result.add(e.getValue() + " " + e.getKey());
+			result.add(e.getValue().getWorldName() + ": " + e.getValue().getBalance() + " " + e.getKey());
 		}
 		
 		return result;

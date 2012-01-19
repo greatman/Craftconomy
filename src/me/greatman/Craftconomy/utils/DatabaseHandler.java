@@ -50,8 +50,11 @@ public class DatabaseHandler {
 					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyTable + " (" +
 							"id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
 							"name VARCHAR(30) UNIQUE NOT NULL)", false);
+					SQLLibrary.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + Config.currencyDefault + "')", false);
+					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
+					e.printStackTrace();
 					return false;
 				}
 				
@@ -65,6 +68,7 @@ public class DatabaseHandler {
 							"currency_id INTEGER NOT NULL," +
 							"worldName VARCHAR(30) NOT NULL," + 
 							"balance DOUBLE NOT NULL)", false);
+					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBalanceTable + " table!");
 					return false;
@@ -119,7 +123,6 @@ public class DatabaseHandler {
 		try {
 			SQLLibrary.query(query,false);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -134,7 +137,6 @@ public class DatabaseHandler {
 			query = "DELETE FROM " + Config.databaseCurrencyTable;
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -146,7 +148,6 @@ public class DatabaseHandler {
 		try {
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -157,7 +158,6 @@ public class DatabaseHandler {
 		try {
 			return SQLLibrary.query(query, true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -177,12 +177,10 @@ public class DatabaseHandler {
 				}
 				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
 	
-	//TODO: Those 3 next functions looks useless
 	public static int getAccountId(String playerName)
 	{
 		int accountId = 0;
@@ -194,7 +192,6 @@ public class DatabaseHandler {
 				accountId =  result.getInt("id");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return accountId;
@@ -210,7 +207,6 @@ public class DatabaseHandler {
 				accountName =  result.getString("username");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 		}
 		return accountName;
 	}
@@ -224,23 +220,23 @@ public class DatabaseHandler {
 	{
 		String query = "SELECT id FROM " + Config.databaseBalanceTable + " WHERE " +
 				"username_id=" + account.getPlayerId() + 
-				" AND world='" + world.getName() + 
+				" AND worldName='" + world.getName() + "'" + 
 				" AND currency_id=" + currency.getdatabaseId();
-		ResultSet result;
+		CachedRowSetImpl result;
 		try {
 			result = SQLLibrary.query(query, true);
-			if (result != null)
+			if (result != null && result.size() != 0)
 			{
-				query = "UPDATE FROM " + Config.databaseBalanceTable + 
+				query = "UPDATE " + Config.databaseBalanceTable + 
 						" SET balance=" + balance + 
 						" WHERE username_id=" + account.getPlayerId() + 
-						" AND world='" + world.getName() + 
+						" AND worldName='" + world.getName() + 
 						" AND currency_id=" + currency.getdatabaseId();
 				SQLLibrary.query(query, false);
 			}
 			else
 			{
-				query = "INSERT INTO " + Config.databaseBalanceTable + "(username_id,world,currency_id,balance) VALUES(" +
+				query = "INSERT INTO " + Config.databaseBalanceTable + "(username_id,worldName,currency_id,balance) VALUES(" +
 						account.getPlayerId() + "," +
 						"'" + world.getName() + "'," +
 						currency.getdatabaseId() + "," +
@@ -250,7 +246,7 @@ public class DatabaseHandler {
 						
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -288,19 +284,8 @@ public class DatabaseHandler {
 	 */
 	public static ResultSet getAllBalance(Account account)
 	{
-		if (!Config.multiWorld)
-			return getAllBalance(account,Craftconomy.plugin.getServer().getWorlds().get(0));
-		return null;
-	}
-	
-	/**
-	 * Grab all balance from a certain world of a account (When MultiWorld)
-	 * @param account The account we want to get the balance
-	 * @param worldName The world we want to check
-	 * @return The result of the query
-	 */
-	public static ResultSet getAllBalance(Account account, World world) {
-		String query = "SELECT balance FROM " + Config.databaseMoneyTable + " LEFT JOIN currency ON " + Config.databaseMoneyTable + ".currency_id = currency.id WHERE username='" +account.getPlayerName()+ "' AND world='" + world.getName() + "'";
+		//TODO: Probably doesn't work
+		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable + " LEFT JOIN currency ON " + Config.databaseBalanceTable + ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId();
 		try
 		{
 			ResultSet result = SQLLibrary.query(query, true);
@@ -308,22 +293,10 @@ public class DatabaseHandler {
 			{
 				return result;
 			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	/**
-	 * Get the balance of a account
-	 * @param account The account we want to get the balance
-	 * @param currency The currency we want to Check
-	 * @return The balance
-	 */
-	public static double getBalanceCurrency(Account account, Currency currency)
-	{
-		return getBalanceCurrency(account,Craftconomy.plugin.getServer().getWorlds().get(0),currency);
 	}
 	
 	/**
@@ -416,7 +389,6 @@ public class DatabaseHandler {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
