@@ -3,10 +3,11 @@ package me.greatman.Craftconomy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import me.greatman.Craftconomy.commands.*;
-import me.greatman.Craftconomy.commands.bank.*;
 import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
 import me.greatman.Craftconomy.utils.Config;
@@ -72,19 +73,19 @@ public class Craftconomy extends JavaPlugin{
 			CraftconomyCommand.setBaseCommand("/money");
 		}
 		//Insert all /bank commands
-		bankCommands.add(new BankOwnBalanceCommand());
-		bankCommands.add(new BankOtherBalanceCommand());
-		bankCommands.add(new BankDepositCommand());
-		bankCommands.add(new BankWithdrawCommand());
-		bankCommands.add(new BankGiveCommand());
-		bankCommands.add(new BankTakeCommand());
-		bankCommands.add(new BankSetCommand());
-		bankCommands.add(new BankHelpCommand());
+		//bankCommands.add(new BankOwnBalanceCommand());
+		//bankCommands.add(new BankOtherBalanceCommand());
+		//bankCommands.add(new BankDepositCommand());
+		//bankCommands.add(new BankWithdrawCommand());
+		//bankCommands.add(new BankGiveCommand());
+		//bankCommands.add(new BankTakeCommand());
+		//bankCommands.add(new BankSetCommand());
+		//bankCommands.add(new BankHelpCommand());
 		
-		for (BaseCommand CraftconomyCommand : this.bankCommands) {
+		//for (BaseCommand CraftconomyCommand : this.bankCommands) {
 		
-			CraftconomyCommand.setBaseCommand("/bank");
-		}
+		//	CraftconomyCommand.setBaseCommand("/bank");
+		//}
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener ,Event.Priority.Normal, this);
@@ -116,8 +117,8 @@ public class Craftconomy extends JavaPlugin{
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));
 		if (cmd.getLabel().equals("money"))
 			this.handleMoneyCommand(cmd, sender, parameters);
-		if (cmd.getLabel().equals("bank"))
-			this.handleBankCommand(cmd,sender, parameters);
+		//if (cmd.getLabel().equals("bank"))
+		//	this.handleBankCommand(cmd,sender, parameters);
 		
 		return true;
 		
@@ -141,7 +142,7 @@ public class Craftconomy extends JavaPlugin{
 		command.execute(sender,parameters);
 	}
 	
-	public void handleBankCommand(Command cmd, CommandSender sender, List<String> parameters) {
+	/*public void handleBankCommand(Command cmd, CommandSender sender, List<String> parameters) {
 		if (parameters.size() == 0)
 		{
 			BankOwnBalanceCommand command = new BankOwnBalanceCommand();
@@ -157,23 +158,25 @@ public class Craftconomy extends JavaPlugin{
 		}
 		BankOtherBalanceCommand command = new BankOtherBalanceCommand();
 		command.execute(sender,parameters);
-	}
+	}*/
 	
-	public static String format(double amount)
+	public static List<String> format(HashMap<String, Double> map)
 	{
 		//TODO: Use all the stuff we need.
-		String result;
-		if (amount >= 2)
+		List<String> result = new ArrayList<String>();
+		for (Entry<String,Double> e : map.entrySet())
 		{
-			result = amount + " " + Config.currencyMajorPlural;
+			result.add(e.getValue() + " " + e.getKey());
 		}
-		else
-		{
-			result = amount + " " + Config.currencyMajorSingle;
-		}
+		
 		return result;
 	}
 	
+	public static String format(double amount, Currency currency)
+	{
+		//TODO: Add plural format
+		return amount + " " + currency.getName();
+	}
 	public static boolean isValidAmount(String amount)
 	{
 		

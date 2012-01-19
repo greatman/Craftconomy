@@ -14,6 +14,6 @@ public class CCPlayerListener extends PlayerListener{
 	}
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
-		AccountHandler.save(event.getPlayer());
+		//AccountHandler.save(event.getPlayer());
 	}
 }

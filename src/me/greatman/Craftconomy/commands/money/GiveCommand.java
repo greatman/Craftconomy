@@ -3,9 +3,13 @@ package me.greatman.Craftconomy.commands.money;
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
+import me.greatman.Craftconomy.Currency;
+import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.commands.BaseCommand;
+import me.greatman.Craftconomy.utils.Config;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 
 public class GiveCommand extends BaseCommand{
 	
@@ -13,22 +17,54 @@ public class GiveCommand extends BaseCommand{
 		this.command.add("give");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
+		this.optionalParameters.add("Currency");
+		this.optionalParameters.add("World");
 		permFlag = ("Craftconomy.accounts.give");
 		helpDescription = "Give money";
 	}
 	
 	public void perform() {
 		double amount;
+		Currency currency;
+		World world = player.getWorld();
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
 			Account receiverAccount = AccountHandler.getAccount(this.parameters.get(0));
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
-				receiverAccount.addMoney(amount);
-				sendMessage("You gave " + ChatColor.WHITE + Craftconomy.format(amount) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
-				sendMessage(receiverAccount.getPlayer(), "You received " + ChatColor.WHITE + Craftconomy.format(amount) + "!");
+				if (this.parameters.size() == 3)
+				{
+					if (!CurrencyHandler.exists(this.parameters.get(2), false))
+					{
+						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
+					}
+					else
+					{
+						sendMessage(ChatColor.RED + "This currency doesn't exists!");
+						return;
+					}
+				}
+				else
+					currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
+				if (this.parameters.size() == 4)
+				{
+					World worldtest = Craftconomy.plugin.getServer().getWorld(this.parameters.get(3));
+					if (worldtest == null)
+					{
+						sendMessage(ChatColor.RED + "This world doesn't exists!");
+						return;
+					}
+					else
+						world = worldtest;
+				}
+				receiverAccount.addMoney(amount, currency, world);
+				
+				
+				sendMessage("You gave " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(), "You received " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
 			}
+			
 			else
 				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 			

@@ -7,13 +7,12 @@ public class Config {
 
 	static Craftconomy plugin;
 	
-	public static String 	currencyMajorSingle,
-							currencyMajorPlural,
-							currencyMinorSingle,
-							currencyMinorPlural,
+	public static String 	currencyDefault,
 							databaseType,
 							databaseMoneyTable,
 							databaseBankTable,
+							databaseCurrencyTable,
+							databaseBalanceTable,
 							databaseUsername,
 							databasePassword,
 							databaseAddress,
@@ -30,7 +29,8 @@ public class Config {
 					transactionLogging,
 					interestEnabled,
 					interestOnlyOnline,
-					interestAnnounce;
+					interestAnnounce,
+					multiWorld;
 					
 	public static int 		interestInterval;
 					
@@ -40,11 +40,11 @@ public class Config {
 		plugin = thePlugin;
 		plugin.getConfig().options().copyDefaults(true);
 		plugin.saveConfig();
-		currencyMajorSingle = plugin.getConfig().getString("System.Default.Currency.Major.Single");
-		currencyMajorPlural = plugin.getConfig().getString("System.Default.Currency.Major.Plural");
-		currencyMinorSingle = plugin.getConfig().getString("System.Default.Currency.Minor.Single");
-		currencyMinorPlural = plugin.getConfig().getString("System.Default.Currency.Minor.Plural");
-		
+		currencyDefault = plugin.getConfig().getString("System.Default.Currency.Default");
+		//currencyMajorPlural = plugin.getConfig().getString("System.Default.Currency.Major.Plural");
+		//currencyMinorSingle = plugin.getConfig().getString("System.Default.Currency.Minor.Single");
+		//currencyMinorPlural = plugin.getConfig().getString("System.Default.Currency.Minor.Plural");
+		multiWorld = plugin.getConfig().getBoolean("System.Default.Currency.MultiWorld");
 		defaultHoldings = plugin.getConfig().getDouble("System.Default.Account.Holdings");
 		
 		minorFormatting = plugin.getConfig().getBoolean("System.Formatting.Minor");
@@ -62,6 +62,8 @@ public class Config {
 		databaseType = plugin.getConfig().getString("System.Database.Type");
 		databaseMoneyTable = plugin.getConfig().getString("System.Database.MoneyTable");
 		databaseBankTable = plugin.getConfig().getString("System.Database.BankTable");
+		databaseCurrencyTable = plugin.getConfig().getString("System.Database.CurrencyTable");
+		databaseBalanceTable = plugin.getConfig().getString("System.Database.BalanceTable");
 		databaseAddress = plugin.getConfig().getString("System.Database.Address");
 		databasePort = plugin.getConfig().getString("System.Database.Port");
 		databaseUsername = plugin.getConfig().getString("System.Database.Username");
