@@ -5,6 +5,7 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.CurrencyHandler;
+import me.greatman.Craftconomy.ILogger;
 import me.greatman.Craftconomy.commands.BaseCommand;
 import me.greatman.Craftconomy.utils.Config;
 
@@ -37,26 +38,37 @@ public class SetCommand extends BaseCommand{
 				{
 					if (!CurrencyHandler.exists(this.parameters.get(2), false))
 					{
+						ILogger.info("omgthisshouldnothappen!");
 						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
 					}
 					else
 					{
+						ILogger.info("omgthisshouldnothasdasdddappen!!!!!!");
 						sendMessage(ChatColor.RED + "This currency doesn't exists!");
 						return;
 					}
 				}
 				else
+				{
+					ILogger.info("I am freaking here!");
 					currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
+				}
+					
 				if (this.parameters.size() == 4)
 				{
 					World worldtest = Craftconomy.plugin.getServer().getWorld(this.parameters.get(3));
 					if (worldtest == null)
 					{
+						ILogger.info("omgthisshouldnothappendddddd!!!!!!");
 						sendMessage(ChatColor.RED + "This world doesn't exists!");
 						return;
 					}
 					else
+					{
+						ILogger.info("omgthisshouldnothappen!!!!!!");
 						world = worldtest;
+					}
+						
 				}
 				receiverAccount.setBalance(amount,currency,world);
 				sendMessage("You set " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account to " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");

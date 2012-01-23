@@ -58,7 +58,7 @@ public class TakeCommand extends BaseCommand{
 					else
 						world = worldtest;
 				}
-				receiverAccount.substractMoney(amount);
+				receiverAccount.substractMoney(amount,world);
 				sendMessage("You removed " + ChatColor.WHITE + Craftconomy.format(amount,currency) + ChatColor.GREEN + " from " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account!");
 				sendMessage(receiverAccount.getPlayer(),  ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.RED + " has been removed from your account!");
 			}

@@ -41,4 +41,17 @@ public class CurrencyHandler {
 		else
 			return false;
 	}
+	
+	public static boolean create(String currencyName)
+	{
+		return DatabaseHandler.createCurrency(currencyName);
+	}
+
+	public static boolean rename(String oldCurrencyName, String newCurrencyName) {
+		return DatabaseHandler.modifyCurrency(oldCurrencyName, newCurrencyName);
+	}
+
+	public static boolean delete(String currencyName) {
+		return DatabaseHandler.removeCurrency(currencyName);
+	}
 }

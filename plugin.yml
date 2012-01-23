@@ -5,10 +5,11 @@ author: Greatman
 load: startup
 commands:
     money:
-      aliases: [craftconomy]
       description: Check / Distribute currency.
     bank:
       description: Check /Distribute money on a Bank.
+    craftconomy:
+      description: Configuration command
 permissions:
     Craftconomy.*:
         default: op
@@ -32,6 +33,9 @@ permissions:
             Craftconomy.banks.holdings.others: true
             Craftconomy.bank.deposit: true
             Craftconomy.bank.withdraw: true
+            Craftconomy.currency.create: true
+            Craftconomy.currency.modify: true
+            Craftconomy.currency.delete: true
     Craftconomy.banks.*:
         description: Give access only to higher level commands for bank
         children:
@@ -161,3 +165,15 @@ permissions:
         description: Withdraw money from your bank account
         default: op
         command: "/bank withdraw <amount>"
+    Craftconomy.currency.create:
+        description: Create a currency
+        default: op
+        command: "/craftcurrency currencycreate <Currency Name>"
+    Craftconomy.currency.modify:
+        description: Modify a currency
+        default: op
+        command: "/craftcurrency currencymodify <Currency Name>"
+    Craftconomy.currency.remove:
+        description: Modify a currency
+        default: op
+        command: "/craftcurrency currencymodify <Currency Name>"

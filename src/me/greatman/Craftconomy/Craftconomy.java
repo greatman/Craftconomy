@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import me.greatman.Craftconomy.commands.*;
+import me.greatman.Craftconomy.commands.config.*;
 import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
 import me.greatman.Craftconomy.utils.Config;
@@ -16,7 +17,6 @@ import me.greatman.Craftconomy.utils.Metrics;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,7 +27,7 @@ public class Craftconomy extends JavaPlugin{
 							version;
 	public List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public List<BaseCommand> bankCommands = new ArrayList<BaseCommand>();
-	
+	public List<BaseCommand> configCommands = new ArrayList<BaseCommand>();
 	public CCPlayerListener playerListener = new CCPlayerListener();
 	
 	public static Craftconomy plugin;
@@ -72,6 +72,16 @@ public class Craftconomy extends JavaPlugin{
 		for (BaseCommand CraftconomyCommand : this.commands) {
 			CraftconomyCommand.setBaseCommand("/money");
 		}
+		
+		//Insert all config commands
+		configCommands.add(new ConfigCurrencyAddCommand());
+		configCommands.add(new ConfigCurrencyModifyCommand());
+		configCommands.add(new ConfigCurrencyRemoveCommand());
+		
+		for (BaseCommand CraftconomyCommand: this.configCommands)
+		{
+			CraftconomyCommand.setBaseCommand("/craftconomy");
+		}
 		//Insert all /bank commands
 		//bankCommands.add(new BankOwnBalanceCommand());
 		//bankCommands.add(new BankOtherBalanceCommand());
@@ -87,7 +97,7 @@ public class Craftconomy extends JavaPlugin{
 		//	CraftconomyCommand.setBaseCommand("/bank");
 		//}
 		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener ,Event.Priority.Normal, this);
+		pm.registerEvents(playerListener, this);
 		Player[] playerList = Craftconomy.plugin.getServer().getOnlinePlayers();
 		if (playerList.length != 0)
 		{
@@ -118,11 +128,26 @@ public class Craftconomy extends JavaPlugin{
 			this.handleMoneyCommand(cmd, sender, parameters);
 		//if (cmd.getLabel().equals("bank"))
 		//	this.handleBankCommand(cmd,sender, parameters);
+		if (cmd.getLabel().equals("craftconomy"))
+			this.handleConfigCommand(cmd,sender,parameters);
 		
 		return true;
 		
 	}
-	
+	//Put that in a single command
+	public void handleConfigCommand(Command cmd, CommandSender sender, List<String> parameters) {
+		if (parameters.size() == 0)
+		{
+			return;
+		}
+		String commandName = parameters.get(0);
+		for (BaseCommand CraftconomyCommand : this.configCommands) {
+			if (CraftconomyCommand.getCommands().contains(commandName)) {
+				CraftconomyCommand.execute(sender, parameters);
+				return;
+			}
+		}
+	}
 	public void handleMoneyCommand(Command cmd, CommandSender sender, List<String> parameters) {
 		if (parameters.size() == 0)
 		{

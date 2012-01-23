@@ -285,7 +285,7 @@ public class DatabaseHandler {
 	public static ResultSet getAllBalance(Account account)
 	{
 		//TODO: Probably doesn't work
-		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable + " LEFT JOIN currency ON " + Config.databaseBalanceTable + ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId();
+		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable + " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBalanceTable + ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId();
 		try
 		{
 			ResultSet result = SQLLibrary.query(query, true);
@@ -321,7 +321,6 @@ public class DatabaseHandler {
 					return result.getInt("balance");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -340,7 +339,7 @@ public class DatabaseHandler {
 	 */
 	public static int getCurrencyId(Currency currency)
 	{
-		String query = "SELECT id FROM currency WHERE name='" + currency.getName() + "'";
+		String query = "SELECT id FROM " + Config.databaseCurrencyTable + " WHERE name='" + currency.getName() + "'";
 		ResultSet result;
 		try {
 			result = SQLLibrary.query(query, true);
@@ -350,7 +349,6 @@ public class DatabaseHandler {
 				return result.getInt("id");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -376,9 +374,9 @@ public class DatabaseHandler {
 	{
 		String query;
 		if (exact)
-			query = "SELECT * FROM currency WHERE name='" + currency + "'";
+			query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name='" + currency + "'";
 		else
-			query = "SELECT * FROM currency WHERE name LIKE '%" + currency + "%'";
+			query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name LIKE '%" + currency + "%'";
 		try {
 			CachedRowSetImpl result = SQLLibrary.query(query,true);
 			if (result != null)
@@ -404,9 +402,9 @@ public class DatabaseHandler {
 	public static String getCurrencyName(String currencyName, boolean exact) {
 		String query;
 		if (exact)
-			query = "SELECT name FROM currency WHERE name='" + currencyName + "'";
+			query = "SELECT name FROM " + Config.databaseCurrencyTable + " WHERE name='" + currencyName + "'";
 		else
-			query = "SELECT name FROM currency WHERE name LIKE '%" + currencyName + "%'";
+			query = "SELECT name FROM " + Config.databaseCurrencyTable + " WHERE name LIKE '%" + currencyName + "%'";
 		ResultSet result;
 		try {
 			result = SQLLibrary.query(query, true);
@@ -416,10 +414,57 @@ public class DatabaseHandler {
 				return result.getString("name");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static boolean createCurrency(String currencyName)
+	{
+		boolean success = false;
+		if (!currencyExist(currencyName, true))
+		{
+			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + currencyName + "')";
+			try {
+				SQLLibrary.query(query, false);
+				success = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return success;
+		
+	}
+
+	public static boolean modifyCurrency(String oldCurrencyName, String newCurrencyName) {
+		boolean success = false;
+		if (currencyExist(oldCurrencyName, true))
+		{
+			String query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName + "' WHERE name='" + oldCurrencyName + "'";
+			try {
+				SQLLibrary.query(query, false);
+				success = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return success;
+	}
+
+	public static boolean removeCurrency(String currencyName) {
+		boolean success = false;
+		if (currencyExist(currencyName, true))
+		{
+			String query = "DELETE FROM " + Config.databaseCurrencyTable + " WHERE name='" + currencyName + "'";
+			try {
+				SQLLibrary.query(query, true);
+				success = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return success;
 	}
 
 	
