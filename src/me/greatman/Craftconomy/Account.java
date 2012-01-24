@@ -171,7 +171,10 @@ public class Account {
 	{
 		double balance = getBalance(currency,world);
 		balance += amount;
-		DatabaseHandler.updateAccount(this, balance, currency, world);
+		if (Config.multiWorld)
+			DatabaseHandler.updateAccount(this, balance, currency, world);
+		else
+			DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		return balance;
 	}
 	/**
@@ -223,7 +226,10 @@ public class Account {
 	{
 		double balance = getBalance(currency,world);
 		balance -= amount;
-		DatabaseHandler.updateAccount(this, balance, currency, world);
+		if (Config.multiWorld)
+			DatabaseHandler.updateAccount(this, balance, currency, world);
+		else
+			DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		return balance;
 	}
 	
@@ -276,7 +282,10 @@ public class Account {
 	{
 		double balance = getBalance(currency,world);
 		balance *= amount;
-		DatabaseHandler.updateAccount(this, balance, currency, world);
+		if (Config.multiWorld)
+			DatabaseHandler.updateAccount(this, balance, currency, world);
+		else
+			DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		return balance;
 	}
 	
@@ -328,7 +337,10 @@ public class Account {
 	{
 		double balance = getBalance(currency,world);
 		balance /= amount;
-		DatabaseHandler.updateAccount(this, balance, currency, world);
+		if (Config.multiWorld)
+			DatabaseHandler.updateAccount(this, balance, currency, world);
+		else
+			DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		return balance;
 	}
 	
@@ -380,7 +392,10 @@ public class Account {
 	public double setBalance(double amount, Currency currency, World world)
 	{
 		double balance = amount;
-		DatabaseHandler.updateAccount(this, balance, currency, world);
+		if (Config.multiWorld)
+			DatabaseHandler.updateAccount(this, balance, currency, world);
+		else
+			DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		return balance;
 	}
 	
@@ -431,7 +446,11 @@ public class Account {
 	 */
 	public boolean hasEnough(double amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency,world);
+		double balance;
+		if (Config.multiWorld)
+			balance = getBalance(currency,world);
+		else
+			balance = getBalance(currency,Craftconomy.plugin.getServer().getWorlds().get(0));
 		boolean result = false;
 		if (balance >= amount)
 			result = true;

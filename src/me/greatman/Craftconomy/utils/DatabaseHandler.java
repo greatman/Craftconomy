@@ -12,7 +12,6 @@ import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
-import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.ILogger;
 
 @SuppressWarnings("restriction")
@@ -128,7 +127,7 @@ public class DatabaseHandler {
 			query = "INSERT INTO " + Config.databaseBalanceTable + "(username_id,worldName,currency_id,balance) VALUES(" +
 					account.getPlayerId() + "," +
 					"'" + Craftconomy.plugin.getServer().getWorlds().get(0).getName() + "'," +
-					CurrencyHandler.getCurrency(Config.currencyDefault, true).getdatabaseId() + "," +
+					getCurrencyId(Config.currencyDefault) + "," +
 					Config.defaultHoldings + ")";
 			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
@@ -317,10 +316,9 @@ public class DatabaseHandler {
 	 */
 	public static double getBalanceCurrency(Account account, World world, Currency currency)
 	{
-		int currencyId = getCurrencyId(currency);
-		if (currencyId != 0)
+		if (currency.getdatabaseId() != 0)
 		{
-			String query = "SELECT balance FROM " + Config.databaseBalanceTable + " WHERE username_id='" + account.getPlayerId() + "' AND worldName='" + world.getName() + "' AND currency_id=" + currencyId;
+			String query = "SELECT balance FROM " + Config.databaseBalanceTable + " WHERE username_id='" + account.getPlayerId() + "' AND worldName='" + world.getName() + "' AND currency_id=" + currency.getdatabaseId();
 			ResultSet result;
 			try {
 				result = SQLLibrary.query(query, true);
@@ -346,22 +344,25 @@ public class DatabaseHandler {
 	
 	/**
 	 * Get the currency database ID
-	 * @param currency The Currency object we want to get the ID 
+	 * @param currency The currency we want to get the ID 
 	 * @return The Currency ID
 	 */
-	public static int getCurrencyId(Currency currency)
+	public static int getCurrencyId(String currency)
 	{
-		String query = "SELECT id FROM " + Config.databaseCurrencyTable + " WHERE name='" + currency.getName() + "'";
-		ResultSet result;
-		try {
-			result = SQLLibrary.query(query, true);
-			if (result != null)
-			{
-				result.next();
-				return result.getInt("id");
+		if (currencyExist(currency, true))
+		{
+			String query = "SELECT id FROM " + Config.databaseCurrencyTable + " WHERE name='" + currency + "'";
+			ResultSet result;
+			try {
+				result = SQLLibrary.query(query, true);
+				if (result != null)
+				{
+					result.next();
+					return result.getInt("id");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return 0;
 	}
@@ -467,9 +468,12 @@ public class DatabaseHandler {
 		boolean success = false;
 		if (currencyExist(currencyName, true))
 		{
+			String query2 = "DELETE FROM " + Config.databaseBalanceTable + " WHERE currency_id=" + getCurrencyId(currencyName);
 			String query = "DELETE FROM " + Config.databaseCurrencyTable + " WHERE name='" + currencyName + "'";
 			try {
-				SQLLibrary.query(query, true);
+				SQLLibrary.query(query, false);
+				
+				SQLLibrary.query(query2, false);
 				success = true;
 			} catch (SQLException e) {
 				e.printStackTrace();

@@ -10,7 +10,7 @@ public class Currency {
 	public Currency(String currencyName)
 	{
 		name = currencyName;
-		databaseId = DatabaseHandler.getCurrencyId(this);
+		databaseId = DatabaseHandler.getCurrencyId(name);
 	}
 	
 	public String getName(){

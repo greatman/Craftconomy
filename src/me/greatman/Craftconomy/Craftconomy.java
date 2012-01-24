@@ -76,6 +76,7 @@ public class Craftconomy extends JavaPlugin{
 		configCommands.add(new ConfigCurrencyAddCommand());
 		configCommands.add(new ConfigCurrencyModifyCommand());
 		configCommands.add(new ConfigCurrencyRemoveCommand());
+		configCommands.add(new ConfigHelpCommand());
 		
 		for (BaseCommand CraftconomyCommand: this.configCommands)
 		{
@@ -137,6 +138,8 @@ public class Craftconomy extends JavaPlugin{
 	public void handleConfigCommand(Command cmd, CommandSender sender, List<String> parameters) {
 		if (parameters.size() == 0)
 		{
+			ConfigHelpCommand command = new ConfigHelpCommand();
+			command.execute(sender, parameters);
 			return;
 		}
 		String commandName = parameters.get(0);
