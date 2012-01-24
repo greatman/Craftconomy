@@ -1,20 +1,21 @@
 package me.greatman.Craftconomy;
 
+
 public class BalanceCollection {
 
-	private String 	world;
-	private double balance;
+	private String	world;
+	private double 	balance;
 	private Currency currency;
 	
 	public BalanceCollection(String worldName, double balanceAmount, Currency currency) {
-		world = worldName;
+		this.world = worldName;
 		balance = balanceAmount;
 		this.currency = currency;
 	}
 	
 	public String getWorldName()
 	{
-		return world;
+		return Craftconomy.plugin.getServer().getWorld(world).getName();
 	}
 	
 	public double getBalance()

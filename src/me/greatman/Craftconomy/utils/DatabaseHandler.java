@@ -127,7 +127,7 @@ public class DatabaseHandler {
 			Account account = AccountHandler.getAccount(accountName);
 			query = "INSERT INTO " + Config.databaseBalanceTable + "(username_id,worldName,currency_id,balance) VALUES(" +
 					account.getPlayerId() + "," +
-					"'" + Craftconomy.plugin.getServer().getWorlds().get(0) + "'," +
+					"'" + Craftconomy.plugin.getServer().getWorlds().get(0).getName() + "'," +
 					CurrencyHandler.getCurrency(Config.currencyDefault, true).getdatabaseId() + "," +
 					Config.defaultHoldings + ")";
 			SQLLibrary.query(query, false);
@@ -393,7 +393,6 @@ public class DatabaseHandler {
 			CachedRowSetImpl result = SQLLibrary.query(query,true);
 			if (result != null)
 			{
-				ILogger.info(result.size() + "");
 				if (result.size() == 1)
 				{
 					return true;
