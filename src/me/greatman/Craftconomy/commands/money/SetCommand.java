@@ -5,7 +5,6 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.CurrencyHandler;
-import me.greatman.Craftconomy.ILogger;
 import me.greatman.Craftconomy.commands.BaseCommand;
 import me.greatman.Craftconomy.utils.Config;
 
@@ -26,7 +25,7 @@ public class SetCommand extends BaseCommand{
 	
 	public void perform() {
 		double amount;
-		Currency currency;
+		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		World world = player.getWorld();
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
@@ -34,24 +33,17 @@ public class SetCommand extends BaseCommand{
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
-				if (this.parameters.size() == 3)
+				if (this.parameters.size() >= 3)
 				{
-					if (!CurrencyHandler.exists(this.parameters.get(2), false))
+					if (CurrencyHandler.exists(this.parameters.get(2), false))
 					{
-						ILogger.info("omgthisshouldnothappen!");
 						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
 					}
 					else
 					{
-						ILogger.info("omgthisshouldnothasdasdddappen!!!!!!");
 						sendMessage(ChatColor.RED + "This currency doesn't exists!");
 						return;
 					}
-				}
-				else
-				{
-					ILogger.info("I am freaking here!");
-					currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 				}
 					
 				if (this.parameters.size() == 4)
@@ -59,13 +51,11 @@ public class SetCommand extends BaseCommand{
 					World worldtest = Craftconomy.plugin.getServer().getWorld(this.parameters.get(3));
 					if (worldtest == null)
 					{
-						ILogger.info("omgthisshouldnothappendddddd!!!!!!");
 						sendMessage(ChatColor.RED + "This world doesn't exists!");
 						return;
 					}
 					else
 					{
-						ILogger.info("omgthisshouldnothappen!!!!!!");
 						world = worldtest;
 					}
 						

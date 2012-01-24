@@ -2,7 +2,7 @@ package me.greatman.Craftconomy;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import me.greatman.Craftconomy.utils.Config;
@@ -92,24 +92,23 @@ public class Account {
 	 * Get All the player balance.
 	 * @return The balance
 	 */
-	public HashMap<String, BalanceCollection> getBalance()
+	public List<BalanceCollection> getBalance()
 	{
 		ResultSet result;
-		BalanceCollection balance;
-		HashMap<String,BalanceCollection> map = new HashMap<String,BalanceCollection>();
+		List<BalanceCollection> list = new ArrayList<BalanceCollection>();
 		result = DatabaseHandler.getAllBalance(this);
 		if (result != null)
 		{
 			try {
 				while (result.next())
 				{
-					balance = new BalanceCollection(result.getString("worldName"), result.getDouble("balance"));
-					map.put(result.getString("name"), balance);
+					list.add(new BalanceCollection(result.getString("worldName"), result.getDouble("balance"), CurrencyHandler.getCurrency(result.getString("name"), true)));
 				}
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			return map;
+			return list;
 		}
 		return null;
 	}

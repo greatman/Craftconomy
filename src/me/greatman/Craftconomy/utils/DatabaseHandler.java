@@ -9,8 +9,10 @@ import org.bukkit.World;
 import com.sun.rowset.CachedRowSetImpl;
 
 import me.greatman.Craftconomy.Account;
+import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
+import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.ILogger;
 
 @SuppressWarnings("restriction")
@@ -117,11 +119,18 @@ public class DatabaseHandler {
 		return exists;
 	}
 	
-	public static void create(String account)
+	public static void create(String accountName)
 	{
-		String query = "INSERT INTO " + Config.databaseMoneyTable + "(username) VALUES('" + account +"')";
+		String query = "INSERT INTO " + Config.databaseMoneyTable + "(username) VALUES('" + accountName +"')";
 		try {
 			SQLLibrary.query(query,false);
+			Account account = AccountHandler.getAccount(accountName);
+			query = "INSERT INTO " + Config.databaseBalanceTable + "(username_id,worldName,currency_id,balance) VALUES(" +
+					account.getPlayerId() + "," +
+					"'" + Craftconomy.plugin.getServer().getWorlds().get(0) + "'," +
+					CurrencyHandler.getCurrency(Config.currencyDefault, true).getdatabaseId() + "," +
+					Config.defaultHoldings + ")";
+			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -230,7 +239,7 @@ public class DatabaseHandler {
 				query = "UPDATE " + Config.databaseBalanceTable + 
 						" SET balance=" + balance + 
 						" WHERE username_id=" + account.getPlayerId() + 
-						" AND worldName='" + world.getName() + 
+						" AND worldName='" + world.getName() + "'" +  
 						" AND currency_id=" + currency.getdatabaseId();
 				SQLLibrary.query(query, false);
 			}
@@ -285,7 +294,7 @@ public class DatabaseHandler {
 	public static ResultSet getAllBalance(Account account)
 	{
 		//TODO: Probably doesn't work
-		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable + " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBalanceTable + ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId();
+		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable + " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBalanceTable + ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId() + " ORDER BY worldName";
 		try
 		{
 			ResultSet result = SQLLibrary.query(query, true);
@@ -302,7 +311,7 @@ public class DatabaseHandler {
 	/**
 	 * Get the balance of a account
 	 * @param account The account we want to get the balance
-	 * @param worldName The world that we want to check the balance
+	 * @param world The world that we want to check the balance
 	 * @param currency The currency we want to check
 	 * @return The balance
 	 */
@@ -311,14 +320,17 @@ public class DatabaseHandler {
 		int currencyId = getCurrencyId(currency);
 		if (currencyId != 0)
 		{
-			String query = "SELECT balance FROM " + Config.databaseMoneyTable + " WHERE username='" +account.getPlayerName()+ "' AND world='" + world.getName() + "' AND currency_id=" + currencyId;
+			String query = "SELECT balance FROM " + Config.databaseBalanceTable + " WHERE username_id='" + account.getPlayerId() + "' AND worldName='" + world.getName() + "' AND currency_id=" + currencyId;
 			ResultSet result;
 			try {
 				result = SQLLibrary.query(query, true);
 				if (result != null)
 				{
-					result.next();
-					return result.getInt("balance");
+					if (!result.isLast())
+					{
+						result.next();
+						return result.getDouble("balance");
+					}
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -381,6 +393,7 @@ public class DatabaseHandler {
 			CachedRowSetImpl result = SQLLibrary.query(query,true);
 			if (result != null)
 			{
+				ILogger.info(result.size() + "");
 				if (result.size() == 1)
 				{
 					return true;

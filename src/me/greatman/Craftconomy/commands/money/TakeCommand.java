@@ -25,7 +25,7 @@ public class TakeCommand extends BaseCommand{
 	
 	public void perform() {
 		double amount;
-		Currency currency;
+		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);;
 		World world = player.getWorld();
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
@@ -33,9 +33,9 @@ public class TakeCommand extends BaseCommand{
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
-				if (this.parameters.size() == 3)
+				if (this.parameters.size() >= 3)
 				{
-					if (!CurrencyHandler.exists(this.parameters.get(2), false))
+					if (CurrencyHandler.exists(this.parameters.get(2), false))
 					{
 						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
 					}
@@ -45,8 +45,6 @@ public class TakeCommand extends BaseCommand{
 						return;
 					}
 				}
-				else
-					currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 				if (this.parameters.size() == 4)
 				{
 					World worldtest = Craftconomy.plugin.getServer().getWorld(this.parameters.get(3));

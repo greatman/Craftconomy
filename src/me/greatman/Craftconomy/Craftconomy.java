@@ -3,9 +3,8 @@ package me.greatman.Craftconomy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import me.greatman.Craftconomy.commands.*;
 import me.greatman.Craftconomy.commands.config.*;
@@ -184,15 +183,19 @@ public class Craftconomy extends JavaPlugin{
 		command.execute(sender,parameters);
 	}*/
 	
-	public static List<String> format(HashMap<String, BalanceCollection> hashMap)
+	public static List<String> format(List<BalanceCollection> list)
 	{
+		BalanceCollection balance;
 		List<String> result = new ArrayList<String>();
-		if (hashMap == null)
+		if (list == null)
 			return result;
-		for (Entry<String,BalanceCollection> e : hashMap.entrySet())
+		Iterator<BalanceCollection> iterator = list.iterator();
+		while(iterator.hasNext())
 		{
-			result.add(e.getValue().getWorldName() + ": " + e.getValue().getBalance() + " " + e.getKey());
+			balance = iterator.next();
+			result.add(balance.getWorldName() + ": " + balance.getBalance() + " " + balance.getCurrencyName());
 		}
+			
 		
 		return result;
 	}

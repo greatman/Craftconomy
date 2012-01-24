@@ -30,6 +30,7 @@ public class CurrencyHandler {
 			}
 			Currency currency = new Currency(currencyFullName);
 			currencyList.add(currency);
+			return currency;
 		}
 		return null;
 		

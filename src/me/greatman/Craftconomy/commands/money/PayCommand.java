@@ -24,7 +24,7 @@ public class PayCommand extends BaseCommand{
 	
 	public void perform() {
 		double amount;
-		Currency currency;
+		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
 			Account senderAccount = AccountHandler.getAccount((Player) sender);
@@ -33,9 +33,9 @@ public class PayCommand extends BaseCommand{
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
 				//We have a special currency
-				if (this.parameters.size() == 3)
+				if (this.parameters.size() >= 3)
 				{
-					if (!CurrencyHandler.exists(this.parameters.get(2), false))
+					if (CurrencyHandler.exists(this.parameters.get(2), false))
 					{
 						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
 					}
@@ -45,8 +45,6 @@ public class PayCommand extends BaseCommand{
 						return;
 					}
 				}
-				else
-					currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 				
 				Player player = (Player) sender;
 				if (!senderAccount.hasEnough(amount,currency,player.getWorld()))
