@@ -87,16 +87,44 @@ public class DatabaseHandler {
 			if (!SQLLibrary.checkTable(Config.databaseMoneyTable))
 			{
 					try {
-						SQLLibrary.query("CREATE TABLE `" + Config.databaseMoneyTable + "` (" +
-								"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
-								"`username` VARCHAR( 30 ) NOT NULL ," +
-								"`balance` DOUBLE NOT NULL " +
-								") ENGINE = InnoDB;",false);
+						SQLLibrary.query("CREATE TABLE " + Config.databaseMoneyTable + " ( " +
+							"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+							"`username` VARCHAR( 30 ) NOT NULL " +
+							") ENGINE = InnoDB;",false);
 						ILogger.info(Config.databaseMoneyTable + " table created!");
 					} catch (SQLException e) {
 						ILogger.error("Unable to create the " + Config.databaseMoneyTable + " table!");
 						return false;
 					}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseBalanceTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "+
+						"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+						"`username_id` INT NOT NULL ," +
+						"`currency_id` INT NOT NULL , " +
+						"`worldName` VARCHAR( 30 ) NOT NULL , " +
+						"`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
+					ILogger.info(Config.databaseBalanceTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBalanceTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseCurrencyTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( " +
+						"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " +
+						"`name` VARCHAR( 30 ) NOT NULL " +
+						") ENGINE = InnoDB;",false);
+					SQLLibrary.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + Config.currencyDefault + "')", false);
+					ILogger.info(Config.databaseCurrencyTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
+					return false;
+				}
 			}
 			ILogger.info("MySQL table loaded!");
 			return true;
