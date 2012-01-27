@@ -11,6 +11,7 @@ import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.CurrencyHandler;
 
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -53,6 +54,10 @@ public class PayDayConfig {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	}
+	public static World getWorld(String groupName)
+	{
+		return Craftconomy.plugin.getServer().getWorld(file.getString(groupName + ".world"));
 	}
 	/**
 	 * Get the type of the Payday (Wage or Tax)

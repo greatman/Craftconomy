@@ -19,6 +19,8 @@ import me.greatman.Craftconomy.utils.PayDayConfig;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -110,6 +112,7 @@ public class Craftconomy extends JavaPlugin
 		new PayDayConfig();
 		if (!Config.payDayList.isEmpty())
 		{
+			Permission perm;
 			String groupName;
 			Iterator<String> iterator = Config.payDayList.iterator();
 			while (iterator.hasNext())
@@ -117,6 +120,9 @@ public class Craftconomy extends JavaPlugin
 				groupName = iterator.next();
 				if (PayDayConfig.exists(groupName))
 				{
+					perm = new Permission("Craftconomy.payday." + groupName);
+					perm.setDefault(PermissionDefault.FALSE);
+					getServer().getPluginManager().addPermission(perm);
 					payDay = new Timer();
 					long time = (PayDayConfig.getInterval(groupName) * 60) * 1000L;
 					payDay.schedule(new PayDay(groupName), time, time);

@@ -35,8 +35,6 @@ permissions:
             Craftconomy.currency.create: true
             Craftconomy.currency.modify: true
             Craftconomy.currency.delete: true
-    Craftconomy.payday.*:
-      default: notop
     Craftconomy.banks.*:
         description: Give access only to higher level commands for bank
         children:

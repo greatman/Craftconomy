@@ -7,3 +7,4 @@ default:
   value: 10
   currency: Dollar
   permissionGroup: [default]
+  world: world
