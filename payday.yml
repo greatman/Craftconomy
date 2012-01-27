@@ -1,0 +1,9 @@
+default:
+  type: wage
+  disabled: false
+  master: none
+  onlineMode: true
+  interval: 1
+  value: 10
+  currency: Dollar
+  permissionGroup: [default]

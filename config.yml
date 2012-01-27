@@ -16,6 +16,8 @@ System:
       # Default account balance when created
       Holdings: 30.0
 
+  PayDay:
+    Enabled: [default]
   # Controls how money is formatted through methods
   Formatting:
     # Minor allows you to use the Minor amounts for amounts <1

@@ -7,6 +7,7 @@ public class Currency {
 	private String name;
 	private int databaseId;
 	
+	
 	public Currency(String currencyName)
 	{
 		name = currencyName;

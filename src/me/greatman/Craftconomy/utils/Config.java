@@ -1,5 +1,7 @@
 package me.greatman.Craftconomy.utils;
 
+import java.util.List;
+
 import me.greatman.Craftconomy.Craftconomy;
 
 
@@ -32,8 +34,9 @@ public class Config {
 					interestAnnounce,
 					multiWorld;
 					
-	public static int 		interestInterval;
+	public static int 	interestInterval;
 					
+	public static List<String> payDayList;
 	
 	public static void load(Craftconomy thePlugin)
 	{
@@ -52,6 +55,8 @@ public class Config {
 		singleFormatting = plugin.getConfig().getBoolean("System.Formatting.Single");
 		
 		transactionLogging = plugin.getConfig().getBoolean("System.Logging.Enabled");
+		
+		payDayList = plugin.getConfig().getStringList("System.PayDay.Enabled");
 		
 		interestEnabled = plugin.getConfig().getBoolean("System.Interest.Enabled");
 		interestOnlyOnline = plugin.getConfig().getBoolean("System.Interest.Online");
