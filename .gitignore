@@ -5,3 +5,5 @@ bin/
 /target
 /.settings
 /doc
+
+/bin
