@@ -10,7 +10,7 @@ System:
   Default:
     Currency:
       Name: Dollar
-      MultiWorld: true
+      MultiWorld: false
 
     Account:
       # Default account balance when created
