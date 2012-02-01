@@ -10,9 +10,12 @@ import com.sun.rowset.CachedRowSetImpl;
 
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
+import me.greatman.Craftconomy.Bank;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.ILogger;
+import org.bukkit.entity.Player;
+
 
 @SuppressWarnings("restriction")
 public class DatabaseHandler {
@@ -72,6 +75,34 @@ public class DatabaseHandler {
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBalanceTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseBankTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
+							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+							"bankName VARCHAR(30)  UNIQUE NOT NULL," +
+							"owner VARCHAR(30) UNIQUE NOT NULL)", false);
+					ILogger.info(Config.databaseBankTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseBankBalanceTable))
+			{
+				try{
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankBalanceTable +  " (" +
+							"id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+							"bank_id INTEGER NOT NULL," +
+							"currency_id INTEGER NOT NULL," +
+							"worldName VARCHAR(30) NOT NULL," + 
+							"balance DOUBLE NOT NULL)", false);
+					ILogger.info(Config.databaseBankBalanceTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankBalanceTable + " table!");
 					return false;
 				}
 			}
@@ -509,6 +540,96 @@ public class DatabaseHandler {
 			
 		}
 		return success;
+	}
+
+	public static boolean bankExists(String bankName)
+	{
+		String query = "SELECT * FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
+		try
+		{
+			CachedRowSetImpl result = SQLLibrary.query(query, true);
+			if (result != null)
+			{
+				if (result.size() == 1)
+					return true;
+				else
+					return false;
+			}
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	public static void updateBankAccount(Bank bank, double balance, Currency currency, World world)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static String getBankOwner(String bankName) {
+		if (bankExists(bankName))
+		{
+			String query = "SELECT owner FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
+			try {
+				ResultSet result = SQLLibrary.query(query, true);
+				if (result != null)
+				{
+					result.next();
+					return result.getString("owner");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public static double getBankBalanceCurrency(Bank bank, World world, Currency currency) {
+		if (bankExists(bank.getName()))
+		{
+			String query = "SELECT balance FROM " + Config.databaseBankBalanceTable + " WHERE bank_id='" + bank.getId() + "' AND worldName='" + world.getName() + "' AND currency_id=" + currency.getdatabaseId();
+			ResultSet result;
+			try {
+				result = SQLLibrary.query(query, true);
+				if (result != null)
+				{
+					if (!result.isLast())
+					{
+						result.next();
+						return result.getDouble("balance");
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return 0.00;
+	}
+
+	public static int getBankId(String bankName) {
+		String query = "SELECT id FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
+		try {
+			ResultSet result = SQLLibrary.query(query, true);
+			if (result != null)
+			{
+				if (!result.isLast())
+				{
+					result.next();
+					return result.getInt("id");
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return 0;
 	}
 
 	
