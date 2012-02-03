@@ -180,8 +180,8 @@ public class Craftconomy extends JavaPlugin
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));
 		if (cmd.getLabel().equals("money"))
 			this.handleMoneyCommand(cmd, sender, parameters);
-		// if (cmd.getLabel().equals("bank"))
-		// this.handleBankCommand(cmd,sender, parameters);
+		if (cmd.getLabel().equals("bank"))
+			this.handleBankCommand(cmd,sender, parameters);
 		if (cmd.getLabel().equals("craftconomy"))
 			this.handleConfigCommand(cmd, sender, parameters);
 

@@ -82,7 +82,7 @@ public class DatabaseHandler {
 				try {
 					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
 							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
-							"bankName VARCHAR(30)  UNIQUE NOT NULL," +
+							"name VARCHAR(30)  UNIQUE NOT NULL," +
 							"owner VARCHAR(30) UNIQUE NOT NULL)", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e) {
