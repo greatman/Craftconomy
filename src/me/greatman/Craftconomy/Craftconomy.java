@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Timer;
 
 import me.greatman.Craftconomy.commands.*;
+import me.greatman.Craftconomy.commands.bank.*;
 import me.greatman.Craftconomy.commands.config.*;
 import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
@@ -93,19 +94,20 @@ public class Craftconomy extends JavaPlugin
 			CraftconomyCommand.setBaseCommand("/craftconomy");
 		}
 		// Insert all /bank commands
-		// bankCommands.add(new BankOwnBalanceCommand());
-		// bankCommands.add(new BankOtherBalanceCommand());
-		// bankCommands.add(new BankDepositCommand());
-		// bankCommands.add(new BankWithdrawCommand());
-		// bankCommands.add(new BankGiveCommand());
-		// bankCommands.add(new BankTakeCommand());
-		// bankCommands.add(new BankSetCommand());
-		// bankCommands.add(new BankHelpCommand());
+		//TODO: Create/Delete/Rename bank account commands
+		bankCommands.add(new BankOwnBalanceCommand());
+		bankCommands.add(new BankOtherBalanceCommand());
+		bankCommands.add(new BankDepositCommand());
+		bankCommands.add(new BankWithdrawCommand());
+		bankCommands.add(new BankGiveCommand());
+		bankCommands.add(new BankTakeCommand());
+		bankCommands.add(new BankSetCommand());
+		bankCommands.add(new BankHelpCommand());
 
-		// for (BaseCommand CraftconomyCommand : this.bankCommands) {
+		for (BaseCommand CraftconomyCommand : this.bankCommands) {
 
-		// CraftconomyCommand.setBaseCommand("/bank");
-		// }
+			CraftconomyCommand.setBaseCommand("/bank");
+		}
 		
 		
 		//Payday System
@@ -228,18 +230,25 @@ public class Craftconomy extends JavaPlugin
 		command.execute(sender, parameters);
 	}
 
-	/*
-	 * public void handleBankCommand(Command cmd, CommandSender sender,
-	 * List<String> parameters) { if (parameters.size() == 0) {
-	 * BankOwnBalanceCommand command = new BankOwnBalanceCommand();
-	 * command.execute(sender,parameters); return; } String commandName =
-	 * parameters.get(0); for (BaseCommand CraftconomyCommand :
-	 * this.bankCommands) { if
-	 * (CraftconomyCommand.getCommands().contains(commandName)) {
-	 * CraftconomyCommand.execute(sender, parameters); return; } }
-	 * BankOtherBalanceCommand command = new BankOtherBalanceCommand();
-	 * command.execute(sender,parameters); }
-	 */
+	
+	public void handleBankCommand(Command cmd, CommandSender sender,
+			List<String> parameters) {
+		if (parameters.size() == 0) {
+			BankOwnBalanceCommand command = new BankOwnBalanceCommand();
+			command.execute(sender, parameters);
+			return;
+		}
+		String commandName = parameters.get(0);
+		for (BaseCommand CraftconomyCommand : this.bankCommands) {
+			if (CraftconomyCommand.getCommands().contains(commandName)) {
+				CraftconomyCommand.execute(sender, parameters);
+				return;
+			}
+		}
+		BankOtherBalanceCommand command = new BankOtherBalanceCommand();
+		command.execute(sender, parameters);
+	}
+	 
 
 	public static List<String> format(List<BalanceCollection> list)
 	{

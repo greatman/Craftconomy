@@ -14,7 +14,6 @@ import me.greatman.Craftconomy.Bank;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.ILogger;
-import org.bukkit.entity.Player;
 
 
 @SuppressWarnings("restriction")

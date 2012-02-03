@@ -4,7 +4,6 @@ import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
 
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 public class Bank
 {
