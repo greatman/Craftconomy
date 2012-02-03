@@ -557,7 +557,6 @@ public class DatabaseHandler {
 		}
 		catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -566,7 +565,37 @@ public class DatabaseHandler {
 
 	public static void updateBankAccount(Bank bank, double balance, Currency currency, World world)
 	{
-		// TODO Auto-generated method stub
+		String query = "SELECT id FROM " + Config.databaseBankBalanceTable + " WHERE " +
+				"bank_id=" + bank.getId() + 
+				" AND worldName='" + world.getName() + "'" + 
+				" AND currency_id=" + currency.getdatabaseId();
+		CachedRowSetImpl result;
+		try {
+			result = SQLLibrary.query(query, true);
+			if (result != null && result.size() != 0)
+			{
+				query = "UPDATE " + Config.databaseBankBalanceTable + 
+						" SET balance=" + balance + 
+						" WHERE bank_id=" + bank.getId() + 
+						" AND worldName='" + world.getName() + "'" +  
+						" AND currency_id=" + currency.getdatabaseId();
+				SQLLibrary.query(query, false);
+			}
+			else
+			{
+				query = "INSERT INTO " + Config.databaseBankBalanceTable + "(bank_id,worldName,currency_id,balance) VALUES(" +
+						bank.getId() + "," +
+						"'" + world.getName() + "'," +
+						currency.getdatabaseId() + "," +
+						balance + ")";
+				SQLLibrary.query(query, false);
+			}
+						
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 		
 	}
 
@@ -582,7 +611,6 @@ public class DatabaseHandler {
 					return result.getString("owner");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -624,11 +652,45 @@ public class DatabaseHandler {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return 0;
+	}
+
+	public static boolean createBank(String bankName, String playerName)
+	{
+		boolean result = false;
+		String query = "INSERT INTO " + Config.databaseBankTable + "(name,owner) VALUES('" + bankName + "','" + playerName + "')";
+		try
+		{
+			SQLLibrary.query(query, false);
+			result = true;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public static boolean deleteBank(String bankName)
+	{
+		boolean result = false;
+		if (bankExists(bankName))
+		{
+			String query = "DELETE FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
+			try
+			{
+				SQLLibrary.query(query,false);
+				result = true;
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 
 	

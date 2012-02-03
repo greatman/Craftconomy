@@ -32,4 +32,22 @@ public class BankHandler
 	{
 		return DatabaseHandler.bankExists(bankName);
 	}
+	
+	public static boolean create(String bankName, String playerName)
+	{
+		if (!exists(bankName))
+		{
+			return DatabaseHandler.createBank(bankName, playerName);
+		}
+		return false;
+	}
+	
+	public static boolean delete(String bankName)
+	{
+		if (exists(bankName))
+		{
+			return DatabaseHandler.deleteBank(bankName);
+		}
+		return false;
+	}
 }

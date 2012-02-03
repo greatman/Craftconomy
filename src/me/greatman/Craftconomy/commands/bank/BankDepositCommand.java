@@ -11,9 +11,11 @@ import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.commands.BaseCommand;
 import me.greatman.Craftconomy.utils.Config;
 
-public class BankDepositCommand extends BaseCommand {
+public class BankDepositCommand extends BaseCommand
+{
 
-	public BankDepositCommand() {
+	public BankDepositCommand()
+	{
 		this.command.add("deposit");
 		this.requiredParameters.add("Bank Name");
 		this.requiredParameters.add("Amount");
@@ -21,39 +23,41 @@ public class BankDepositCommand extends BaseCommand {
 		permFlag = ("Craftconomy.bank.deposit");
 		helpDescription = "Deposit money in a bank account";
 	}
-	
+
 	public void perform() {
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		double amount;
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
-			if (Craftconomy.isValidAmount(this.parameters.get(1)))
+			if (BankHandler.getBank(this.parameters.get(0)).getOwner().equals(player.getName()))
 			{
-				amount = Double.parseDouble(this.parameters.get(1));
-				if (this.parameters.size() == 3)
+				if (Craftconomy.isValidAmount(this.parameters.get(1)))
 				{
-					if (CurrencyHandler.exists(this.parameters.get(2), false))
+					amount = Double.parseDouble(this.parameters.get(1));
+					if (this.parameters.size() == 3)
 					{
-						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
+						if (CurrencyHandler.exists(this.parameters.get(2), false))
+						{
+							currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
+						}
+						else
+						{
+							sendMessage("This currency doesn't exists!");
+							return;
+						}
 					}
-					else
+					Account account = AccountHandler.getAccount(player);
+					if (account.hasEnough(amount, currency))
 					{
-						sendMessage("This currency doesn't exists!");
-						return;
+						account.substractMoney(amount, currency);
+						BankHandler.getBank(this.parameters.get(0)).addMoney(amount, currency, player.getWorld());
+						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been added into the " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
+						
 					}
 				}
-				Account account = AccountHandler.getAccount(player);
-				if (account.hasEnough(amount, currency))
-				{
-					account.substractMoney(amount, currency);
-					BankHandler.getBank(this.parameters.get(0)).addMoney(amount, currency, player.getWorld());
-					sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been added into the " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
-					
-				}
+				else
+					sendMessage(ChatColor.RED + "Invalid amount!");
 			}
-			else
-				sendMessage(ChatColor.RED + "Invalid amount!");
-			
 		}
 		else
 			sendMessage(ChatColor.RED + "This bank doesn't exists!");

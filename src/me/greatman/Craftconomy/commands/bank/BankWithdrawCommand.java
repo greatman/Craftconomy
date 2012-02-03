@@ -27,33 +27,37 @@ public class BankWithdrawCommand extends BaseCommand {
 		double amount;
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
-			if (Craftconomy.isValidAmount(this.parameters.get(1)))
+			if (BankHandler.getBank(this.parameters.get(0)).getOwner().equals(player.getName()))
 			{
-				amount = Double.parseDouble(this.parameters.get(1));
-				if (this.parameters.size() == 3)
+				if (Craftconomy.isValidAmount(this.parameters.get(1)))
 				{
-					if (CurrencyHandler.exists(this.parameters.get(2), false))
+					amount = Double.parseDouble(this.parameters.get(1));
+					if (this.parameters.size() == 3)
 					{
-						currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
+						if (CurrencyHandler.exists(this.parameters.get(2), false))
+						{
+							currency = CurrencyHandler.getCurrency(this.parameters.get(2), false);
+						}
+						else
+						{
+							sendMessage("This currency doesn't exists!");
+							return;
+						}
 					}
-					else
-					{
-						sendMessage("This currency doesn't exists!");
-						return;
-					}
-				}
-				Bank bank = BankHandler.getBank(this.parameters.get(0));
-				
-				if (bank.hasEnough(amount, currency, player.getWorld()))
-				{
-					bank.substractMoney(amount, currency, player.getWorld());
-					AccountHandler.getAccount(player).addMoney(amount, currency, player.getWorld());
-					sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been withdraw from the " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
+					Bank bank = BankHandler.getBank(this.parameters.get(0));
 					
+					if (bank.hasEnough(amount, currency, player.getWorld()))
+					{
+						bank.substractMoney(amount, currency, player.getWorld());
+						AccountHandler.getAccount(player).addMoney(amount, currency, player.getWorld());
+						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been withdraw from the " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
+						
+					}
 				}
+				else
+					sendMessage(ChatColor.RED + "Invalid amount!");
 			}
-			else
-				sendMessage(ChatColor.RED + "Invalid amount!");
+			
 			
 		}
 		else

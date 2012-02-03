@@ -103,6 +103,8 @@ public class Craftconomy extends JavaPlugin
 		bankCommands.add(new BankTakeCommand());
 		bankCommands.add(new BankSetCommand());
 		bankCommands.add(new BankHelpCommand());
+		bankCommands.add(new BankCreateCommand());
+		bankCommands.add(new BankDeleteCommand());
 
 		for (BaseCommand CraftconomyCommand : this.bankCommands) {
 
