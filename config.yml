@@ -28,16 +28,16 @@ System:
     #  - These will attempt to create & connect to SQLite
     Type: 'sqlite'
 
-    # The table used for the money
+    # The table used for the accounts
     AccountTable: 'Account'
-
+    BalanceTable: 'Balance'
+    
     # The table used for the bank
     BankTable: 'Bank'
+    BankBalanceTable: 'BankBalance'
     
-    CurrencyTable: 'Currency'
+    CurrencyTable: 'Currency'    
     
-    BalanceTable: 'Balance'
-
     #Modify if using MySQL
     Address: 'localhost'
     Port: 3306
