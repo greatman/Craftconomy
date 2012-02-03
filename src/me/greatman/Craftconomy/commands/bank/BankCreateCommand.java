@@ -15,6 +15,10 @@ public class BankCreateCommand extends BaseCommand{
 	}
 	
 	public void perform() {
+		if (BankHandler.exists(this.parameters.get(0)))
+		{
+			
+		}
 		if (BankHandler.create(this.parameters.get(0),player.getName()))
 		{
 			sendMessage("The bank account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN +" has been created!");
