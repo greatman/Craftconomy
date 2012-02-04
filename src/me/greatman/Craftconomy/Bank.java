@@ -1,5 +1,10 @@
 package me.greatman.Craftconomy;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
 
@@ -39,6 +44,27 @@ public class Bank
 		if (!Config.multiWorld)
 			return DatabaseHandler.getBankBalanceCurrency(this, Craftconomy.plugin.getServer().getWorlds().get(0),currency);
 		return DatabaseHandler.getBankBalanceCurrency(this, world, currency);
+	}
+	
+	public List<BalanceCollection> getBalance()
+	{
+		ResultSet result;
+		List<BalanceCollection> list = new ArrayList<BalanceCollection>();
+		result = DatabaseHandler.getAllBankBalance(this);
+		if (result != null)
+		{
+			try {
+				while (result.next())
+				{
+					list.add(new BalanceCollection(result.getString("worldName"), result.getDouble("balance"), CurrencyHandler.getCurrency(result.getString("name"), true)));
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return list;
+		}
+		return null;
 	}
 	
 	/**

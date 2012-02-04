@@ -95,7 +95,6 @@ public class Craftconomy extends JavaPlugin
 		}
 		// Insert all /bank commands
 		//TODO: Create/Delete/Rename bank account commands
-		bankCommands.add(new BankOwnBalanceCommand());
 		bankCommands.add(new BankOtherBalanceCommand());
 		bankCommands.add(new BankDepositCommand());
 		bankCommands.add(new BankWithdrawCommand());
@@ -236,7 +235,7 @@ public class Craftconomy extends JavaPlugin
 	public void handleBankCommand(Command cmd, CommandSender sender,
 			List<String> parameters) {
 		if (parameters.size() == 0) {
-			BankOwnBalanceCommand command = new BankOwnBalanceCommand();
+			BankHelpCommand command = new BankHelpCommand();
 			command.execute(sender, parameters);
 			return;
 		}

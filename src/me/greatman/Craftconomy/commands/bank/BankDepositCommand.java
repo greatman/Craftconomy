@@ -51,7 +51,7 @@ public class BankDepositCommand extends BaseCommand
 					{
 						account.substractMoney(amount, currency);
 						BankHandler.getBank(this.parameters.get(0)).addMoney(amount, currency, player.getWorld());
-						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been added into the " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
+						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been added into the " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account!");
 						
 					}
 				}

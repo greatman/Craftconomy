@@ -690,6 +690,22 @@ public class DatabaseHandler {
 		}
 		return result;
 	}
-
+	
+	public static ResultSet getAllBankBalance(Bank bank)
+	{
+		//TODO: Probably doesn't work
+		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBankBalanceTable + " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBankBalanceTable + ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE bank_id=" + bank.getId() + " ORDER BY worldName";
+		try
+		{
+			ResultSet result = SQLLibrary.query(query, true);
+			if (result != null)
+			{
+				return result;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 }

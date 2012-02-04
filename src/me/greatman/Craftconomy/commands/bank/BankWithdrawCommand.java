@@ -50,7 +50,7 @@ public class BankWithdrawCommand extends BaseCommand {
 					{
 						bank.substractMoney(amount, currency, player.getWorld());
 						AccountHandler.getAccount(player).addMoney(amount, currency, player.getWorld());
-						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been withdraw from the " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
+						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been withdraw from the " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account!");
 						
 					}
 				}

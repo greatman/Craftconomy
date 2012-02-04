@@ -59,7 +59,7 @@ public class BankTakeCommand extends BaseCommand {
 				}
 				
 				BankHandler.getBank(this.parameters.get(0)).substractMoney(amount, currency, world);
-				sendMessage("You added" + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " to " + ChatColor.WHITE + this.parameters.get(0) + " bank account!");
+				sendMessage("You added" + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " to " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account!");
 			}
 			else
 				sendMessage(ChatColor.RED + "Invalid amount!");
