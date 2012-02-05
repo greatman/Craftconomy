@@ -20,7 +20,8 @@ public class Config {
 							databasePassword,
 							databaseAddress,
 							databasePort,
-							databaseDb;
+							databaseDb,
+							bankCurrency;
 					
 	public static double	defaultHoldings,
 							bankPrice;
@@ -42,7 +43,8 @@ public class Config {
 		
 		defaultHoldings = plugin.getConfig().getDouble("System.Default.Account.Holdings");
 		
-		bankPrice = plugin.getConfig().getDouble("System.Default.Bank.Price");
+		bankPrice = plugin.getConfig().getDouble("System.Bank.Price");
+		bankCurrency = plugin.getConfig().getString("System.Bank.Currency");
 		
 		transactionLogging = plugin.getConfig().getBoolean("System.Logging.Enabled");
 		

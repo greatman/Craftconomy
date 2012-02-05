@@ -10,6 +10,7 @@ System:
 
   Bank:
     Price: 50
+    Currency: Dollar
     
   PayDay:
     Enabled: [default]
