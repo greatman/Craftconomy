@@ -18,7 +18,7 @@ public class PayCommand extends BaseCommand{
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
 		this.optionalParameters.add("Currency");
-		permFlag = ("Craftconomy.payment");
+		permFlag = ("Craftconomy.money.pay");
 		helpDescription = "Send money to others.";
 	}
 	

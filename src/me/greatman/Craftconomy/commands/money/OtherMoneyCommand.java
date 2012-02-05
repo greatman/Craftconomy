@@ -13,7 +13,7 @@ import me.greatman.Craftconomy.commands.BaseCommand;
 public class OtherMoneyCommand extends BaseCommand{
 
 	public OtherMoneyCommand() {
-		permFlag = ("Craftconomy.holdings.others");
+		permFlag = ("Craftconomy.money.holdings.others");
 		this.requiredParameters.add("Player Name");
 		helpDescription = "Check others balance";
 	}

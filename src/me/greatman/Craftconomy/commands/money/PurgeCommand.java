@@ -10,7 +10,7 @@ public class PurgeCommand extends BaseCommand{
 	
 	public PurgeCommand() {
 		this.command.add("purge");
-		permFlag = ("Craftconomy.accounts.purge");
+		permFlag = ("Craftconomy.money.purge");
 		helpDescription = "Purge all accounts with initial holdings.";
 	}
 	

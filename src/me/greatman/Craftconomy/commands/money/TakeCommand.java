@@ -19,7 +19,7 @@ public class TakeCommand extends BaseCommand{
 		this.requiredParameters.add("Amount");
 		this.optionalParameters.add("Currency");
 		this.optionalParameters.add("World");
-		permFlag = ("Craftconomy.accounts.take");
+		permFlag = ("Craftconomy.money.take");
 		helpDescription = "Take money";
 	}
 	

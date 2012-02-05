@@ -74,7 +74,8 @@ public class Craftconomy extends JavaPlugin
 		commands.add(new GiveCommand());
 		commands.add(new TakeCommand());
 		commands.add(new SetCommand());
-		commands.add(new PurgeCommand());
+		//TODO: Find a safer way for this
+		//commands.add(new PurgeCommand());
 		commands.add(new EmptyCommand());
 		commands.add(new MoneyHelpCommand());
 

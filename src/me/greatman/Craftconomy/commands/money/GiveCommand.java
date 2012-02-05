@@ -19,7 +19,7 @@ public class GiveCommand extends BaseCommand{
 		this.requiredParameters.add("Amount");
 		this.optionalParameters.add("Currency");
 		this.optionalParameters.add("World");
-		permFlag = ("Craftconomy.accounts.give");
+		permFlag = ("Craftconomy.money.give");
 		helpDescription = "Give money";
 	}
 	

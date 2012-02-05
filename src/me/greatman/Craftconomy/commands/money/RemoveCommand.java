@@ -11,7 +11,7 @@ public class RemoveCommand extends BaseCommand{
 	public RemoveCommand() {
 		this.command.add("remove");
 		this.requiredParameters.add("Player Name");
-		permFlag = ("Craftconomy.accounts.remove");
+		permFlag = ("Craftconomy.account.remove");
 		helpDescription = "Remove an account.";
 	}
 	

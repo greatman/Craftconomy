@@ -16,7 +16,7 @@ public class BankOtherBalanceCommand extends BaseCommand{
 	
 	public BankOtherBalanceCommand()
 	{
-		permFlag = ("Craftconomy.bank.holdings.others");
+		permFlag = ("Craftconomy.bank.holdings");
 		this.requiredParameters.add("Bank Name");
 		helpDescription = "Check other bank balance";
 	}

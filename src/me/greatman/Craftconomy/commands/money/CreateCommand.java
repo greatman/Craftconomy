@@ -10,7 +10,7 @@ public class CreateCommand extends BaseCommand{
 	public CreateCommand() {
 		this.command.add("create");
 		this.requiredParameters.add("Player Name");
-		permFlag = ("Craftconomy.create");
+		permFlag = ("Craftconomy.account.create");
 		helpDescription = "Create a account";
 	}
 	

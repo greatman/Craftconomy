@@ -15,7 +15,7 @@ public class OwnMoneyCommand extends BaseCommand{
 
 	public OwnMoneyCommand() {
 		this.command.add("");
-		permFlag = ("Craftconomy.holdings");
+		permFlag = ("Craftconomy.money.holdings");
 		helpDescription = "Check your balance";
 	}
 	

@@ -19,7 +19,7 @@ public class SetCommand extends BaseCommand{
 		this.requiredParameters.add("Amount");
 		this.optionalParameters.add("Currency");
 		this.optionalParameters.add("World");
-		permFlag = ("Craftconomy.accounts.set");
+		permFlag = ("Craftconomy.money.set");
 		helpDescription = "Set account balance";
 	}
 	

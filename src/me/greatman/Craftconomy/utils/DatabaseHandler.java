@@ -202,6 +202,11 @@ public class DatabaseHandler {
 			SQLLibrary.query(query, false);
 			query = "DELETE FROM " + Config.databaseCurrencyTable;
 			SQLLibrary.query(query, false);
+			SQLLibrary.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + Config.currencyDefault + "')", false);
+			query = "DELETE FROM " + Config.databaseBankTable;
+			SQLLibrary.query(query, false);
+			query = "DELETE FROM " + Config.databaseBankBalanceTable;
+			SQLLibrary.query(query, false);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
