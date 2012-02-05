@@ -23,7 +23,9 @@ public class Bank
 		id = DatabaseHandler.getBankId(bankName);
 	}
 
-	
+	public double getDefaultBalance() {
+		return getBalance(Craftconomy.plugin.getServer().getWorlds().get(0));
+	}
 	/**
 	 * Get the default balance in the specific world
 	 * @param world The world we want to get the balance
@@ -67,6 +69,11 @@ public class Bank
 		return null;
 	}
 	
+	
+	public double addMoney(double amount)
+	{
+		return addMoney(amount,CurrencyHandler.getCurrency(Config.currencyDefault, true), Craftconomy.plugin.getServer().getWorlds().get(0));
+	}
 	/**
 	 * Add money in a specific world and currency account
 	 * @param amount The amount we want to add
@@ -85,6 +92,10 @@ public class Bank
 		return balance;
 	}
 	
+	public double substractMoney(double amount)
+	{
+		return substractMoney(amount,CurrencyHandler.getCurrency(Config.currencyDefault, true), Craftconomy.plugin.getServer().getWorlds().get(0));
+	}
 	/**
 	 * Remove money from a player account
 	 * @param amount The amount we want to remove from the account
@@ -163,6 +174,12 @@ public class Bank
 	 * @param world The world we want to check
 	 * @return True if the player has enough else false
 	 */
+	
+	public boolean hasEnough(double amount)
+	{
+		return hasEnough(amount,CurrencyHandler.getCurrency(Config.currencyDefault, true), Craftconomy.plugin.getServer().getWorlds().get(0));
+	}
+	
 	public boolean hasEnough(double amount, Currency currency, World world)
 	{
 		double balance;
@@ -190,4 +207,22 @@ public class Bank
 	{
 		return owner;
 	}
+	
+	public List<String> getMembers()
+	{
+		return DatabaseHandler.getBankMembers(this);
+	}
+	
+	public void addMember(String playerName)
+	{
+		DatabaseHandler.addBankMember(this, playerName);
+	}
+	
+	public void removeMember(String playerName)
+	{
+		DatabaseHandler.removeBankMember(this, playerName);
+	}
+
+
+	
 }

@@ -50,4 +50,9 @@ public class BankHandler
 		}
 		return false;
 	}
+	
+	public static List<String> listBanks()
+	{
+		return DatabaseHandler.listBanks();
+	}
 }

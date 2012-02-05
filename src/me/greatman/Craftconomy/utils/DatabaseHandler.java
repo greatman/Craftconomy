@@ -3,6 +3,8 @@ package me.greatman.Craftconomy.utils;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.World;
 
@@ -83,7 +85,7 @@ public class DatabaseHandler {
 					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
 							"id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + 
 							"name VARCHAR(30)  UNIQUE NOT NULL," +
-							"owner VARCHAR(30) UNIQUE NOT NULL)", false);
+							"owner VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
@@ -102,6 +104,18 @@ public class DatabaseHandler {
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseBankBalanceTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseBankMemberTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankMemberTable + " (" +
+							"bank_id INTEGER  NOT NULL," + 
+							"playerName VARCHAR(30) NOT NULL)", false);
+					ILogger.info(Config.databaseBankMemberTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankMemberTable + " table!");
 					return false;
 				}
 			}
@@ -711,6 +725,63 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static List<String> getBankMembers(Bank bank) {
+		String query = "SELECT * FROM " + Config.databaseBankMemberTable + " WHERE bank_id = " + bank.getId();
+		List<String> list = new ArrayList<String>();
+		try {
+			ResultSet result = SQLLibrary.query(query, true);
+			if (result != null)
+			{
+				while(result.next())
+				{
+					list.add(result.getString("playerName"));
+				}
+				return list;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static List<String> listBanks() {
+		String query = "SELECT name FROM " + Config.databaseBankTable;
+		List<String> list = new ArrayList<String>();
+		try {
+			ResultSet result = SQLLibrary.query(query, true);
+			if (result != null)
+			{
+				while(result.next())
+				{
+					list.add(result.getString("name"));
+				}
+				return list;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void addBankMember(Bank bank, String playerName) {
+		String query = "INSERT INTO " + Config.databaseBankMemberTable + " VALUES(" + bank.getId() + ",'" + playerName + "')";
+		try {
+			SQLLibrary.query(query, false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void removeBankMember(Bank bank, String playerName)
+	{
+		String query = "DELETE FROM " + Config.databaseBankMemberTable + " WHERE bank_id=" + bank.getId() + " AND playerName='" + playerName + "'";
+		try {
+			SQLLibrary.query(query,false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

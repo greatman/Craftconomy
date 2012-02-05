@@ -36,6 +36,7 @@ System:
     # The table used for the bank
     BankTable: 'Bank'
     BankBalanceTable: 'BankBalance'
+    BankMemberTable: 'BankMember'
     
     CurrencyTable: 'Currency'    
     
