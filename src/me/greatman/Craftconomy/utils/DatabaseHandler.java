@@ -170,6 +170,48 @@ public class DatabaseHandler {
 					return false;
 				}
 			}
+			if(!SQLLibrary.checkTable(Config.databaseBankTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " (" +
+					"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " +
+					"`name` VARCHAR( 30 ) NOT NULL , " +
+					"`owner` VARCHAR( 30 ) NOT NULL " +
+					") ENGINE = InnoDB;", false);
+					ILogger.info(Config.databaseBankTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseBankBalanceTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "+
+							"`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
+							"`bank_id` INT NOT NULL ," +
+							"`currency_id` INT NOT NULL , " +
+							"`worldName` VARCHAR( 30 ) NOT NULL , " +
+							"`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
+					ILogger.info(Config.databaseBankBalanceTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankBalanceTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseBankMemberTable))
+			{
+				try {
+					SQLLibrary.query("CREATE TABLE " + Config.databaseBankMemberTable + " (" +
+						"`bank_id` INT NOT NULL ," +
+						"`playerName` INT NOT NULL " +
+						") ENGINE = InnoDB;", false);
+					ILogger.info(Config.databaseBankMemberTable + " table created!");
+				} catch (SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseBankMemberTable + " table!");
+					return false;
+				}
+			}
 			ILogger.info("MySQL table loaded!");
 			return true;
 		}
