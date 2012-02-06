@@ -35,6 +35,8 @@ permissions:
             Craftconomy.bank.set: true
             Craftconomy.bank.take: true
             Craftconomy.bank.withdraw: true
+            Craftconomy.bank.add: true
+            Craftconomy.bank.remove: true
             
     Craftconomy.banks.*:
         description: Give access to all bank commands
@@ -48,6 +50,8 @@ permissions:
           Craftconomy.bank.set: true
           Craftconomy.bank.take: true
           Craftconomy.bank.withdraw: true
+          Craftconomy.bank.add: true
+          Craftconomy.bank.remove: true
           
     Craftconomy.bankuser:
         description: Give access to the player bank account commands
@@ -57,6 +61,8 @@ permissions:
           Craftconomy.bank.withdraw: true
           Craftconomy.bank.deposit: true
           Craftconomy.bank.create: true
+          Craftconomy.bank.add: true
+          Craftconomy.bank.remove: true
           
     Craftconomy.accounts.*:
         description: Gives access only to higher level commands
@@ -201,3 +207,13 @@ permissions:
         description: Remove a currency
         default: op
         command: "/craftcurrency currencyremove <Currency Name>"
+        
+    Craftconomy.bank.add:
+        description: Add someone in your bank account
+        default: op
+        command: "/bank add <Bank Name> <Player Name>"
+    
+    Craftconomy.bank.remove:
+        description: Remove someone from your bank account
+        default: op
+        command: "/bank remove <Bank Name> <Player Name>"
