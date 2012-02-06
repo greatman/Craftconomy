@@ -29,7 +29,7 @@ public class BankDepositCommand extends BaseCommand
 		double amount;
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
-			if (BankHandler.getBank(this.parameters.get(0)).getOwner().equals(player.getName()))
+			if (BankHandler.getBank(this.parameters.get(0)).getOwner().equals(player.getName()) || BankHandler.getBank(this.parameters.get(0)).getMembers().contains(player.getName()))
 			{
 				if (Craftconomy.isValidAmount(this.parameters.get(1)))
 				{

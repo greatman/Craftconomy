@@ -26,7 +26,7 @@ public class BankOtherBalanceCommand extends BaseCommand{
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
 			Bank bank = BankHandler.getBank(this.parameters.get(0));
-			if (bank.getOwner().equals(player.getName()))
+			if (bank.getOwner().equals(player.getName()) || BankHandler.getBank(this.parameters.get(0)).getMembers().contains(player.getName()))
 			{
 				sendMessage("Bank " + this.parameters.get(0) + ChatColor.GREEN + " status:");
 				List<String> balance = Craftconomy.format(bank.getBalance());
