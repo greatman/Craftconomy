@@ -53,11 +53,14 @@ public class BankWithdrawCommand extends BaseCommand {
 						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been withdraw from the " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account!");
 						
 					}
+					else
+						sendMessage(ChatColor.RED + "There's not enough money in the bank account for this transaction!");
 				}
 				else
 					sendMessage(ChatColor.RED + "Invalid amount!");
 			}
-			
+			else
+				sendMessage(ChatColor.RED + "You don't have access to that bank!");
 			
 		}
 		else

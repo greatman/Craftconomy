@@ -54,10 +54,14 @@ public class BankDepositCommand extends BaseCommand
 						sendMessage(ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " has been added into the " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account!");
 						
 					}
+					else
+						sendMessage(ChatColor.RED + "You don't have enough money!");
 				}
 				else
 					sendMessage(ChatColor.RED + "Invalid amount!");
 			}
+			else
+				sendMessage(ChatColor.RED + "You don't have access to this bank!");
 		}
 		else
 			sendMessage(ChatColor.RED + "This bank doesn't exists!");
