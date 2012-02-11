@@ -2,6 +2,7 @@ package me.greatman.Craftconomy;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 
 import me.greatman.Craftconomy.utils.DatabaseHandler;
 
@@ -29,13 +30,28 @@ public class CurrencyHandler {
 				
 			}
 			Currency currency = new Currency(currencyFullName);
+			for(Entry<String, Double> entry : DatabaseHandler.getExchangeRates(currency).entrySet()) {
+				//Tell the currency the exchange rate
+				currency.setExchangeRate(entry.getKey(), entry.getValue());
+			}
 			currencyList.add(currency);
 			return currency;
 		}
 		return null;
 		
 	}
-
+	
+	/**
+	 * Converts a -> b
+	 * @param src The source currency
+	 * @param dest The destination currency
+	 * @param amount The amount (as source currency)
+	 * @return
+	 */
+	public static double convert(Currency src, Currency dest, double amount) {
+		return amount * src.getExchangeRate(dest.getName());
+	}
+	
 	public static boolean exists(String currencyName, boolean exact) {
 		if (DatabaseHandler.currencyExist(currencyName,exact))
 			return true;
@@ -54,5 +70,14 @@ public class CurrencyHandler {
 
 	public static boolean delete(String currencyName) {
 		return DatabaseHandler.removeCurrency(currencyName);
+	}
+	/**
+	 * Set the currency exchange rate
+	 * @param src The source currency
+	 * @param dest The destination currency
+	 * @param rate The rate
+	 */
+	public static void setExchangeRate(Currency src, Currency dest, double rate) {
+		DatabaseHandler.setExchangeRate(src, dest, rate);
 	}
 }

@@ -77,6 +77,7 @@ public class Craftconomy extends JavaPlugin
 		//TODO: Find a safer way for this
 		//commands.add(new PurgeCommand());
 		commands.add(new EmptyCommand());
+		commands.add(new ExchangeCommand());
 		commands.add(new MoneyHelpCommand());
 
 		for (BaseCommand CraftconomyCommand : this.commands)
@@ -88,6 +89,7 @@ public class Craftconomy extends JavaPlugin
 		configCommands.add(new ConfigCurrencyAddCommand());
 		configCommands.add(new ConfigCurrencyModifyCommand());
 		configCommands.add(new ConfigCurrencyRemoveCommand());
+		configCommands.add(new ConfigCurrencyExchangeCommand());
 		configCommands.add(new ConfigHelpCommand());
 
 		for (BaseCommand CraftconomyCommand : this.configCommands)

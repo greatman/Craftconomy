@@ -38,7 +38,8 @@ System:
     BankBalanceTable: 'BankBalance'
     BankMemberTable: 'BankMember'
     
-    CurrencyTable: 'Currency'    
+    CurrencyTable: 'Currency'
+    CurrencyExchangeTable: 'CurrencyExchange'    
     
     #Modify if using MySQL
     Address: 'localhost'
