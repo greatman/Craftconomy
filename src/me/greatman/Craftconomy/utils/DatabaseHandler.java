@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.World;
@@ -15,6 +16,7 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Bank;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
+import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.ILogger;
 
 
@@ -63,6 +65,18 @@ public class DatabaseHandler {
 					return false;
 				}
 				
+			}
+			if(!SQLLibrary.checkTable(Config.databaseCurrencyExchangeTable)) {
+				try{
+					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( " +
+							"src VARCHAR ( 30 ) NOT NULL , " +
+							"dest VARCHAR ( 30 ) NOT NULL , " +
+							"rate DOUBLE NOT NULL)", false);
+					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
+				}catch(SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseCurrencyExchangeTable + " table!");
+					return false;
+				}
 			}
 			if(!SQLLibrary.checkTable(Config.databaseBalanceTable))
 			{
@@ -167,6 +181,19 @@ public class DatabaseHandler {
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				} catch (SQLException e) {
 					ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
+					return false;
+				}
+			}
+			if(!SQLLibrary.checkTable(Config.databaseCurrencyExchangeTable)) {
+				try{
+					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( " +
+							"`src` VARCHAR ( 30 ) NOT NULL , " +
+							"`dest` VARCHAR ( 30 ) NOT NULL , " +
+							"`rate` DOUBLE NOT NULL " +
+							") ENGINE = InnoDB;", false);
+					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
+				}catch(SQLException e) {
+					ILogger.error("Unable to create the " + Config.databaseCurrencyExchangeTable + " table!");
 					return false;
 				}
 			}
@@ -825,5 +852,37 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public static void setExchangeRate(Currency src, Currency dest, double rate) {
+		//already in?
+		String query = "SELECT * FROM " + Config.databaseCurrencyExchangeTable + " WHERE src = '"+src.getName()+"' AND dest = '"+dest.getName()+"'";
+		try{
+			ResultSet result = SQLLibrary.query(query, true);
+			if(result.next()) {
+				query = "UPDATE " + Config.databaseCurrencyExchangeTable +" SET rate="+rate+" WHERE src='"+src.getName()+"' AND dest = '"+dest.getName()+"'";
+					SQLLibrary.query(query,false);
+			}else{
+				//create new
+				query = "INSERT INTO " + Config.databaseCurrencyExchangeTable + " (src, dest, rate) VALUES ('"+src.getName()+"','"+dest.getName()+"',"+String.valueOf(rate)+")";
+				SQLLibrary.query(query,false);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public static HashMap<String, Double> getExchangeRates(Currency a) {
+		String query = "SELECT * FROM " + Config.databaseCurrencyExchangeTable + " WHERE src = '"+a.getName()+"'";
+		HashMap<String, Double> ret = new HashMap<String, Double>();
+		try{
+			ResultSet result = SQLLibrary.query(query, true);
+			if(result != null) {
+				while(result.next()) {
+					ret.put(result.getString("dest"), result.getDouble("rate"));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
 }

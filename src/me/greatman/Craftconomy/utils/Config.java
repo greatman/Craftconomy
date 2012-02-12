@@ -16,6 +16,7 @@ public class Config {
 							databaseBankBalanceTable,
 							databaseBankMemberTable,
 							databaseCurrencyTable,
+							databaseCurrencyExchangeTable,
 							databaseBalanceTable,
 							databaseUsername,
 							databasePassword,
@@ -54,6 +55,7 @@ public class Config {
 		databaseAccountTable = plugin.getConfig().getString("System.Database.AccountTable");
 		databaseBankTable = plugin.getConfig().getString("System.Database.BankTable");
 		databaseCurrencyTable = plugin.getConfig().getString("System.Database.CurrencyTable");
+		databaseCurrencyExchangeTable = plugin.getConfig().getString("System.Database.CurrencyExchangeTable");
 		databaseBalanceTable = plugin.getConfig().getString("System.Database.BalanceTable");
 		databaseBankBalanceTable = plugin.getConfig().getString("System.Database.BankBalanceTable");
 		databaseBankMemberTable = plugin.getConfig().getString("System.Database.BankMemberTable");

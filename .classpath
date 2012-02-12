@@ -7,5 +7,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="B:/projects/bukkit - Kopie/craftbukkit-1.1-R3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
