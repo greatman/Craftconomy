@@ -2,6 +2,7 @@ package me.greatman.Craftconomy.commands.money;
 
 import org.bukkit.ChatColor;
 
+import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.commands.BaseCommand;
@@ -18,7 +19,7 @@ public class ExchangeCalcCommand extends BaseCommand{
 			this.requiredParameters.add("Source Currency");
 			this.requiredParameters.add("Destination Currency");
 			permFlag = ("Craftconomy.money.exchange");
-			helpDescription = "Create a account";
+			helpDescription = "Show the exchange rate between 2 currency";
 		}
 		
 		public void perform() {
@@ -29,17 +30,17 @@ public class ExchangeCalcCommand extends BaseCommand{
 			{
 				source = CurrencyHandler.getCurrency(this.parameters.get(0), false);
 			}else{
-				sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " does not exist!");
+				sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exist!");
 				return;
 			}
 			if (CurrencyHandler.exists(this.parameters.get(1), false))
 			{
 				destination = CurrencyHandler.getCurrency(this.parameters.get(1), false);
 			}else{
-				sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(1) + ChatColor.GREEN + " does not exist!");
+				sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(1) + ChatColor.RED + " does not exist!");
 				return;
 			}
-			sendMessage(ChatColor.GRAY + "1" + ChatColor.WHITE + " " + source.getName() +" = " + CurrencyHandler.convert(source, destination, 1.00) + " " + destination.getName());
-			sendMessage(ChatColor.GRAY + "1" + ChatColor.WHITE + " " + destination.getName() + " = " + CurrencyHandler.convert(destination, source, 1.00) + " " + source.getName());
+			sendMessage(ChatColor.GRAY + Craftconomy.format(1,source) + " = " + Craftconomy.format(CurrencyHandler.convert(source, destination, 1.00), destination));
+			sendMessage(ChatColor.GRAY + Craftconomy.format(1,destination) + " = " + Craftconomy.format(CurrencyHandler.convert(destination, source, 1.00), source));
 		}
 }
