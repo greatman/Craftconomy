@@ -1,6 +1,7 @@
 package me.greatman.Craftconomy;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -258,15 +259,17 @@ public class Craftconomy extends JavaPlugin
 
 	public static List<String> format(List<BalanceCollection> list)
 	{
+		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 		BalanceCollection balance;
 		List<String> result = new ArrayList<String>();
 		if (list == null)
 			return result;
 		Iterator<BalanceCollection> iterator = list.iterator();
+		
 		while (iterator.hasNext())
 		{
 			balance = iterator.next();
-			result.add(balance.getWorldName() + ": " + balance.getBalance()
+			result.add(balance.getWorldName() + ": " + decimalFormat.format(balance.getBalance())
 					+ " " + balance.getCurrencyName());
 		}
 
@@ -276,7 +279,8 @@ public class Craftconomy extends JavaPlugin
 	public static String format(double amount, Currency currency)
 	{
 		// TODO: Add plural format
-		return amount + " " + currency.getName();
+		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+		return decimalFormat.format(amount) + " " + currency.getName();
 	}
 
 	public static boolean isValidAmount(String amount)
