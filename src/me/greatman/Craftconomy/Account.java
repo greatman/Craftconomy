@@ -47,6 +47,10 @@ public class Account {
 		player = user;
 	}
 	
+	/**
+	 * Get the default balance.
+	 * @return the balance
+	 */
 	public double getDefaultBalance()
 	{
 			return getBalance(CurrencyHandler.getCurrency(Config.currencyDefault, true));
@@ -88,8 +92,9 @@ public class Account {
 			balance = DatabaseHandler.getBalanceCurrency(this,Craftconomy.plugin.getServer().getWorlds().get(0),currency);
 		return balance;
 	}
+	
 	/**
-	 * Get All the player balance.
+	 * Get all the player balance.
 	 * @return The balance
 	 */
 	public List<BalanceCollection> getBalance()
@@ -313,7 +318,7 @@ public class Account {
 	}
 	
 	/**
-	 * Multiply money in the player account
+	 * Divide money in the player account
 	 * @param amount The amount we want to divide
 	 * @param currency The currency we want to fetch
 	 * @return The balance after the money is divided
@@ -327,7 +332,7 @@ public class Account {
 	}
 	
 	/**
-	 * Multiply money in the player account
+	 * Divide money in the player account
 	 * @param amount The amount we want to divide
 	 * @param currency The currency we want to fetch
 	 * @param world The world from where we fetch the currency
@@ -467,6 +472,11 @@ public class Account {
 	{
 		return hasEnough(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
+	
+	/**
+	 * Get the player database ID
+	 * @return the player Database ID
+	 */
 	public int getPlayerId() {
 		return playerId;
 	}
