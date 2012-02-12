@@ -37,6 +37,6 @@ public class ConfigCurrencyExchangeCommand extends BaseCommand {
 		}
 		CurrencyHandler.setExchangeRate(src, dest, rate);
 		src.setExchangeRate(dest.getName(), rate);
-		sendMessage(ChatColor.GREEN + "Exchange rate of currencys set!");
+		sendMessage("Exchange rate of currencys set!");
 	}
 }
