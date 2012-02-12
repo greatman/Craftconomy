@@ -79,6 +79,7 @@ public class Craftconomy extends JavaPlugin
 		//commands.add(new PurgeCommand());
 		commands.add(new EmptyCommand());
 		commands.add(new ExchangeCommand());
+		commands.add(new ExchangeCalcCommand());
 		commands.add(new MoneyHelpCommand());
 
 		for (BaseCommand CraftconomyCommand : this.commands)
