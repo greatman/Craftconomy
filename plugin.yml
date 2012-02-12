@@ -38,7 +38,19 @@ permissions:
             Craftconomy.bank.withdraw: true
             Craftconomy.bank.add: true
             Craftconomy.bank.remove: true
+            Craftconomy.currency.exchange: true
+            Craftconomy.currency.create: true
+            Craftconomy.currency.modify: true
+            Craftconomy.currency.remove: true
             
+    Craftconomy.currency.*:
+        description: Gives access to all currency config commands
+        children:
+          Craftconomy.currency.exchange: true
+          Craftconomy.currency.create: true
+          Craftconomy.currency.modify: true
+          Craftconomy.currency.remove: true
+
     Craftconomy.banks.*:
         description: Give access to all bank commands
         children:
@@ -84,6 +96,7 @@ permissions:
             Craftconomy.money.set: true
             Craftconomy.money.take: true
             Craftconomy.money.exchange: true
+            
             
     Craftconomy.plus:
         description: Gives access to user plus only commands
@@ -161,7 +174,12 @@ permissions:
         command: "/money set <account-name> <amount> [Currency] [World]"
         examples:
           - "/money set greatman 30"
-          
+    
+    Craftconomy.money.exchange:
+        description: Exchange money into another currency.
+        default: op
+        command: "/money exchange <Source Currency> <Destination Currency> <Amount>"
+         
     Craftconomy.accounts.empty:
         description: Empty / Drop entire database of accounts.
         default: op
@@ -196,6 +214,16 @@ permissions:
         description: Withdraw money from your bank account
         default: op
         command: "/bank withdraw <amount> [Currency]"
+    
+    Craftconomy.bank.add:
+        description: Add someone in your bank account
+        default: op
+        command: "/bank add <Bank Name> <Player Name>"
+    
+    Craftconomy.bank.remove:
+        description: Remove someone from your bank account
+        default: op
+        command: "/bank remove <Bank Name> <Player Name>"
         
     Craftconomy.currency.create:
         description: Create a currency
@@ -211,18 +239,12 @@ permissions:
         description: Remove a currency
         default: op
         command: "/craftcurrency currencyremove <Currency Name>"
-        
-    Craftconomy.bank.add:
-        description: Add someone in your bank account
-        default: op
-        command: "/bank add <Bank Name> <Player Name>"
     
-    Craftconomy.bank.remove:
-        description: Remove someone from your bank account
+    Craftconomy.currency.exchange:
+        description: Set the exchange rate of a currency
         default: op
-        command: "/bank remove <Bank Name> <Player Name>"
+        command: "/craftconomy currencyexchange <Source Currency> <Destination Currency> <Rate>"
     
-    Craftconomy.money.exchange:
-        description: Exchange money into another currency.
-        default: op
-        command: "/money exchange <Source Currency> <Destination Currency> <Amount>"
+    
+    
+    
