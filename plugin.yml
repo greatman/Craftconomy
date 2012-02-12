@@ -23,6 +23,7 @@ permissions:
             Craftconomy.money.purge: true
             Craftconomy.money.set: true
             Craftconomy.money.take: true
+            Craftconomy.money.exchange: true
             Craftconomy.account.remove: true
             Craftconomy.account.create: true
             Craftconomy.account.empty: true
@@ -82,6 +83,7 @@ permissions:
             Craftconomy.money.purge: true
             Craftconomy.money.set: true
             Craftconomy.money.take: true
+            Craftconomy.money.exchange: true
             
     Craftconomy.plus:
         description: Gives access to user plus only commands
@@ -90,6 +92,7 @@ permissions:
             Craftconomy.money.holdings: true
             Craftconomy.money.holdings.others: true
             Craftconomy.money.pay: true
+            Craftconomy.money.exchange: true
             
     Craftconomy.user:
         description: Gives access to user only commands
@@ -97,6 +100,7 @@ permissions:
             Craftconomy.money.help: true
             Craftconomy.money.holdings: true
             Craftconomy.money.pay: true
+            Craftconomy.money.exchange: true
             
     Craftconomy.money.help:
         description: Allows you to request help information.
@@ -217,3 +221,8 @@ permissions:
         description: Remove someone from your bank account
         default: op
         command: "/bank remove <Bank Name> <Player Name>"
+    
+    Craftconomy.money.exchange:
+        description: Exchange money into another currency.
+        default: op
+        command: "/money exchange <Source Currency> <Destination Currency> <Amount>"
