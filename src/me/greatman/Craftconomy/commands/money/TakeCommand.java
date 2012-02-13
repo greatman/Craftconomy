@@ -11,9 +11,11 @@ import me.greatman.Craftconomy.utils.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 
-public class TakeCommand extends BaseCommand{
-	
-	public TakeCommand() {
+public class TakeCommand extends BaseCommand
+{
+
+	public TakeCommand()
+	{
 		this.command.add("take");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
@@ -22,10 +24,12 @@ public class TakeCommand extends BaseCommand{
 		permFlag = ("Craftconomy.money.take");
 		helpDescription = "Take money";
 	}
-	
-	public void perform() {
+
+	public void perform()
+	{
 		double amount;
-		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);;
+		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
+		;
 		World world = player.getWorld();
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
@@ -53,17 +57,17 @@ public class TakeCommand extends BaseCommand{
 						sendMessage(ChatColor.RED + "This world doesn't exists!");
 						return;
 					}
-					else
-						world = worldtest;
+					else world = worldtest;
 				}
-				receiverAccount.substractMoney(amount,world);
-				sendMessage("You removed " + ChatColor.WHITE + Craftconomy.format(amount,currency) + ChatColor.GREEN + " from " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account!");
-				sendMessage(receiverAccount.getPlayer(),  ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.RED + " has been removed from your account!");
+				receiverAccount.substractMoney(amount, world);
+				sendMessage("You removed " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
+						+ " from " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account!");
+				sendMessage(receiverAccount.getPlayer(), ChatColor.WHITE + Craftconomy.format(amount, currency)
+						+ ChatColor.RED + " has been removed from your account!");
 			}
-			else
-				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
+			else sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 		}
-		else
-			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exists!");
+		else sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED
+				+ " does not exists!");
 	}
 }

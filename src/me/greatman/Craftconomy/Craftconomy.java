@@ -37,7 +37,7 @@ public class Craftconomy extends JavaPlugin
 	public Timer payDay;
 	public static Craftconomy plugin;
 	public List<Timer> timerMap = new ArrayList<Timer>();
-	
+
 	public void onEnable()
 	{
 		name = this.getDescription().getName();
@@ -62,8 +62,7 @@ public class Craftconomy extends JavaPlugin
 
 			// 'this' in this context is the Plugin object
 			metrics.beginMeasuringPlugin(this);
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			ILogger.error("A error occured while starting the plugin stats");
 		}
@@ -75,8 +74,8 @@ public class Craftconomy extends JavaPlugin
 		commands.add(new GiveCommand());
 		commands.add(new TakeCommand());
 		commands.add(new SetCommand());
-		//TODO: Find a safer way for this
-		//commands.add(new PurgeCommand());
+		// TODO: Find a safer way for this
+		// commands.add(new PurgeCommand());
 		commands.add(new EmptyCommand());
 		commands.add(new ExchangeCommand());
 		commands.add(new ExchangeCalcCommand());
@@ -99,7 +98,7 @@ public class Craftconomy extends JavaPlugin
 			CraftconomyCommand.setBaseCommand("/craftconomy");
 		}
 		// Insert all /bank commands
-		//TODO: Create/Delete/Rename bank account commands
+		// TODO: Create/Delete/Rename bank account commands
 		bankCommands.add(new BankOtherBalanceCommand());
 		bankCommands.add(new BankDepositCommand());
 		bankCommands.add(new BankWithdrawCommand());
@@ -112,13 +111,13 @@ public class Craftconomy extends JavaPlugin
 		bankCommands.add(new BankAddCommand());
 		bankCommands.add(new BankRemoveCommand());
 
-		for (BaseCommand CraftconomyCommand : this.bankCommands) {
+		for (BaseCommand CraftconomyCommand : this.bankCommands)
+		{
 
 			CraftconomyCommand.setBaseCommand("/bank");
 		}
-		
-		
-		//Payday System
+
+		// Payday System
 		new PayDayConfig();
 		if (!Config.payDayList.isEmpty())
 		{
@@ -155,7 +154,7 @@ public class Craftconomy extends JavaPlugin
 		ILogger.info("Started!");
 
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
@@ -180,14 +179,13 @@ public class Craftconomy extends JavaPlugin
 
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd,
-			String commandLabel, String[] args)
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
 		List<String> parameters = new ArrayList<String>(Arrays.asList(args));
 		if (cmd.getLabel().equals("money"))
 			this.handleMoneyCommand(cmd, sender, parameters);
 		if (cmd.getLabel().equals("bank"))
-			this.handleBankCommand(cmd,sender, parameters);
+			this.handleBankCommand(cmd, sender, parameters);
 		if (cmd.getLabel().equals("craftconomy"))
 			this.handleConfigCommand(cmd, sender, parameters);
 
@@ -196,8 +194,7 @@ public class Craftconomy extends JavaPlugin
 	}
 
 	// Put that in a single command
-	public void handleConfigCommand(Command cmd, CommandSender sender,
-			List<String> parameters)
+	public void handleConfigCommand(Command cmd, CommandSender sender, List<String> parameters)
 	{
 		if (parameters.size() == 0)
 		{
@@ -216,8 +213,7 @@ public class Craftconomy extends JavaPlugin
 		}
 	}
 
-	public void handleMoneyCommand(Command cmd, CommandSender sender,
-			List<String> parameters)
+	public void handleMoneyCommand(Command cmd, CommandSender sender, List<String> parameters)
 	{
 		if (parameters.size() == 0)
 		{
@@ -238,17 +234,19 @@ public class Craftconomy extends JavaPlugin
 		command.execute(sender, parameters);
 	}
 
-	
-	public void handleBankCommand(Command cmd, CommandSender sender,
-			List<String> parameters) {
-		if (parameters.size() == 0) {
+	public void handleBankCommand(Command cmd, CommandSender sender, List<String> parameters)
+	{
+		if (parameters.size() == 0)
+		{
 			BankHelpCommand command = new BankHelpCommand();
 			command.execute(sender, parameters);
 			return;
 		}
 		String commandName = parameters.get(0);
-		for (BaseCommand CraftconomyCommand : this.bankCommands) {
-			if (CraftconomyCommand.getCommands().contains(commandName)) {
+		for (BaseCommand CraftconomyCommand : this.bankCommands)
+		{
+			if (CraftconomyCommand.getCommands().contains(commandName))
+			{
 				CraftconomyCommand.execute(sender, parameters);
 				return;
 			}
@@ -256,7 +254,6 @@ public class Craftconomy extends JavaPlugin
 		BankOtherBalanceCommand command = new BankOtherBalanceCommand();
 		command.execute(sender, parameters);
 	}
-	 
 
 	public static List<String> format(List<BalanceCollection> list)
 	{
@@ -266,12 +263,12 @@ public class Craftconomy extends JavaPlugin
 		if (list == null)
 			return result;
 		Iterator<BalanceCollection> iterator = list.iterator();
-		
+
 		while (iterator.hasNext())
 		{
 			balance = iterator.next();
-			result.add(balance.getWorldName() + ": " + decimalFormat.format(balance.getBalance())
-					+ " " + balance.getCurrencyName());
+			result.add(balance.getWorldName() + ": " + decimalFormat.format(balance.getBalance()) + " "
+					+ balance.getCurrencyName());
 		}
 
 		return result;
@@ -292,10 +289,8 @@ public class Craftconomy extends JavaPlugin
 			double amountParsed = Double.parseDouble(amount);
 			if (amountParsed > 0.00)
 				return true;
-			else
-				return false;
-		}
-		catch (NumberFormatException e)
+			else return false;
+		} catch (NumberFormatException e)
 		{
 			return false;
 		}

@@ -11,9 +11,11 @@ import me.greatman.Craftconomy.utils.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 
-public class SetCommand extends BaseCommand{
-	
-	public SetCommand() {
+public class SetCommand extends BaseCommand
+{
+
+	public SetCommand()
+	{
 		this.command.add("set");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
@@ -22,8 +24,9 @@ public class SetCommand extends BaseCommand{
 		permFlag = ("Craftconomy.money.set");
 		helpDescription = "Set account balance";
 	}
-	
-	public void perform() {
+
+	public void perform()
+	{
 		double amount;
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		World world = player.getWorld();
@@ -45,7 +48,7 @@ public class SetCommand extends BaseCommand{
 						return;
 					}
 				}
-					
+
 				if (this.parameters.size() == 4)
 				{
 					World worldtest = Craftconomy.plugin.getServer().getWorld(this.parameters.get(3));
@@ -58,18 +61,18 @@ public class SetCommand extends BaseCommand{
 					{
 						world = worldtest;
 					}
-						
+
 				}
-				receiverAccount.setBalance(amount,currency,world);
-				sendMessage("You set " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN + " account to " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
-				sendMessage(receiverAccount.getPlayer(),  "Your account has been set to " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + "!");
+				receiverAccount.setBalance(amount, currency, world);
+				sendMessage("You set " + ChatColor.WHITE + receiverAccount.getPlayerName() + ChatColor.GREEN
+						+ " account to " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
+				sendMessage(receiverAccount.getPlayer(), "Your account has been set to " + ChatColor.WHITE
+						+ Craftconomy.format(amount, currency) + ChatColor.GREEN + "!");
 			}
-			else
-				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
-				
-			
+			else sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
+
 		}
-		else
-			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exists!");
+		else sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED
+				+ " does not exists!");
 	}
 }

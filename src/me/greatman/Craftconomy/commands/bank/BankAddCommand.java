@@ -9,20 +9,23 @@ import me.greatman.Craftconomy.BankHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.commands.BaseCommand;
 
-public class BankAddCommand extends BaseCommand {
+public class BankAddCommand extends BaseCommand
+{
 
-	public BankAddCommand() {
+	public BankAddCommand()
+	{
 		this.command.add("add");
 		this.requiredParameters.add("Bank Name");
 		this.requiredParameters.add("Player Name");
 		permFlag = "Craftconomy.bank.add";
 		helpDescription = "Add someone to a bank account.";
 	}
-	
-	public void perform() {
+
+	public void perform()
+	{
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
-			if(BankHandler.getBank(this.parameters.get(0)).getOwner().equals(sender.getName()))
+			if (BankHandler.getBank(this.parameters.get(0)).getOwner().equals(sender.getName()))
 			{
 				List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(this.parameters.get(1));
 				if (playerList.size() != 1)
@@ -32,12 +35,12 @@ public class BankAddCommand extends BaseCommand {
 				}
 				Player player = playerList.get(0);
 				BankHandler.getBank(this.parameters.get(0)).addMember(player.getName());
-				sendMessage("The player " + ChatColor.WHITE + player.getName() + ChatColor.GREEN + " has been added to " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account!");
+				sendMessage("The player " + ChatColor.WHITE + player.getName() + ChatColor.GREEN
+						+ " has been added to " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN
+						+ " bank account!");
 			}
-			else
-				sendMessage(ChatColor.RED + "You are not the owner!");
+			else sendMessage(ChatColor.RED + "You are not the owner!");
 		}
-		else
-			sendMessage(ChatColor.RED + "This bank doesn't exist!");
+		else sendMessage(ChatColor.RED + "This bank doesn't exist!");
 	}
 }

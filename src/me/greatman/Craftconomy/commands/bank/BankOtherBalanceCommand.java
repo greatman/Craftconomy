@@ -10,23 +10,25 @@ import me.greatman.Craftconomy.BankHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.commands.BaseCommand;
 
-public class BankOtherBalanceCommand extends BaseCommand{
+public class BankOtherBalanceCommand extends BaseCommand
+{
 
-	//TODO: Everything
-	
+	// TODO: Everything
+
 	public BankOtherBalanceCommand()
 	{
 		permFlag = ("Craftconomy.bank.holdings");
 		this.requiredParameters.add("Bank Name");
 		helpDescription = "Check other bank balance";
 	}
-	
+
 	public void perform()
 	{
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
 			Bank bank = BankHandler.getBank(this.parameters.get(0));
-			if (bank.getOwner().equals(player.getName()) || BankHandler.getBank(this.parameters.get(0)).getMembers().contains(player.getName()))
+			if (bank.getOwner().equals(player.getName())
+					|| BankHandler.getBank(this.parameters.get(0)).getMembers().contains(player.getName()))
 			{
 				sendMessage("Bank " + this.parameters.get(0) + ChatColor.GREEN + " status:");
 				List<String> balance = Craftconomy.format(bank.getBalance());
@@ -34,10 +36,8 @@ public class BankOtherBalanceCommand extends BaseCommand{
 				while (balanceIterator.hasNext())
 					sendMessage(ChatColor.WHITE + balanceIterator.next());
 			}
-			else
-				sendMessage(ChatColor.RED + "You do not have access to that bank!");
+			else sendMessage(ChatColor.RED + "You do not have access to that bank!");
 		}
-		else
-			sendMessage(ChatColor.RED + "This bank doesn't exist!");
+		else sendMessage(ChatColor.RED + "This bank doesn't exist!");
 	}
 }

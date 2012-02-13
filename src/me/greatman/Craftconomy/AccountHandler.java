@@ -11,24 +11,36 @@ import me.greatman.Craftconomy.utils.DatabaseHandler;
 
 import org.bukkit.entity.Player;
 
-public class AccountHandler {
+/**
+ * Account handler. <b>Get a account from this class.</b>
+ * 
+ * @author greatman
+ * 
+ */
+public class AccountHandler
+{
 
 	public static List<Account> accounts = new ArrayList<Account>();
 	public static Timer thread;
+
 	/**
 	 * Auto-save class
+	 * 
 	 * @author greatman
-	 *
+	 * 
 	 */
-	class saveAccounts extends TimerTask{
-		public void run() {
+	class saveAccounts extends TimerTask
+	{
+		public void run()
+		{
 			List<Account> accountsToRemove = new ArrayList<Account>();
-			for (Account playerAccount : accounts) {
-				if (playerAccount.getPlayer() == null || !playerAccount.getPlayer().isOnline())	
+			for (Account playerAccount : accounts)
+			{
+				if (playerAccount.getPlayer() == null || !playerAccount.getPlayer().isOnline())
 				{
 					accountsToRemove.add(playerAccount);
 				}
-					
+
 			}
 			for (Account playerAccount : accountsToRemove)
 			{
@@ -36,18 +48,19 @@ public class AccountHandler {
 			}
 		}
 	}
-	
+
 	public AccountHandler()
 	{
-		//Initialize the auto 10s saves
+		// Initialize the auto 10s saves
 		thread = new Timer();
 		long time = 10 * 1000L;
 		thread.scheduleAtFixedRate(new saveAccounts(), time, time);
-		
+
 	}
-	
+
 	/**
 	 * Get a account
+	 * 
 	 * @param player The player name we want to get the account
 	 * @return The Account
 	 */
@@ -71,10 +84,11 @@ public class AccountHandler {
 		accounts.add(playerAccount);
 		return playerAccount;
 	}
-	
+
 	/**
 	 * Get a account
-	 * @param player The player we want to get the account
+	 * 
+	 * @param databaseId the account we want to get from the databaseId
 	 * @return The Account
 	 */
 	public static Account getAccount(int databaseId)
@@ -85,7 +99,13 @@ public class AccountHandler {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Get a account
+	 * 
+	 * @param player The player we want to get his account
+	 * @return The player account
+	 */
 	public static Account getAccount(Player player)
 	{
 		for (Account playerAccount : accounts)
@@ -93,18 +113,21 @@ public class AccountHandler {
 			if (playerAccount.getPlayerName().equals(player.getName()))
 				return playerAccount;
 		}
-		
+
 		Account playerAccount = new Account(player);
 		accounts.add(playerAccount);
 		return playerAccount;
 	}
-	
-	public static void deleteAllAccounts() {
+
+	public static void deleteAllAccounts()
+	{
 		DatabaseHandler.deleteAll();
 		accounts.clear();
 	}
+
 	/**
 	 * Checks if a account exists
+	 * 
 	 * @param player The player name we want to get the account
 	 * @return True if the account exists else false.
 	 */
@@ -117,12 +140,13 @@ public class AccountHandler {
 			if (playerList.size() == 1)
 				exists = true;
 		}
-		else
-			exists = true;
+		else exists = true;
 		return exists;
 	}
+
 	/**
 	 * Checks if a account exists
+	 * 
 	 * @param player The player we want to get the account
 	 * @return True if the account exists else false.
 	 */
@@ -131,29 +155,36 @@ public class AccountHandler {
 		return DatabaseHandler.exists(player.getName());
 	}
 
-	public static void deleteAllInitialAccounts() {
+	public static void deleteAllInitialAccounts()
+	{
 		ResultSet result = DatabaseHandler.getAllInitialAccounts();
-		try {
+		try
+		{
 			if (result.next())
 			{
 				do
 				{
 					if (accounts.contains(result.getString("username")))
 						accounts.remove(result.getString("username"));
-				}
-				while(result.next());
+				} while (result.next());
 			}
 			DatabaseHandler.deleteAllInitialAccounts();
-		} catch (SQLException e) {
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
-	public static void delete(Account account) {
+	/**
+	 * Delete a player account
+	 * 
+	 * @param account The account we want to delete
+	 */
+	public static void delete(Account account)
+	{
 		DatabaseHandler.delete(account.getPlayerName());
 		accounts.remove(account);
 	}
-	
+
 }

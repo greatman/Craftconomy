@@ -11,9 +11,11 @@ import me.greatman.Craftconomy.utils.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 
-public class GiveCommand extends BaseCommand{
-	
-	public GiveCommand() {
+public class GiveCommand extends BaseCommand
+{
+
+	public GiveCommand()
+	{
 		this.command.add("give");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
@@ -22,8 +24,9 @@ public class GiveCommand extends BaseCommand{
 		permFlag = ("Craftconomy.money.give");
 		helpDescription = "Give money";
 	}
-	
-	public void perform() {
+
+	public void perform()
+	{
 		double amount;
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		World world = player.getWorld();
@@ -53,21 +56,20 @@ public class GiveCommand extends BaseCommand{
 						sendMessage(ChatColor.RED + "This world doesn't exists!");
 						return;
 					}
-					else
-						world = worldtest;
+					else world = worldtest;
 				}
 				receiverAccount.addMoney(amount, currency, world);
-				
-				
-				sendMessage("You gave " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
-				sendMessage(receiverAccount.getPlayer(), "You received " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
+
+				sendMessage("You gave " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
+						+ " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(),
+						"You received " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
 			}
-			
-			else
-				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
-			
+
+			else sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
+
 		}
-		else
-			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exists!");
+		else sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED
+				+ " does not exists!");
 	}
 }

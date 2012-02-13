@@ -11,16 +11,19 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.commands.BaseCommand;
 
-public class OwnMoneyCommand extends BaseCommand{
+public class OwnMoneyCommand extends BaseCommand
+{
 
-	public OwnMoneyCommand() {
+	public OwnMoneyCommand()
+	{
 		this.command.add("");
 		permFlag = ("Craftconomy.money.holdings");
 		helpDescription = "Check your balance";
 	}
-	
-	public void perform() {
-		
+
+	public void perform()
+	{
+
 		Account playerAccount = AccountHandler.getAccount((Player) sender);
 		sendMessage("Your Balance: ");
 		List<String> balance = Craftconomy.format(playerAccount.getBalance());

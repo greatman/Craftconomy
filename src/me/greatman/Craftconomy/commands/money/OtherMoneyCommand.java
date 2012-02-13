@@ -10,16 +10,19 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.commands.BaseCommand;
 
-public class OtherMoneyCommand extends BaseCommand{
+public class OtherMoneyCommand extends BaseCommand
+{
 
-	public OtherMoneyCommand() {
+	public OtherMoneyCommand()
+	{
 		permFlag = ("Craftconomy.money.holdings.others");
 		this.requiredParameters.add("Player Name");
 		helpDescription = "Check others balance";
 	}
-	
-	public void perform() {
-		
+
+	public void perform()
+	{
+
 		if (AccountHandler.exists(parameters.get(0)))
 		{
 			Account playerAccount = AccountHandler.getAccount(parameters.get(0));
@@ -29,7 +32,6 @@ public class OtherMoneyCommand extends BaseCommand{
 			while (balanceIterator.hasNext())
 				sendMessage(ChatColor.WHITE + balanceIterator.next());
 		}
-		else
-			sendMessage(ChatColor.RED + "This account doesn't exists!");
+		else sendMessage(ChatColor.RED + "This account doesn't exists!");
 	}
 }

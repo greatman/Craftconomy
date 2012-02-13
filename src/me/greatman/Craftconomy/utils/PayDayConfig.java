@@ -15,14 +15,17 @@ import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class PayDayConfig {
+public class PayDayConfig
+{
 
 	private static YamlConfiguration file;
-	
+
 	public String groupName;
+
 	public PayDayConfig()
 	{
-		try {
+		try
+		{
 			File theFile = new File(Craftconomy.plugin.getDataFolder(), "payday.yml");
 			if (!theFile.exists())
 			{
@@ -31,38 +34,50 @@ public class PayDayConfig {
 			}
 			file = new YamlConfiguration();
 			file.load(theFile);
-			
-		} catch (FileNotFoundException e) {
-			
-		} catch (IOException e) {
+
+		} catch (FileNotFoundException e)
+		{
+
+		} catch (IOException e)
+		{
 			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
+		} catch (InvalidConfigurationException e)
+		{
 			e.printStackTrace();
 		}
-		
+
 	}
-	private void copy(InputStream in, File file) {
-	    try {
-	        OutputStream out = new FileOutputStream(file);
-	        byte[] buf = new byte[1024];
-	        int len;
-	        while((len=in.read(buf))>0){
-	            out.write(buf,0,len);
-	        }
-	        out.close();
-	        in.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+
+	private void copy(InputStream in, File file)
+	{
+		try
+		{
+			OutputStream out = new FileOutputStream(file);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0)
+			{
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
+
 	public static World getWorld(String groupName)
 	{
 		return Craftconomy.plugin.getServer().getWorld(file.getString(groupName + ".world"));
 	}
+
 	/**
 	 * Get the type of the Payday (Wage or Tax)
+	 * 
 	 * @param groupName The Group name we want to get
-	 * @return tax or wage or null if the entry in the configuration file is wrong
+	 * @return tax or wage or null if the entry in the configuration file is
+	 *         wrong
 	 */
 	public static String getType(String groupName)
 	{
@@ -71,8 +86,10 @@ public class PayDayConfig {
 			return type;
 		return null;
 	}
+
 	/**
 	 * Check if the payday is disabled for that group
+	 * 
 	 * @param groupName The group we want to get
 	 * @return True if disabled else false
 	 */
@@ -80,9 +97,10 @@ public class PayDayConfig {
 	{
 		return file.getBoolean(groupName + ".disabled");
 	}
-	
+
 	/**
 	 * Get the player who pays the tax or wage
+	 * 
 	 * @param groupName The group we want to get
 	 * @return none if it's the server that pays. Else the player name
 	 */
@@ -90,8 +108,10 @@ public class PayDayConfig {
 	{
 		return file.getString(groupName + ".master");
 	}
+
 	/**
 	 * Get if it works only on Online players or anybody
+	 * 
 	 * @param groupName The group we want to get
 	 * @return True if it is only online players else false
 	 */
@@ -99,8 +119,10 @@ public class PayDayConfig {
 	{
 		return file.getBoolean(groupName + ".onlineMode");
 	}
+
 	/**
 	 * Get at what interval in minutes the PayDay is run
+	 * 
 	 * @param groupName The group we want to get
 	 * @return The interval
 	 */
@@ -108,17 +130,21 @@ public class PayDayConfig {
 	{
 		return file.getInt(groupName + ".interval");
 	}
+
 	/**
 	 * Get the amount we want to give to players
+	 * 
 	 * @param groupName the group we want to get
-	 * @return The amount we want to give 
+	 * @return The amount we want to give
 	 */
 	public static double getAmount(String groupName)
 	{
 		return file.getDouble(groupName + ".value");
 	}
+
 	/**
 	 * Get the currency this Payday is working
+	 * 
 	 * @param groupName the group we want to get
 	 * @return A instance of the Currency
 	 */
@@ -126,7 +152,7 @@ public class PayDayConfig {
 	{
 		return CurrencyHandler.getCurrency(file.getString(groupName + ".currency"), true);
 	}
-	
+
 	public static boolean exists(String groupName)
 	{
 		return (file.get(groupName + ".interval") != null);

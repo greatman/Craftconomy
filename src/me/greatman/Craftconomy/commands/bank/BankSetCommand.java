@@ -10,9 +10,11 @@ import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.commands.BaseCommand;
 import me.greatman.Craftconomy.utils.Config;
 
-public class BankSetCommand extends BaseCommand {
+public class BankSetCommand extends BaseCommand
+{
 
-	public BankSetCommand() {
+	public BankSetCommand()
+	{
 		this.command.add("set");
 		this.requiredParameters.add("Bank Name");
 		this.requiredParameters.add("Amount");
@@ -21,8 +23,9 @@ public class BankSetCommand extends BaseCommand {
 		permFlag = ("Craftconomy.bank.set");
 		helpDescription = "set money in a bank account";
 	}
-	
-	public void perform() {
+
+	public void perform()
+	{
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		World world = player.getWorld();
 		double amount;
@@ -55,17 +58,16 @@ public class BankSetCommand extends BaseCommand {
 					{
 						world = worldtest;
 					}
-						
+
 				}
-				
+
 				BankHandler.getBank(this.parameters.get(0)).setBalance(amount, currency, world);
-				sendMessage("You set " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN + " bank account to " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
+				sendMessage("You set " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN
+						+ " bank account to " + ChatColor.WHITE + Craftconomy.format(amount, currency) + "!");
 			}
-			else
-				sendMessage(ChatColor.RED + "Invalid amount!");
-			
+			else sendMessage(ChatColor.RED + "Invalid amount!");
+
 		}
-		else
-			sendMessage(ChatColor.RED + "This bank doesn't exists!");
+		else sendMessage(ChatColor.RED + "This bank doesn't exists!");
 	}
 }

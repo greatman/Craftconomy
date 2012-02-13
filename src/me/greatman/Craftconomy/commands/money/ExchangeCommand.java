@@ -54,11 +54,15 @@ public class ExchangeCommand extends BaseCommand
 					// now simply convert + add
 					client.addMoney(CurrencyHandler.convert(source, dest, amount), dest);
 					client.substractMoney(amount, source);
-					sendMessage("You just converted " + ChatColor.WHITE + Craftconomy.format(amount, source) + ChatColor.GREEN + " into " + ChatColor.WHITE + Craftconomy.format(CurrencyHandler.convert(source, dest, amount), dest) + ChatColor.GREEN + ".");
+					sendMessage("You just converted " + ChatColor.WHITE + Craftconomy.format(amount, source)
+							+ ChatColor.GREEN + " into " + ChatColor.WHITE
+							+ Craftconomy.format(CurrencyHandler.convert(source, dest, amount), dest) + ChatColor.GREEN
+							+ ".");
 				}
 				else
 				{
-					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE + Craftconomy.format(amount, source) + ChatColor.GREEN + "!");
+					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE
+							+ Craftconomy.format(amount, source) + ChatColor.GREEN + "!");
 				}
 			}
 			else
@@ -69,7 +73,8 @@ public class ExchangeCommand extends BaseCommand
 		}
 		else
 		{
-			sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(index) + ChatColor.GREEN + " does not exist!");
+			sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(index) + ChatColor.GREEN
+					+ " does not exist!");
 		}
 	}
 }

@@ -11,9 +11,11 @@ import me.greatman.Craftconomy.utils.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class PayCommand extends BaseCommand{
+public class PayCommand extends BaseCommand
+{
 
-	public PayCommand() {
+	public PayCommand()
+	{
 		this.command.add("pay");
 		this.requiredParameters.add("Player Name");
 		this.requiredParameters.add("Amount");
@@ -21,8 +23,9 @@ public class PayCommand extends BaseCommand{
 		permFlag = ("Craftconomy.money.pay");
 		helpDescription = "Send money to others.";
 	}
-	
-	public void perform() {
+
+	public void perform()
+	{
 		double amount;
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		if (AccountHandler.exists(this.parameters.get(0)))
@@ -32,7 +35,7 @@ public class PayCommand extends BaseCommand{
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
 				amount = Double.parseDouble(this.parameters.get(1));
-				//We have a special currency
+				// We have a special currency
 				if (this.parameters.size() >= 3)
 				{
 					if (CurrencyHandler.exists(this.parameters.get(2), false))
@@ -45,22 +48,25 @@ public class PayCommand extends BaseCommand{
 						return;
 					}
 				}
-				
+
 				Player player = (Player) sender;
-				if (!senderAccount.hasEnough(amount,currency,player.getWorld()))
+				if (!senderAccount.hasEnough(amount, currency, player.getWorld()))
 				{
-					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + "!");
+					sendMessage(ChatColor.RED + "You don't have " + ChatColor.WHITE
+							+ Craftconomy.format(amount, currency) + ChatColor.GREEN + "!");
 					return;
 				}
 				senderAccount.substractMoney(amount, currency, player.getWorld());
 				receiverAccount.addMoney(amount, currency, player.getWorld());
-				sendMessage("You sended " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
-				sendMessage(receiverAccount.getPlayer(), "You received " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN + " from " + ChatColor.WHITE + senderAccount.getPlayerName());
+				sendMessage("You sended " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
+						+ " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
+				sendMessage(receiverAccount.getPlayer(),
+						"You received " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
+								+ " from " + ChatColor.WHITE + senderAccount.getPlayerName());
 			}
-			else
-				sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
+			else sendMessage(ChatColor.RED + "Positive number expected. Received something else.");
 		}
-		else
-			sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED + " does not exists!");
+		else sendMessage(ChatColor.RED + "The account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED
+				+ " does not exists!");
 	}
 }
