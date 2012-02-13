@@ -4,6 +4,14 @@
 	<groupId>me.greatman</groupId>
 	<artifactId>Craftconomy</artifactId>
 	<version>2.2-SNAPSHOT</version>
+	<name>Craftconomy</name>
+	<description>MultiWorld / MultiCurrency economy plugin for Bukkit.</description>
+	<url>http://dev.bukkit.org/server-mods/craftconomy/</url>
+	<issueManagement>http://dev.bukkit.org/server-mods/craftconomy/tickets/</issueManagement>
+	<ciManagement>
+		<system>jenkins</system>
+		<url>http://jenkins.thebigdigmc.info/job/Craftconomy</url>
+	</ciManagement>
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
