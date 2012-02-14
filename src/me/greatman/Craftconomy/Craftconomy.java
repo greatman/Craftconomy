@@ -1,6 +1,8 @@
 package me.greatman.Craftconomy;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +17,10 @@ import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
 import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
+import me.greatman.Craftconomy.utils.DatabaseType;
 import me.greatman.Craftconomy.utils.Metrics;
 import me.greatman.Craftconomy.utils.PayDayConfig;
+import me.greatman.Craftconomy.utils.SQLLibrary;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -118,6 +122,7 @@ public class Craftconomy extends JavaPlugin
 		}
 
 		// Payday System
+		//TODO: Use a better system (Aka use player online timer. Not only server uptime)
 		new PayDayConfig();
 		if (!Config.payDayList.isEmpty())
 		{
@@ -293,6 +298,55 @@ public class Craftconomy extends JavaPlugin
 		} catch (NumberFormatException e)
 		{
 			return false;
+		}
+	}
+	
+	public static void iConomyConvert()
+	{
+		Account account = null;
+		SQLLibrary database = null;
+		ResultSet result = null;
+		if (Config.convertEnabled)
+		{
+			//Iconomy support
+			//TODO: Flatfile (minidb) support
+			if (Config.convertType.equalsIgnoreCase("iconomy"))
+			{
+				if (Config.convertDatabaseType.equalsIgnoreCase("mysql"))
+				{
+					database = new SQLLibrary("jdbc:mysql://" + Config.convertDatabaseAddress + ":" + Config.convertDatabasePort + "/"
+							+ Config.convertDatabaseDb, Config.convertDatabaseUsername, Config.convertDatabasePassword, DatabaseType.MYSQL);
+				}
+				else if (Config.convertDatabaseType.equalsIgnoreCase("sqlite"))
+				{
+					database = new SQLLibrary("jdbc:sqlite:" + Config.convertDatabaseAddress, "", "", DatabaseType.SQLITE);
+				}
+				
+				if (database.getType().equals(DatabaseType.MYSQL) || database.getType().equals(DatabaseType.SQLITE))
+				{
+					try
+					{
+						result = database.query("SELECT * FROM " + Config.convertTableName, true);
+						if (result != null)
+						{
+							int i = 0;
+							while (result.next())
+							{
+								account = AccountHandler.getAccount(result.getString("username"));
+								account.addMoney(result.getDouble("balance"));
+								i++;
+							}
+							ILogger.info(i + " accounts converted from the iConomy database to the Craftconomy database");
+							return;
+						}
+					} catch (SQLException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
 		}
 	}
 }

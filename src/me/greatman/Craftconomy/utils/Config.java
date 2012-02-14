@@ -12,11 +12,11 @@ public class Config
 	public static String currencyDefault, databaseType, databaseAccountTable, databaseBankTable,
 			databaseBankBalanceTable, databaseBankMemberTable, databaseCurrencyTable, databaseCurrencyExchangeTable,
 			databaseBalanceTable, databaseUsername, databasePassword, databaseAddress, databasePort, databaseDb,
-			bankCurrency;
+			bankCurrency, convertType, convertTableName, convertDatabaseType, convertDatabaseAddress, convertDatabasePort, convertDatabaseUsername, convertDatabasePassword, convertDatabaseDb;
 
 	public static double defaultHoldings, bankPrice;
 
-	public static boolean multiWorld, transactionLogging;
+	public static boolean multiWorld, transactionLogging, convertEnabled;
 
 	public static List<String> payDayList;
 
@@ -46,11 +46,22 @@ public class Config
 		databaseBalanceTable = plugin.getConfig().getString("System.Database.BalanceTable");
 		databaseBankBalanceTable = plugin.getConfig().getString("System.Database.BankBalanceTable");
 		databaseBankMemberTable = plugin.getConfig().getString("System.Database.BankMemberTable");
+		
 		databaseType = plugin.getConfig().getString("System.Database.Type");
 		databaseAddress = plugin.getConfig().getString("System.Database.Address");
 		databasePort = plugin.getConfig().getString("System.Database.Port");
 		databaseUsername = plugin.getConfig().getString("System.Database.Username");
 		databasePassword = plugin.getConfig().getString("System.Database.Password");
 		databaseDb = plugin.getConfig().getString("System.Database.Db");
+		
+		convertEnabled = plugin.getConfig().getBoolean("System.Convert.Enabled");
+		convertType = plugin.getConfig().getString("System.Convert.Type");
+		convertTableName = plugin.getConfig().getString("System.Convert.TableName");
+		convertDatabaseType = plugin.getConfig().getString("System.Convert.DatabaseType");
+		convertDatabaseAddress = plugin.getConfig().getString("System.Convert.Address");
+		convertDatabasePort = plugin.getConfig().getString("System.Convert.Port");
+		convertDatabaseUsername = plugin.getConfig().getString("System.Convert.Username");
+		convertDatabasePassword = plugin.getConfig().getString("System.Convert.Password");
+		convertDatabaseDb = plugin.getConfig().getString("System.Convert.Database");
 	}
 }

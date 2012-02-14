@@ -19,6 +19,17 @@ System:
   Logging:
     Enabled: false
 
+  Convert:
+    Enabled: false
+    Type: iconomy
+    TableName: iConomy
+    DatabaseType: mysql
+    Address: localhost
+    Port: 3306
+    Username: root
+    Password: test
+    Database: iconomy
+    
   Database:
     # Databases Supported:
     ##

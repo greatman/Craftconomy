@@ -21,14 +21,7 @@ import me.greatman.Craftconomy.ILogger;
 @SuppressWarnings("restriction")
 public class DatabaseHandler
 {
-
-	enum databaseType
-	{
-		MYSQL, SQLITE;
-	}
-
-	public static databaseType type = null;
-
+	private static SQLLibrary database = null;
 	/**
 	 * Load the DatabaseHandler. Create the tables if needed
 	 * 
@@ -39,14 +32,13 @@ public class DatabaseHandler
 	{
 		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
 		{
-			type = databaseType.SQLITE;
-			SQLLibrary.setUrl("jdbc:sqlite:" + Craftconomy.plugin.getDataFolder().getAbsolutePath() + File.separator
-					+ "database.db");
-			if (!SQLLibrary.checkTable(Config.databaseAccountTable))
+			database = new SQLLibrary("jdbc:sqlite:" + Craftconomy.plugin.getDataFolder().getAbsolutePath() + File.separator
+					+ "database.db","","", DatabaseType.SQLITE);
+			if (!database.checkTable(Config.databaseAccountTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseAccountTable + " ("
+					database.query("CREATE TABLE " + Config.databaseAccountTable + " ("
 							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,"
 							+ "username VARCHAR(30)  UNIQUE NOT NULL)", false);
 					ILogger.info(Config.databaseAccountTable + " table created!");
@@ -56,14 +48,14 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseCurrencyTable))
+			if (!database.checkTable(Config.databaseCurrencyTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
+					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "name VARCHAR(30) UNIQUE NOT NULL)",
 							false);
-					SQLLibrary.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('"
+					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('"
 							+ Config.currencyDefault + "')", false);
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				} catch (SQLException e)
@@ -74,11 +66,11 @@ public class DatabaseHandler
 				}
 
 			}
-			if (!SQLLibrary.checkTable(Config.databaseCurrencyExchangeTable))
+			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
+					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
 							+ "src VARCHAR ( 30 ) NOT NULL , " + "dest VARCHAR ( 30 ) NOT NULL , "
 							+ "rate DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
@@ -88,11 +80,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBalanceTable))
+			if (!database.checkTable(Config.databaseBalanceTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBalanceTable + " ("
+					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "username_id INTEGER NOT NULL,"
 							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
 							+ "balance DOUBLE NOT NULL)", false);
@@ -103,11 +95,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBankTable))
+			if (!database.checkTable(Config.databaseBankTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " ("
+					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
 							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + "name VARCHAR(30)  UNIQUE NOT NULL,"
 							+ "owner VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
@@ -117,11 +109,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBankBalanceTable))
+			if (!database.checkTable(Config.databaseBankBalanceTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ("
+					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "bank_id INTEGER NOT NULL,"
 							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
 							+ "balance DOUBLE NOT NULL)", false);
@@ -132,11 +124,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBankMemberTable))
+			if (!database.checkTable(Config.databaseBankMemberTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
+					database.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
 							+ "bank_id INTEGER  NOT NULL," + "playerName VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankMemberTable + " table created!");
 				} catch (SQLException e)
@@ -150,16 +142,13 @@ public class DatabaseHandler
 		}
 		else if (Config.databaseType.equalsIgnoreCase("mysql"))
 		{
-			type = databaseType.MYSQL;
-			SQLLibrary.setUrl("jdbc:mysql://" + Config.databaseAddress + ":" + Config.databasePort + "/"
-					+ Config.databaseDb);
-			SQLLibrary.setUsername(Config.databaseUsername);
-			SQLLibrary.setPassword(Config.databasePassword);
-			if (!SQLLibrary.checkTable(Config.databaseAccountTable))
+			database = new SQLLibrary("jdbc:mysql://" + Config.databaseAddress + ":" + Config.databasePort + "/"
+					+ Config.databaseDb, Config.databaseUsername, Config.databasePassword, DatabaseType.MYSQL);
+			if (!database.checkTable(Config.databaseAccountTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseAccountTable + " ( "
+					database.query("CREATE TABLE " + Config.databaseAccountTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseAccountTable + " table created!");
@@ -169,11 +158,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBalanceTable))
+			if (!database.checkTable(Config.databaseBalanceTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "
+					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username_id` INT NOT NULL ,"
 							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
 							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
@@ -184,14 +173,14 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseCurrencyTable))
+			if (!database.checkTable(Config.databaseCurrencyTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( "
+					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " + "`name` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
-					SQLLibrary.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('"
+					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('"
 							+ Config.currencyDefault + "')", false);
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				} catch (SQLException e)
@@ -200,11 +189,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseCurrencyExchangeTable))
+			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
+					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
 							+ "`src` VARCHAR ( 30 ) NOT NULL , " + "`dest` VARCHAR ( 30 ) NOT NULL , "
 							+ "`rate` DOUBLE NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
@@ -214,11 +203,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBankTable))
+			if (!database.checkTable(Config.databaseBankTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBankTable + " ("
+					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " + "`name` VARCHAR( 30 ) NOT NULL , "
 							+ "`owner` VARCHAR( 30 ) NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
@@ -228,11 +217,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBankBalanceTable))
+			if (!database.checkTable(Config.databaseBankBalanceTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "
+					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`bank_id` INT NOT NULL ,"
 							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
 							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
@@ -243,11 +232,11 @@ public class DatabaseHandler
 					return false;
 				}
 			}
-			if (!SQLLibrary.checkTable(Config.databaseBankMemberTable))
+			if (!database.checkTable(Config.databaseBankMemberTable))
 			{
 				try
 				{
-					SQLLibrary.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
+					database.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
 							+ "`bank_id` INT NOT NULL ," + "`playerName` INT NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankMemberTable + " table created!");
 				} catch (SQLException e)
@@ -269,7 +258,7 @@ public class DatabaseHandler
 		String query = "SELECT * FROM " + Config.databaseAccountTable + " WHERE username='" + account + "'";
 		try
 		{
-			result = SQLLibrary.query(query, true);
+			result = database.query(query, true);
 			if (result.next())
 				exists = true;
 		} catch (SQLException e)
@@ -283,13 +272,13 @@ public class DatabaseHandler
 		String query = "INSERT INTO " + Config.databaseAccountTable + "(username) VALUES('" + accountName + "')";
 		try
 		{
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 			Account account = AccountHandler.getAccount(accountName);
 			query = "INSERT INTO " + Config.databaseBalanceTable
 					+ "(username_id,worldName,currency_id,balance) VALUES(" + account.getPlayerId() + "," + "'"
 					+ Craftconomy.plugin.getServer().getWorlds().get(0).getName() + "',"
 					+ getCurrencyId(Config.currencyDefault) + "," + Config.defaultHoldings + ")";
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -301,17 +290,17 @@ public class DatabaseHandler
 		String query = "DELETE FROM " + Config.databaseAccountTable;
 		try
 		{
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 			query = "DELETE FROM " + Config.databaseBalanceTable;
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 			query = "DELETE FROM " + Config.databaseCurrencyTable;
-			SQLLibrary.query(query, false);
-			SQLLibrary.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + Config.currencyDefault
+			database.query(query, false);
+			database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + Config.currencyDefault
 					+ "')", false);
 			query = "DELETE FROM " + Config.databaseBankTable;
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 			query = "DELETE FROM " + Config.databaseBankBalanceTable;
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -324,7 +313,7 @@ public class DatabaseHandler
 		String query = "DELETE FROM " + Config.databaseAccountTable + " WHERE balance=" + Config.defaultHoldings;
 		try
 		{
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -336,7 +325,7 @@ public class DatabaseHandler
 		String query = "SELECT * FROM " + Config.databaseAccountTable + " WHERE balance=" + Config.defaultHoldings;
 		try
 		{
-			return SQLLibrary.query(query, true);
+			return database.query(query, true);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -351,11 +340,11 @@ public class DatabaseHandler
 		try
 		{
 			int accountId = getAccountId(playerName);
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 			if (accountId != 0)
 			{
 				query = "DELETE FROM " + Config.databaseBalanceTable + " WHERE username_id=" + accountId;
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 
 		} catch (SQLException e)
@@ -369,7 +358,7 @@ public class DatabaseHandler
 		int accountId = 0;
 		try
 		{
-			ResultSet result = SQLLibrary.query("SELECT id FROM " + Config.databaseAccountTable + " WHERE username='"
+			ResultSet result = database.query("SELECT id FROM " + Config.databaseAccountTable + " WHERE username='"
 					+ playerName + "'", true);
 			if (result != null)
 			{
@@ -388,7 +377,7 @@ public class DatabaseHandler
 		String accountName = null;
 		try
 		{
-			ResultSet result = SQLLibrary.query("SELECT username FROM " + Config.databaseAccountTable + " WHERE id="
+			ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + " WHERE id="
 					+ id, true);
 			if (result != null)
 			{
@@ -413,20 +402,20 @@ public class DatabaseHandler
 		CachedRowSetImpl result;
 		try
 		{
-			result = SQLLibrary.query(query, true);
+			result = database.query(query, true);
 			if (result != null && result.size() != 0)
 			{
 				query = "UPDATE " + Config.databaseBalanceTable + " SET balance=" + balance + " WHERE username_id="
 						+ account.getPlayerId() + " AND worldName='" + world.getName() + "'" + " AND currency_id="
 						+ currency.getdatabaseId();
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 			else
 			{
 				query = "INSERT INTO " + Config.databaseBalanceTable
 						+ "(username_id,worldName,currency_id,balance) VALUES(" + account.getPlayerId() + "," + "'"
 						+ world.getName() + "'," + currency.getdatabaseId() + "," + balance + ")";
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 
 		} catch (SQLException e)
@@ -480,7 +469,7 @@ public class DatabaseHandler
 				+ " ORDER BY worldName";
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result != null)
 			{
 				return result;
@@ -510,7 +499,7 @@ public class DatabaseHandler
 			ResultSet result;
 			try
 			{
-				result = SQLLibrary.query(query, true);
+				result = database.query(query, true);
 				if (result != null)
 				{
 					if (!result.isLast())
@@ -546,7 +535,7 @@ public class DatabaseHandler
 			ResultSet result;
 			try
 			{
-				result = SQLLibrary.query(query, true);
+				result = database.query(query, true);
 				if (result != null)
 				{
 					result.next();
@@ -586,7 +575,7 @@ public class DatabaseHandler
 		else query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name LIKE '%" + currency + "%'";
 		try
 		{
-			CachedRowSetImpl result = SQLLibrary.query(query, true);
+			CachedRowSetImpl result = database.query(query, true);
 			if (result != null)
 			{
 				if (result.size() == 1)
@@ -618,7 +607,7 @@ public class DatabaseHandler
 		ResultSet result;
 		try
 		{
-			result = SQLLibrary.query(query, true);
+			result = database.query(query, true);
 			if (result != null)
 			{
 				result.next();
@@ -639,7 +628,7 @@ public class DatabaseHandler
 			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + currencyName + "')";
 			try
 			{
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 				success = true;
 			} catch (SQLException e)
 			{
@@ -659,7 +648,7 @@ public class DatabaseHandler
 					+ "' WHERE name='" + oldCurrencyName + "'";
 			try
 			{
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 				success = true;
 			} catch (SQLException e)
 			{
@@ -679,9 +668,9 @@ public class DatabaseHandler
 			String query = "DELETE FROM " + Config.databaseCurrencyTable + " WHERE name='" + currencyName + "'";
 			try
 			{
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 
-				SQLLibrary.query(query2, false);
+				database.query(query2, false);
 				success = true;
 			} catch (SQLException e)
 			{
@@ -697,7 +686,7 @@ public class DatabaseHandler
 		String query = "SELECT * FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
 		try
 		{
-			CachedRowSetImpl result = SQLLibrary.query(query, true);
+			CachedRowSetImpl result = database.query(query, true);
 			if (result != null)
 			{
 				if (result.size() == 1)
@@ -719,20 +708,20 @@ public class DatabaseHandler
 		CachedRowSetImpl result;
 		try
 		{
-			result = SQLLibrary.query(query, true);
+			result = database.query(query, true);
 			if (result != null && result.size() != 0)
 			{
 				query = "UPDATE " + Config.databaseBankBalanceTable + " SET balance=" + balance + " WHERE bank_id="
 						+ bank.getId() + " AND worldName='" + world.getName() + "'" + " AND currency_id="
 						+ currency.getdatabaseId();
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 			else
 			{
 				query = "INSERT INTO " + Config.databaseBankBalanceTable
 						+ "(bank_id,worldName,currency_id,balance) VALUES(" + bank.getId() + "," + "'"
 						+ world.getName() + "'," + currency.getdatabaseId() + "," + balance + ")";
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 
 		} catch (SQLException e)
@@ -748,7 +737,7 @@ public class DatabaseHandler
 			String query = "SELECT owner FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
 			try
 			{
-				ResultSet result = SQLLibrary.query(query, true);
+				ResultSet result = database.query(query, true);
 				if (result != null)
 				{
 					result.next();
@@ -771,7 +760,7 @@ public class DatabaseHandler
 			ResultSet result;
 			try
 			{
-				result = SQLLibrary.query(query, true);
+				result = database.query(query, true);
 				if (result != null)
 				{
 					if (!result.isLast())
@@ -793,7 +782,7 @@ public class DatabaseHandler
 		String query = "SELECT id FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result != null)
 			{
 				if (!result.isLast())
@@ -817,7 +806,7 @@ public class DatabaseHandler
 				+ playerName + "')";
 		try
 		{
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 			result = true;
 		} catch (SQLException e)
 		{
@@ -834,7 +823,7 @@ public class DatabaseHandler
 			String query = "DELETE FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
 			try
 			{
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 				result = true;
 			} catch (SQLException e)
 			{
@@ -853,7 +842,7 @@ public class DatabaseHandler
 				+ " ORDER BY worldName";
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result != null)
 			{
 				return result;
@@ -871,7 +860,7 @@ public class DatabaseHandler
 		List<String> list = new ArrayList<String>();
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result != null)
 			{
 				while (result.next())
@@ -893,7 +882,7 @@ public class DatabaseHandler
 		List<String> list = new ArrayList<String>();
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result != null)
 			{
 				while (result.next())
@@ -915,7 +904,7 @@ public class DatabaseHandler
 				+ "')";
 		try
 		{
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -928,7 +917,7 @@ public class DatabaseHandler
 				+ " AND playerName='" + playerName + "'";
 		try
 		{
-			SQLLibrary.query(query, false);
+			database.query(query, false);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -942,19 +931,19 @@ public class DatabaseHandler
 				+ "' AND dest = '" + dest.getName() + "'";
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result.next())
 			{
 				query = "UPDATE " + Config.databaseCurrencyExchangeTable + " SET rate=" + rate + " WHERE src='"
 						+ src.getName() + "' AND dest = '" + dest.getName() + "'";
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 			else
 			{
 				// create new
 				query = "INSERT INTO " + Config.databaseCurrencyExchangeTable + " (src, dest, rate) VALUES ('"
 						+ src.getName() + "','" + dest.getName() + "'," + String.valueOf(rate) + ")";
-				SQLLibrary.query(query, false);
+				database.query(query, false);
 			}
 		} catch (SQLException e)
 		{
@@ -968,7 +957,7 @@ public class DatabaseHandler
 		HashMap<String, Double> ret = new HashMap<String, Double>();
 		try
 		{
-			ResultSet result = SQLLibrary.query(query, true);
+			ResultSet result = database.query(query, true);
 			if (result != null)
 			{
 				while (result.next())

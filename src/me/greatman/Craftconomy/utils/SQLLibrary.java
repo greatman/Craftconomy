@@ -14,31 +14,39 @@ import com.sun.rowset.CachedRowSetImpl;
 public class SQLLibrary
 {
 
-	private static String databaseUrl, username, password;
+	private String databaseUrl, username, password;
+	private DatabaseType type;
 
-	public static void setUrl(String url)
+	public SQLLibrary(String url, String databaseUsername, String databasePassword, DatabaseType dbtype)
+	{
+		setUrl(url);
+		setUsername(databaseUsername);
+		setPassword(databasePassword);
+		type = dbtype;
+	}
+	public void setUrl(String url)
 	{
 		databaseUrl = url;
 	}
 
-	public static void setUsername(String databaseUsername)
+	public void setUsername(String databaseUsername)
 	{
 		username = databaseUsername;
 	}
 
-	public static void setPassword(String databasePassword)
+	public void setPassword(String databasePassword)
 	{
 		password = databasePassword;
 	}
 
-	public static Connection createConnection()
+	public Connection createConnection()
 	{
 		Connection conn = null;
 		try
 		{
 			Class.forName("org.sqlite.JDBC");
 			Class.forName("com.mysql.jdbc.Driver");
-			if (DatabaseHandler.type == DatabaseHandler.databaseType.SQLITE)
+			if (type == DatabaseType.SQLITE)
 				conn = DriverManager.getConnection(databaseUrl);
 			else conn = DriverManager.getConnection(databaseUrl, username, password);
 
@@ -52,7 +60,7 @@ public class SQLLibrary
 		return conn;
 	}
 
-	public static CachedRowSetImpl query(String query, boolean result) throws SQLException
+	public  CachedRowSetImpl query(String query, boolean result) throws SQLException
 	{
 		ResultSet rs = null;
 		CachedRowSetImpl crs = null;
@@ -72,7 +80,7 @@ public class SQLLibrary
 		// return rs;
 	}
 
-	public static boolean checkTable(String table)
+	public  boolean checkTable(String table)
 	{
 		boolean result = false;
 		ResultSet query;
@@ -89,19 +97,24 @@ public class SQLLibrary
 		return result;
 	}
 
-	public static void truncateTable(String string)
+	public void truncateTable(String string)
 	{
 		try
 		{
 
-			if (DatabaseHandler.type == DatabaseHandler.databaseType.MYSQL)
+			if (type == DatabaseType.MYSQL)
 				query("TRUNCATE TABLE " + string, false);
-			else if (DatabaseHandler.type == DatabaseHandler.databaseType.SQLITE)
+			else if (type == DatabaseType.SQLITE)
 				query("DELETE FROM " + string, false);
 
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public DatabaseType getType()
+	{
+		return type;
 	}
 }
