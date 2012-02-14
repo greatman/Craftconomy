@@ -12,7 +12,7 @@ public class BankDeleteCommand extends BaseCommand
 	{
 		this.command.add("delete");
 		this.requiredParameters.add("Bank Name");
-		permFlag = "Craftconomy.bank.remove";
+		permFlag = "Craftconomy.bank.delete";
 		helpDescription = "Remove a bank account";
 	}
 

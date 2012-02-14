@@ -28,7 +28,7 @@ permissions:
             Craftconomy.account.create: true
             Craftconomy.account.empty: true
             Craftconomy.bank.create: true
-            Craftconomy.bank.remove: true
+            Craftconomy.bank.delete: true
             Craftconomy.bank.deposit: true
             Craftconomy.bank.give: true
             Craftconomy.bank.help: true
@@ -55,7 +55,7 @@ permissions:
         description: Give access to all bank commands
         children:
           Craftconomy.bank.create: true
-          Craftconomy.bank.remove: true
+          Craftconomy.bank.delete: true
           Craftconomy.bank.deposit: true
           Craftconomy.bank.give: true
           Craftconomy.bank.help: true
@@ -225,6 +225,21 @@ permissions:
         default: op
         command: "/bank remove <Bank Name> <Player Name>"
         
+    Craftconomy.bank.create:
+        description: Create a bank account
+        default: op
+        command: "/bank create <Bank Name>"
+    
+    Craftconomy.bank.delete:
+        description: Delete a bank account
+        default: op
+        command: "/bank delete <Bank Name>"
+
+    Craftconomy.bank.admindelete:
+        description: Remove a bank account (Admin permission)
+        default: op
+        command: "/bank delete <Bank Name>"
+    
     Craftconomy.currency.create:
         description: Create a currency
         default: op
