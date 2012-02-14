@@ -337,12 +337,13 @@ public class Craftconomy extends JavaPlugin
 						BufferedReader in = new BufferedReader(new FileReader(dbFile));
 					    String str;
 					    while ((str = in.readLine()) != null) {
-					        info = str.split("");
-					        balance = info[2].split(":");
-					        account = AccountHandler.getAccount(info[1]);
+					        info = str.split(" ");
+					        balance = info[1].split(":");
+					        account = AccountHandler.getAccount(info[0]);
 					        account.setBalance(Double.parseDouble(balance[1]));
 					    }
 					    in.close();
+					    return;
 					} catch (FileNotFoundException e)
 					{
 						e.printStackTrace();
