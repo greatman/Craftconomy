@@ -60,7 +60,7 @@ public class Craftconomy extends JavaPlugin
 			onDisable();
 			return;
 		}
-
+		convert();
 		new AccountHandler();
 
 		// Enable the plugin stats Metrics
@@ -306,7 +306,7 @@ public class Craftconomy extends JavaPlugin
 		}
 	}
 	
-	public static void iConomyConvert()
+	public static void convert()
 	{
 		Account account = null;
 		SQLLibrary database = null;
@@ -362,7 +362,7 @@ public class Craftconomy extends JavaPlugin
 							while (result.next())
 							{
 								account = AccountHandler.getAccount(result.getString("username"));
-								account.addMoney(result.getDouble("balance"));
+								account.setBalance(result.getDouble("balance"));
 								i++;
 							}
 							ILogger.info(i + " accounts converted from the iConomy database to the Craftconomy database");
