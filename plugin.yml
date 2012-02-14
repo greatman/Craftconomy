@@ -2,6 +2,7 @@ name: Craftconomy
 main: me.greatman.Craftconomy.Craftconomy
 version: 2.2.0-b${BUILD_NUMBER}
 author: Greatman
+softdepend: [Spout]
 commands:
     money:
       description: Check / Distribute currency.

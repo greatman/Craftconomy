@@ -19,6 +19,7 @@ import me.greatman.Craftconomy.commands.bank.*;
 import me.greatman.Craftconomy.commands.config.*;
 import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
+import me.greatman.Craftconomy.listeners.SpoutListener;
 import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
 import me.greatman.Craftconomy.utils.DatabaseType;
@@ -28,10 +29,10 @@ import me.greatman.Craftconomy.utils.SQLLibrary;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,6 +47,7 @@ public class Craftconomy extends JavaPlugin
 	public Timer payDay;
 	public static Craftconomy plugin;
 	public List<Timer> timerMap = new ArrayList<Timer>();
+	public static boolean spoutEnabled = false;
 
 	public void onEnable()
 	{
@@ -63,6 +65,22 @@ public class Craftconomy extends JavaPlugin
 		convert();
 		new AccountHandler();
 
+		//Loads the listeners
+		PluginManager pm = this.getServer().getPluginManager();
+		pm.registerEvents(playerListener, this);
+		//Checks if Spout is on the server
+		Plugin ec = getServer().getPluginManager().getPlugin("Spout");
+		if (ec != null)
+		{
+			ILogger.info("Spout found. Enabling Spout features.");
+			spoutEnabled = true;
+			pm.registerEvents(new SpoutListener(), this);
+		}
+		else
+		{
+			ILogger.info("Spout not found. Disabling Spout features.");
+		}
+		
 		// Enable the plugin stats Metrics
 		try
 		{
@@ -153,8 +171,6 @@ public class Craftconomy extends JavaPlugin
 		}
 
 		// Loads the players after a /reload;
-		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvents(playerListener, this);
 		Player[] playerList = Craftconomy.plugin.getServer().getOnlinePlayers();
 		if (playerList.length != 0)
 		{
