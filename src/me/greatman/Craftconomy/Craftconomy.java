@@ -1,5 +1,9 @@
 package me.greatman.Craftconomy;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +28,7 @@ import me.greatman.Craftconomy.utils.SQLLibrary;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -306,6 +311,8 @@ public class Craftconomy extends JavaPlugin
 		Account account = null;
 		SQLLibrary database = null;
 		ResultSet result = null;
+		File dbFile = null;
+		String[] info, balance;
 		if (Config.convertEnabled)
 		{
 			//Iconomy support
@@ -321,7 +328,29 @@ public class Craftconomy extends JavaPlugin
 				{
 					database = new SQLLibrary("jdbc:sqlite:" + Config.convertDatabaseAddress, "", "", DatabaseType.SQLITE);
 				}
-				
+				else if (Config.convertDatabaseType.equalsIgnoreCase("minidb"))
+				{
+					try
+					{
+						dbFile = new File(Config.convertDatabaseAddress);
+						
+						BufferedReader in = new BufferedReader(new FileReader(dbFile));
+					    String str;
+					    while ((str = in.readLine()) != null) {
+					        info = str.split("");
+					        balance = info[2].split(":");
+					        account = AccountHandler.getAccount(info[1]);
+					        account.setBalance(Double.parseDouble(balance[1]));
+					    }
+					    in.close();
+					} catch (FileNotFoundException e)
+					{
+						e.printStackTrace();
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
 				if (database.getType().equals(DatabaseType.MYSQL) || database.getType().equals(DatabaseType.SQLITE))
 				{
 					try
