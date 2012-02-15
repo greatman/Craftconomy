@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -300,8 +301,10 @@ public class Craftconomy extends JavaPlugin
 		return result;
 	}
 
-	public static String format(double amount, Currency currency)
+	public static String format(BigDecimal amount, Currency currency)
 	{
+		//just format the BigDecimal 2 to fields :p
+		amount = amount.setScale(2, BigDecimal.ROUND_HALF_DOWN);
 		// TODO: Add plural format
 		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 		return decimalFormat.format(amount) + " " + currency.getName();
@@ -356,7 +359,7 @@ public class Craftconomy extends JavaPlugin
 					        info = str.split(" ");
 					        balance = info[1].split(":");
 					        account = AccountHandler.getAccount(info[0]);
-					        account.setBalance(Double.parseDouble(balance[1]));
+					        account.setBalance(new BigDecimal(balance[1]));
 					    }
 					    in.close();
 					    return;
@@ -379,7 +382,7 @@ public class Craftconomy extends JavaPlugin
 							while (result.next())
 							{
 								account = AccountHandler.getAccount(result.getString("username"));
-								account.setBalance(result.getDouble("balance"));
+								account.setBalance(result.getBigDecimal("balance"));
 								i++;
 							}
 							ILogger.info(i + " accounts converted from the iConomy database to the Craftconomy database");

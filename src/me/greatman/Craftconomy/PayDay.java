@@ -1,5 +1,6 @@
 package me.greatman.Craftconomy;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +16,7 @@ public class PayDay extends TimerTask
 {
 
 	private String groupName;
-	private double amount;
+	private BigDecimal amount;
 	private Currency currency;
 	private World world;
 	private String master;
@@ -24,7 +25,7 @@ public class PayDay extends TimerTask
 	public PayDay(String group)
 	{
 		groupName = group;
-		amount = PayDayConfig.getAmount(groupName);
+		amount = new BigDecimal(PayDayConfig.getAmount(groupName));
 		currency = PayDayConfig.getCurrency(groupName);
 		world = PayDayConfig.getWorld(groupName);
 		master = PayDayConfig.whoPay(groupName);
@@ -63,10 +64,10 @@ public class PayDay extends TimerTask
 				if (type.equalsIgnoreCase("wage"))
 				{
 					Iterator<Player> giveMoneyList = theList.iterator();
-					if (AccountHandler.getAccount(master).hasEnough(amount * theList.size(), currency, world))
+					if (AccountHandler.getAccount(master).hasEnough(amount.multiply(new BigDecimal(theList.size())), currency, world))
 					{
 
-						AccountHandler.getAccount(master).substractMoney(amount * theList.size(), currency, world);
+						AccountHandler.getAccount(master).substractMoney(amount.multiply(new BigDecimal(theList.size())), currency, world);
 						paydayIterator(giveMoneyList);
 					}
 					else

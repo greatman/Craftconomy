@@ -1,5 +1,7 @@
 package me.greatman.Craftconomy.commands.money;
 
+import java.math.BigDecimal;
+
 import org.bukkit.ChatColor;
 
 import me.greatman.Craftconomy.Craftconomy;
@@ -50,9 +52,9 @@ public class ExchangeCalcCommand extends BaseCommand
 					+ " does not exist!");
 			return;
 		}
-		sendMessage(ChatColor.GRAY + Craftconomy.format(1, source) + " = "
-				+ Craftconomy.format(CurrencyHandler.convert(source, destination, 1.00), destination));
-		sendMessage(ChatColor.GRAY + Craftconomy.format(1, destination) + " = "
-				+ Craftconomy.format(CurrencyHandler.convert(destination, source, 1.00), source));
+		sendMessage(ChatColor.GRAY + Craftconomy.format(BigDecimal.ONE, source) + " = "
+				+ Craftconomy.format(CurrencyHandler.convert(source, destination, BigDecimal.ONE), destination));
+		sendMessage(ChatColor.GRAY + Craftconomy.format(BigDecimal.ONE, destination) + " = "
+				+ Craftconomy.format(CurrencyHandler.convert(destination, source, BigDecimal.ONE), source));
 	}
 }

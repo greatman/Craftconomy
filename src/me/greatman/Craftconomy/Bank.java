@@ -1,5 +1,6 @@
 package me.greatman.Craftconomy;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class Bank
 	 * 
 	 * @return the balance
 	 */
-	public double getDefaultBalance()
+	public BigDecimal getDefaultBalance()
 	{
 		return getBalance(Craftconomy.plugin.getServer().getWorlds().get(0));
 	}
@@ -46,7 +47,7 @@ public class Bank
 	 * @param world The world we want to get the balance
 	 * @return The account balance
 	 */
-	public double getBalance(World world)
+	public BigDecimal getBalance(World world)
 	{
 		return getBalance(CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
@@ -58,7 +59,7 @@ public class Bank
 	 * @param world The world we want to get
 	 * @return The account balance
 	 */
-	public double getBalance(Currency currency, World world)
+	public BigDecimal getBalance(Currency currency, World world)
 	{
 		if (!Config.multiWorld)
 			return DatabaseHandler.getBankBalanceCurrency(this, Craftconomy.plugin.getServer().getWorlds().get(0),
@@ -82,7 +83,7 @@ public class Bank
 			{
 				while (result.next())
 				{
-					list.add(new BalanceCollection(result.getString("worldName"), result.getDouble("balance"),
+					list.add(new BalanceCollection(result.getString("worldName"), result.getBigDecimal("balance"),
 							CurrencyHandler.getCurrency(result.getString("name"), true)));
 				}
 
@@ -101,7 +102,7 @@ public class Bank
 	 * @param amount the amount of money we want to add
 	 * @return the new balance
 	 */
-	public double addMoney(double amount)
+	public BigDecimal addMoney(BigDecimal amount)
 	{
 		return addMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), Craftconomy.plugin
 				.getServer().getWorlds().get(0));
@@ -115,10 +116,10 @@ public class Bank
 	 * @param world The world the currency is
 	 * @return The new balance
 	 */
-	public double addMoney(double amount, Currency currency, World world)
+	public BigDecimal addMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance += amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.add(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateBankAccount(this, balance, currency, world);
 		else DatabaseHandler.updateBankAccount(this, balance, currency,
@@ -132,7 +133,7 @@ public class Bank
 	 * @param amount the amount we want to remove
 	 * @return The new balance
 	 */
-	public double substractMoney(double amount)
+	public BigDecimal substractMoney(BigDecimal amount)
 	{
 		return substractMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), Craftconomy.plugin
 				.getServer().getWorlds().get(0));
@@ -146,10 +147,10 @@ public class Bank
 	 * @param world The world we want to modify the money
 	 * @return the new balance
 	 */
-	public double substractMoney(double amount, Currency currency, World world)
+	public BigDecimal substractMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance -= amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance.subtract(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateBankAccount(this, balance, currency, world);
 		else DatabaseHandler.updateBankAccount(this, balance, currency,
@@ -165,10 +166,10 @@ public class Bank
 	 * @param world The world from where we fetch the currency
 	 * @return The new balance
 	 */
-	public double multiplyMoney(double amount, Currency currency, World world)
+	public BigDecimal multiplyMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance *= amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.multiply(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateBankAccount(this, balance, currency, world);
 		else DatabaseHandler.updateBankAccount(this, balance, currency,
@@ -184,10 +185,10 @@ public class Bank
 	 * @param world The world from where we fetch the currency
 	 * @return The balance after the money is divided
 	 */
-	public double divideMoney(double amount, Currency currency, World world)
+	public BigDecimal divideMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance /= amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.divide(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateBankAccount(this, balance, currency, world);
 		else DatabaseHandler.updateBankAccount(this, balance, currency,
@@ -203,9 +204,8 @@ public class Bank
 	 * @param world The world we want to change
 	 * @return The balance after the change.
 	 */
-	public double setBalance(double amount, Currency currency, World world)
+	public BigDecimal setBalance(BigDecimal balance, Currency currency, World world)
 	{
-		double balance = amount;
 		if (Config.multiWorld)
 			DatabaseHandler.updateBankAccount(this, balance, currency, world);
 		else DatabaseHandler.updateBankAccount(this, balance, currency,
@@ -219,7 +219,7 @@ public class Bank
 	 * @param amount The amount we want to check
 	 * @return True if the bank account has enough else false
 	 */
-	public boolean hasEnough(double amount)
+	public boolean hasEnough(BigDecimal amount)
 	{
 		return hasEnough(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), Craftconomy.plugin
 				.getServer().getWorlds().get(0));
@@ -233,14 +233,15 @@ public class Bank
 	 * @param world The world we want to check
 	 * @return True if the bank account has enough else false
 	 */
-	public boolean hasEnough(double amount, Currency currency, World world)
+	public boolean hasEnough(BigDecimal amount, Currency currency, World world)
 	{
-		double balance;
+		BigDecimal balance;
 		if (Config.multiWorld)
 			balance = getBalance(currency, world);
 		else balance = getBalance(currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		boolean result = false;
-		if (balance >= amount)
+		//if (balance >= amount)
+		if(balance.compareTo(amount)>=0)
 			result = true;
 		return result;
 	}

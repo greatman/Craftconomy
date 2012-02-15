@@ -1,5 +1,7 @@
 package me.greatman.Craftconomy.commands.money;
 
+import java.math.BigDecimal;
+
 import me.greatman.Craftconomy.Account;
 import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Craftconomy;
@@ -26,7 +28,7 @@ public class PayCommand extends BaseCommand
 
 	public void perform()
 	{
-		double amount;
+		BigDecimal amount;
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		if (AccountHandler.exists(this.parameters.get(0)))
 		{
@@ -34,7 +36,7 @@ public class PayCommand extends BaseCommand
 			Account receiverAccount = AccountHandler.getAccount(this.parameters.get(0));
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
-				amount = Double.parseDouble(this.parameters.get(1));
+				amount = new BigDecimal(this.parameters.get(1));
 				// We have a special currency
 				if (this.parameters.size() >= 3)
 				{

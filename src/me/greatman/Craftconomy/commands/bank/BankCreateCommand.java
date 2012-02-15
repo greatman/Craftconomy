@@ -1,5 +1,7 @@
 package me.greatman.Craftconomy.commands.bank;
 
+import java.math.BigDecimal;
+
 import org.bukkit.ChatColor;
 
 import me.greatman.Craftconomy.Account;
@@ -22,11 +24,11 @@ public class BankCreateCommand extends BaseCommand
 	public void perform()
 	{
 		Account account = AccountHandler.getAccount(player);
-		if (account.hasEnough(Config.bankPrice))
+		if (account.hasEnough(new BigDecimal(Config.bankPrice)))
 		{
 			if (BankHandler.create(this.parameters.get(0), player.getName()))
 			{
-				account.substractMoney(Config.bankPrice);
+				account.substractMoney(new BigDecimal(Config.bankPrice));
 				sendMessage("The bank account " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.GREEN
 						+ " has been created!");
 			}

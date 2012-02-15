@@ -1,5 +1,6 @@
 package me.greatman.Craftconomy;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -63,9 +64,9 @@ public class CurrencyHandler
 	 * @param amount The amount (as source currency)
 	 * @return
 	 */
-	public static double convert(Currency src, Currency dest, double amount)
+	public static BigDecimal convert(Currency src, Currency dest, BigDecimal amount)
 	{
-		return amount * src.getExchangeRate(dest.getName());
+		return amount.multiply(new BigDecimal(src.getExchangeRate(dest.getName())));
 	}
 
 	/**

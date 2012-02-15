@@ -1,5 +1,6 @@
 package me.greatman.Craftconomy;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class Account
 	 * 
 	 * @return the balance
 	 */
-	public double getDefaultBalance()
+	public BigDecimal getDefaultBalance()
 	{
 		return getBalance(CurrencyHandler.getCurrency(Config.currencyDefault, true));
 	}
@@ -70,7 +71,7 @@ public class Account
 	 * @param world The world we want to get the balance
 	 * @return The account balance
 	 */
-	public double getBalance(World world)
+	public BigDecimal getBalance(World world)
 	{
 		if (!Config.multiWorld)
 			return getBalance(CurrencyHandler.getCurrency(Config.currencyDefault, true));
@@ -84,7 +85,7 @@ public class Account
 	 * @param world The world we want to get
 	 * @return The account balance
 	 */
-	public double getBalance(Currency currency, World world)
+	public BigDecimal getBalance(Currency currency, World world)
 	{
 		if (!Config.multiWorld)
 			return getBalance(currency);
@@ -97,9 +98,9 @@ public class Account
 	 * @param currency The Currency we want to check
 	 * @return The balance of that according currency
 	 */
-	public double getBalance(Currency currency)
+	public BigDecimal getBalance(Currency currency)
 	{
-		double balance;
+		BigDecimal balance;
 		if (Config.multiWorld)
 			balance = DatabaseHandler.getBalanceCurrency(this, player.getWorld(), currency);
 		else balance = DatabaseHandler.getBalanceCurrency(this, Craftconomy.plugin.getServer().getWorlds().get(0),
@@ -123,7 +124,7 @@ public class Account
 			{
 				while (result.next())
 				{
-					list.add(new BalanceCollection(result.getString("worldName"), result.getDouble("balance"),
+					list.add(new BalanceCollection(result.getString("worldName"), result.getBigDecimal("balance"),
 							CurrencyHandler.getCurrency(result.getString("name"), true)));
 				}
 
@@ -162,7 +163,7 @@ public class Account
 	 * @param amount The amount we want to add.
 	 * @return The balance after the amount is added.
 	 */
-	public double addMoney(double amount)
+	public BigDecimal addMoney(BigDecimal amount)
 	{
 		if (Config.multiWorld)
 			return addMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), player.getWorld());
@@ -177,7 +178,7 @@ public class Account
 	 * @param currency The currency we want to add the money
 	 * @return The balance after the changes
 	 */
-	public double addMoney(double amount, Currency currency)
+	public BigDecimal addMoney(BigDecimal amount, Currency currency)
 	{
 		if (Config.multiWorld)
 			return addMoney(amount, currency, player.getWorld());
@@ -192,10 +193,10 @@ public class Account
 	 * @param world The world the currency is
 	 * @return The balance after all the changes
 	 */
-	public double addMoney(double amount, Currency currency, World world)
+	public BigDecimal addMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance += amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.add(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateAccount(this, balance, currency, world);
 		else DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
@@ -209,7 +210,7 @@ public class Account
 	 * @param world The world we want to add the money
 	 * @return The balance after all the changes
 	 */
-	public double addMoney(double amount, World world)
+	public BigDecimal addMoney(BigDecimal amount, World world)
 	{
 		return addMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
@@ -220,7 +221,7 @@ public class Account
 	 * @param amount the amount we want to add.
 	 * @return The balance after the amount is removed.
 	 */
-	public double substractMoney(double amount)
+	public BigDecimal substractMoney(BigDecimal amount)
 	{
 		if (Config.multiWorld)
 			return substractMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), player.getWorld());
@@ -235,7 +236,7 @@ public class Account
 	 * @param currency The currency we want to modify
 	 * @return the new balance
 	 */
-	public double substractMoney(double amount, Currency currency)
+	public BigDecimal substractMoney(BigDecimal amount, Currency currency)
 	{
 		if (Config.multiWorld)
 			return substractMoney(amount, currency, player.getWorld());
@@ -250,10 +251,10 @@ public class Account
 	 * @param world The world we want to modify the money
 	 * @return the new balance
 	 */
-	public double substractMoney(double amount, Currency currency, World world)
+	public BigDecimal substractMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance -= amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.subtract(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateAccount(this, balance, currency, world);
 		else DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
@@ -267,7 +268,7 @@ public class Account
 	 * @param world The world we want to modify the money
 	 * @return the new balance
 	 */
-	public double substractMoney(double amount, World world)
+	public BigDecimal substractMoney(BigDecimal amount, World world)
 	{
 		return substractMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
@@ -278,7 +279,7 @@ public class Account
 	 * @param amount the amount we want to multiply
 	 * @return The balance after the money is multiplied
 	 */
-	public double multiplyMoney(double amount)
+	public BigDecimal multiplyMoney(BigDecimal amount)
 	{
 		if (Config.multiWorld)
 			return multiplyMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), player.getWorld());
@@ -293,7 +294,7 @@ public class Account
 	 * @param currency The currency we want to fetch
 	 * @return The balance after the money is multiplied.
 	 */
-	public double multiplyMoney(double amount, Currency currency)
+	public BigDecimal multiplyMoney(BigDecimal amount, Currency currency)
 	{
 		if (Config.multiWorld)
 			return multiplyMoney(amount, currency, player.getWorld());
@@ -308,10 +309,10 @@ public class Account
 	 * @param world The world from where we fetch the currency
 	 * @return The balance after the money is multiplied
 	 */
-	public double multiplyMoney(double amount, Currency currency, World world)
+	public BigDecimal multiplyMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance *= amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.multiply(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateAccount(this, balance, currency, world);
 		else DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
@@ -325,7 +326,7 @@ public class Account
 	 * @param world The world we fetch the money
 	 * @return The balance after the money is multiplied
 	 */
-	public double multiplyMoney(double amount, World world)
+	public BigDecimal multiplyMoney(BigDecimal amount, World world)
 	{
 		return multiplyMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
@@ -336,7 +337,7 @@ public class Account
 	 * @param amount The amount we want to divide
 	 * @return The balance after the money is divided.
 	 */
-	public double divideMoney(double amount)
+	public BigDecimal divideMoney(BigDecimal amount)
 	{
 		if (Config.multiWorld)
 			return divideMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), player.getWorld());
@@ -351,7 +352,7 @@ public class Account
 	 * @param currency The currency we want to fetch
 	 * @return The balance after the money is divided
 	 */
-	public double divideMoney(double amount, Currency currency)
+	public BigDecimal divideMoney(BigDecimal amount, Currency currency)
 	{
 		if (Config.multiWorld)
 			return divideMoney(amount, currency, player.getWorld());
@@ -366,10 +367,10 @@ public class Account
 	 * @param world The world from where we fetch the currency
 	 * @return The balance after the money is divided
 	 */
-	public double divideMoney(double amount, Currency currency, World world)
+	public BigDecimal divideMoney(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = getBalance(currency, world);
-		balance /= amount;
+		BigDecimal balance = getBalance(currency, world);
+		balance = balance.divide(amount);
 		if (Config.multiWorld)
 			DatabaseHandler.updateAccount(this, balance, currency, world);
 		else DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
@@ -383,7 +384,7 @@ public class Account
 	 * @param world The world we fetch the money
 	 * @return The balance after the money is divided
 	 */
-	public double divideMoney(double amount, World world)
+	public BigDecimal divideMoney(BigDecimal amount, World world)
 	{
 		return divideMoney(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
@@ -394,7 +395,7 @@ public class Account
 	 * @param amount The balance we want to set the account to
 	 * @return The current balance after the change.
 	 */
-	public double setBalance(double amount)
+	public BigDecimal setBalance(BigDecimal amount)
 	{
 		if (Config.multiWorld)
 			return setBalance(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), player.getWorld());
@@ -409,7 +410,7 @@ public class Account
 	 * @param currency The currency we want to change
 	 * @return The current balance after the change
 	 */
-	public double setBalance(double amount, Currency currency)
+	public BigDecimal setBalance(BigDecimal amount, Currency currency)
 	{
 		if (Config.multiWorld)
 			return setBalance(amount, currency, player.getWorld());
@@ -424,9 +425,9 @@ public class Account
 	 * @param world The world we want to change
 	 * @return The balance after the change.
 	 */
-	public double setBalance(double amount, Currency currency, World world)
+	public BigDecimal setBalance(BigDecimal amount, Currency currency, World world)
 	{
-		double balance = amount;
+		BigDecimal balance = amount;
 		if (Config.multiWorld)
 			DatabaseHandler.updateAccount(this, balance, currency, world);
 		else DatabaseHandler.updateAccount(this, balance, currency, Craftconomy.plugin.getServer().getWorlds().get(0));
@@ -440,7 +441,7 @@ public class Account
 	 * @param world The world we want to change
 	 * @return The balance after the change.
 	 */
-	public double setBalance(double amount, World world)
+	public BigDecimal setBalance(BigDecimal amount, World world)
 	{
 		return setBalance(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}
@@ -451,7 +452,7 @@ public class Account
 	 * @param amount The amount we want to check
 	 * @return True if the player has enough else false
 	 */
-	public boolean hasEnough(double amount)
+	public boolean hasEnough(BigDecimal amount)
 	{
 		if (Config.multiWorld)
 			return hasEnough(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), player.getWorld());
@@ -466,7 +467,7 @@ public class Account
 	 * @param currency The currency we want to check
 	 * @return True if the player has enough else false
 	 */
-	public boolean hasEnough(double amount, Currency currency)
+	public boolean hasEnough(BigDecimal amount, Currency currency)
 	{
 		if (Config.multiWorld)
 			return hasEnough(amount, currency, player.getWorld());
@@ -481,14 +482,15 @@ public class Account
 	 * @param world The world we want to check
 	 * @return True if the player has enough else false
 	 */
-	public boolean hasEnough(double amount, Currency currency, World world)
+	public boolean hasEnough(BigDecimal amount, Currency currency, World world)
 	{
-		double balance;
+		BigDecimal balance;
 		if (Config.multiWorld)
 			balance = getBalance(currency, world);
 		else balance = getBalance(currency, Craftconomy.plugin.getServer().getWorlds().get(0));
 		boolean result = false;
-		if (balance >= amount)
+		//if (balance >= amount)
+		if(balance.compareTo(amount)>=0)
 			result = true;
 		return result;
 	}
@@ -500,7 +502,7 @@ public class Account
 	 * @param world The world we want to check
 	 * @return True if the player has enough else false
 	 */
-	public boolean hasEnough(double amount, World world)
+	public boolean hasEnough(BigDecimal amount, World world)
 	{
 		return hasEnough(amount, CurrencyHandler.getCurrency(Config.currencyDefault, true), world);
 	}

@@ -1,6 +1,7 @@
 package me.greatman.Craftconomy.utils;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class DatabaseHandler
 					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "username_id INTEGER NOT NULL,"
 							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
-							+ "balance DOUBLE NOT NULL)", false);
+							+ "balance BIGDECIMAL NOT NULL)", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -116,7 +117,7 @@ public class DatabaseHandler
 					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "bank_id INTEGER NOT NULL,"
 							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
-							+ "balance DOUBLE NOT NULL)", false);
+							+ "balance BIGDECIMAL NOT NULL)", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -165,7 +166,7 @@ public class DatabaseHandler
 					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username_id` INT NOT NULL ,"
 							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
-							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
+							+ "`balance` BIGDECIMAL NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -224,7 +225,7 @@ public class DatabaseHandler
 					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`bank_id` INT NOT NULL ,"
 							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
-							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
+							+ "`balance` BIGDECIMAL NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -394,7 +395,7 @@ public class DatabaseHandler
 	 * Update an account
 	 */
 
-	public static void updateAccount(Account account, double balance, Currency currency, World world)
+	public static void updateAccount(Account account, BigDecimal balance, Currency currency, World world)
 	{
 		String query = "SELECT id FROM " + Config.databaseBalanceTable + " WHERE " + "username_id="
 				+ account.getPlayerId() + " AND worldName='" + world.getName() + "'" + " AND currency_id="
@@ -489,7 +490,7 @@ public class DatabaseHandler
 	 * @param currency The currency we want to check
 	 * @return The balance
 	 */
-	public static double getBalanceCurrency(Account account, World world, Currency currency)
+	public static BigDecimal getBalanceCurrency(Account account, World world, Currency currency)
 	{
 		if (currency.getdatabaseId() != 0)
 		{
@@ -505,7 +506,7 @@ public class DatabaseHandler
 					if (!result.isLast())
 					{
 						result.next();
-						return result.getDouble("balance");
+						return result.getBigDecimal("balance");
 					}
 				}
 			} catch (SQLException e)
@@ -514,7 +515,7 @@ public class DatabaseHandler
 			}
 
 		}
-		return 0.00;
+		return BigDecimal.ZERO;
 	}
 
 	/*
@@ -701,7 +702,7 @@ public class DatabaseHandler
 		return false;
 	}
 
-	public static void updateBankAccount(Bank bank, double balance, Currency currency, World world)
+	public static void updateBankAccount(Bank bank, BigDecimal balance, Currency currency, World world)
 	{
 		String query = "SELECT id FROM " + Config.databaseBankBalanceTable + " WHERE " + "bank_id=" + bank.getId()
 				+ " AND worldName='" + world.getName() + "'" + " AND currency_id=" + currency.getdatabaseId();
@@ -751,7 +752,7 @@ public class DatabaseHandler
 		return null;
 	}
 
-	public static double getBankBalanceCurrency(Bank bank, World world, Currency currency)
+	public static BigDecimal getBankBalanceCurrency(Bank bank, World world, Currency currency)
 	{
 		if (bankExists(bank.getName()))
 		{
@@ -766,7 +767,7 @@ public class DatabaseHandler
 					if (!result.isLast())
 					{
 						result.next();
-						return result.getDouble("balance");
+						return result.getBigDecimal("balance");
 					}
 				}
 			} catch (SQLException e)
@@ -774,7 +775,7 @@ public class DatabaseHandler
 				e.printStackTrace();
 			}
 		}
-		return 0.00;
+		return BigDecimal.ZERO;
 	}
 
 	public static int getBankId(String bankName)

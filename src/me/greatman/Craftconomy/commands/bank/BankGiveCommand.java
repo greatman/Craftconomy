@@ -1,5 +1,8 @@
 package me.greatman.Craftconomy.commands.bank;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 
@@ -28,12 +31,12 @@ public class BankGiveCommand extends BaseCommand
 	{
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		World world = player.getWorld();
-		double amount;
+		BigDecimal amount;
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
 			if (Craftconomy.isValidAmount(this.parameters.get(1)))
 			{
-				amount = Double.parseDouble(this.parameters.get(1));
+				amount = new BigDecimal(this.parameters.get(1));
 				if (this.parameters.size() == 3)
 				{
 					if (CurrencyHandler.exists(this.parameters.get(2), false))

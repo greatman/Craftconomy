@@ -1,5 +1,8 @@
 package me.greatman.Craftconomy.commands.bank;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.bukkit.ChatColor;
 
 import me.greatman.Craftconomy.Account;
@@ -27,7 +30,7 @@ public class BankDepositCommand extends BaseCommand
 	public void perform()
 	{
 		Currency currency = CurrencyHandler.getCurrency(Config.currencyDefault, true);
-		double amount;
+		BigDecimal amount;
 		if (BankHandler.exists(this.parameters.get(0)))
 		{
 			if (BankHandler.getBank(this.parameters.get(0)).getOwner().equals(player.getName())
@@ -35,7 +38,7 @@ public class BankDepositCommand extends BaseCommand
 			{
 				if (Craftconomy.isValidAmount(this.parameters.get(1)))
 				{
-					amount = Double.parseDouble(this.parameters.get(1));
+					amount = new BigDecimal(this.parameters.get(1));
 					if (this.parameters.size() == 3)
 					{
 						if (CurrencyHandler.exists(this.parameters.get(2), false))

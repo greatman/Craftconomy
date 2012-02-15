@@ -1,5 +1,8 @@
 package me.greatman.Craftconomy.commands.money;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.bukkit.ChatColor;
 
 import me.greatman.Craftconomy.Account;
@@ -46,8 +49,8 @@ public class ExchangeCommand extends BaseCommand
 			// - validate amount parameter
 			if (Craftconomy.isValidAmount(parameters.get(index + 1)))
 			{
-				double amount;
-				amount = Double.parseDouble(parameters.get(index + 1));
+				BigDecimal amount;
+				amount = new BigDecimal(parameters.get(index + 1));
 				// - has the user enough of source currency?
 				if (client.hasEnough(amount, source))
 				{
