@@ -2,6 +2,9 @@ System:
   Default:
     Currency:
       Name: Dollar
+      NamePlural: Dollars
+      Minor: Coin
+      MinorPlural: Coins
       MultiWorld: false
 
     Account:

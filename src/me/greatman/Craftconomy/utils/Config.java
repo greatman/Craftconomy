@@ -9,7 +9,7 @@ public class Config
 
 	static Craftconomy plugin;
 
-	public static String currencyDefault, databaseType, databaseAccountTable, databaseBankTable,
+	public static String currencyDefault, currencyDefaultPlural, currencyDefaultMinor, currencyDefaultMinorPlural, databaseType, databaseAccountTable, databaseBankTable,
 			databaseBankBalanceTable, databaseBankMemberTable, databaseCurrencyTable, databaseCurrencyExchangeTable,
 			databaseBalanceTable, databaseUsername, databasePassword, databaseAddress, databasePort, databaseDb,
 			bankCurrency, convertType, convertTableName, convertDatabaseType, convertDatabaseAddress, convertDatabasePort, convertDatabaseUsername, convertDatabasePassword, convertDatabaseDb;
@@ -27,6 +27,9 @@ public class Config
 		plugin.saveConfig();
 
 		currencyDefault = plugin.getConfig().getString("System.Default.Currency.Name");
+		currencyDefaultPlural = plugin.getConfig().getString("System.Default.Currency.NamePlural");
+		currencyDefaultMinor = plugin.getConfig().getString("System.Default.Currency.Minor");
+		currencyDefaultMinorPlural = plugin.getConfig().getString("System.Default.Currency.MinorPlural");
 
 		multiWorld = plugin.getConfig().getBoolean("System.Default.Currency.MultiWorld");
 

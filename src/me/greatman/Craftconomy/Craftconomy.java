@@ -302,9 +302,19 @@ public class Craftconomy extends JavaPlugin
 
 	public static String format(double amount, Currency currency)
 	{
-		// TODO: Add plural format
-		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-		return decimalFormat.format(amount) + " " + currency.getName();
+		String name = currency.getName();
+		String minor = currency.getNameMinor();
+		String[] theAmount = Double.toString(amount).split(".");
+
+		if (Integer.parseInt(theAmount[0]) > 1)
+		{
+			name = currency.getNamePlural();
+		}
+		if(Integer.parseInt(theAmount[1]) > 0.01)
+		{
+			minor = currency.getNameMinorPlural();
+		}
+		return theAmount[0] + " " + name + " " + theAmount[1] + " " + minor;
 	}
 
 	public static boolean isValidAmount(String amount)

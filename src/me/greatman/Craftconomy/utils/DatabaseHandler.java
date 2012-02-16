@@ -53,10 +53,16 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "name VARCHAR(30) UNIQUE NOT NULL)",
-							false);
-					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('"
-							+ Config.currencyDefault + "')", false);
+							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+							+ "name VARCHAR(30) UNIQUE NOT NULL)"
+							+ "plural VARCHAR(30) UNIQUE NOT NULL)"
+							+ "minor VARCHAR(30) UNIQUE NOT NULL)"
+							+ "minorplural VARCHAR(30) UNIQUE NOT NULL)", false);
+					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
+							+ "'" + Config.currencyDefault + "',"
+							+ "'" + Config.currencyDefaultPlural + "',"
+							+ "'" + Config.currencyDefaultMinor + "'," 
+							+ "'" + Config.currencyDefaultMinorPlural + "')", false);
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -178,10 +184,17 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " + "`name` VARCHAR( 30 ) NOT NULL "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , "
+							+ "`name` VARCHAR( 30 ) NOT NULL "
+							+ "`plural` VARCHAR( 30 ) NOT NULL "
+							+ "`minor` VARCHAR( 30 ) NOT NULL "
+							+ "`minorplural` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
-					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('"
-							+ Config.currencyDefault + "')", false);
+					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
+							+ "'" + Config.currencyDefault + "',"
+							+ "'" + Config.currencyDefaultPlural + "',"
+							+ "'" + Config.currencyDefaultMinor + "'," 
+							+ "'" + Config.currencyDefaultMinorPlural + "')", false);
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -970,5 +983,31 @@ public class DatabaseHandler
 			e.printStackTrace();
 		}
 		return ret;
+	}
+
+	public static HashMap<String,String> getCurrencyNames(String currencyName, boolean exact) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		String query;
+		if (exact)
+			query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name='" + currencyName + "'";
+		else query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name LIKE '%" + currencyName + "%'";
+		ResultSet result;
+		try
+		{
+			result = database.query(query, true);
+			if (result != null)
+			{
+				result.next();
+				map.put("name", result.getString("name"));
+				map.put("plural", result.getString("plural"));
+				map.put("minor", result.getString("minor"));
+				map.put("minorplural", result.getString("minorplural"));
+				return map;
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

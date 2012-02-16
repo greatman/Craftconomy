@@ -19,6 +19,22 @@ public class Currency
 	 */
 	private String name;
 
+	
+	/**
+	 * Contains the Currency name in plural
+	 */
+	private String namePlural;
+	
+	/**
+	 * Contains the Currency minor name (0.XX)
+	 */
+	private String nameMinor;
+	
+	/**
+	 * Contains the Currency minor name in plural (0.XX)
+	 */
+	private String nameMinorPlural;
+	
 	/**
 	 * Contains the database ID
 	 */
@@ -35,6 +51,10 @@ public class Currency
 	{
 		name = currencyName;
 		databaseId = DatabaseHandler.getCurrencyId(name);
+		HashMap<String,String> map = DatabaseHandler.getCurrencyNames(name, true);
+		namePlural = map.get("plural");
+		nameMinor = map.get("minor");
+		nameMinorPlural = map.get("minorPlural");
 	}
 
 	/**
@@ -56,7 +76,34 @@ public class Currency
 	{
 		return databaseId;
 	}
-
+	
+	/**
+	 * Get the Currency name in plural
+	 * @return The currency name in plural
+	 */
+	public String getNamePlural()
+	{
+		return namePlural;
+	}
+	
+	/**
+	 * Get the Currency minor name (0.XX)
+	 * @return The currency minor name
+	 */
+	public String getNameMinor()
+	{
+		return nameMinor;
+	}
+	
+	/**
+	 * Get the currency minor plural name (0.XX)
+	 * @return The currency minor plural name
+	 */
+	public String getNameMinorPlural()
+	{
+		return nameMinorPlural;
+	}
+	
 	/**
 	 * Get the exchange rate for a currency
 	 * 
