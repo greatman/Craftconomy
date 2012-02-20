@@ -284,7 +284,6 @@ public class Craftconomy extends JavaPlugin
 
 	public static List<String> format(List<BalanceCollection> list)
 	{
-		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 		BalanceCollection balance;
 		List<String> result = new ArrayList<String>();
 		if (list == null)
@@ -294,8 +293,7 @@ public class Craftconomy extends JavaPlugin
 		while (iterator.hasNext())
 		{
 			balance = iterator.next();
-			result.add(balance.getWorldName() + ": " + decimalFormat.format(balance.getBalance()) + " "
-					+ balance.getCurrencyName());
+			result.add(balance.getWorldName() + ": " + format(balance.getBalance(), balance.getCurrency()));
 		}
 
 		return result;
@@ -314,11 +312,20 @@ public class Craftconomy extends JavaPlugin
 			name = currency.getNamePlural();
 		}
 		
+		
+		if (theAmount[1].matches("0[1-9]"))
+		{
+			theAmount[1] = theAmount[1].replaceFirst("0", "");
+		}
+		else if (theAmount[1].matches("[1-9]"))
+		{
+			theAmount[1] = theAmount[1] + "0";
+		}
+		
 		if(Integer.parseInt(theAmount[1]) > 1)
 		{
 			minor = currency.getNameMinorPlural();
 		}
-		
 		return theAmount[0] + " " + name + " " + theAmount[1] + " " + minor;
 	}
 
