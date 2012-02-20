@@ -16,6 +16,7 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Bank;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
+import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.ILogger;
 
 @SuppressWarnings("restriction")
@@ -647,12 +648,16 @@ public class DatabaseHandler
 		return null;
 	}
 
-	public static boolean createCurrency(String currencyName)
+	public static boolean createCurrency(String currencyName, String currencyNamePlural, String currencyMinor, String currencyMinorPlural)
 	{
 		boolean success = false;
 		if (!currencyExist(currencyName, true))
 		{
-			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + currencyName + "')";
+			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES(" +
+									"'" + currencyName + "'," +
+									"'" + currencyNamePlural + "'," +
+									"'" + currencyMinor + "'," +
+									"'" + currencyMinorPlural + "',)";
 			try
 			{
 				database.query(query, false);
@@ -666,13 +671,33 @@ public class DatabaseHandler
 
 	}
 
-	public static boolean modifyCurrency(String oldCurrencyName, String newCurrencyName)
+	public static boolean modifyCurrency(CurrencyHandler.editType type, String oldCurrencyName, String newCurrencyName)
 	{
 		boolean success = false;
 		if (currencyExist(oldCurrencyName, true))
 		{
-			String query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName
-					+ "' WHERE name='" + oldCurrencyName + "'";
+			String query = "";
+			if (type == CurrencyHandler.editType.NAME)
+			{
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			else if (type == CurrencyHandler.editType.NAMEPLURAL)
+			{
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET plural='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			else if (type == CurrencyHandler.editType.MINOR)
+			{
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET minor='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			else if (type == CurrencyHandler.editType.MINORPLURAL)
+			{
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET minorplural='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			 
 			try
 			{
 				database.query(query, false);

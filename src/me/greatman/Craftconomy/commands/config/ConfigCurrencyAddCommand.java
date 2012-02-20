@@ -12,6 +12,9 @@ public class ConfigCurrencyAddCommand extends BaseCommand
 	{
 		this.command.add("currencyadd");
 		this.requiredParameters.add("Currency Name");
+		this.requiredParameters.add("Currency Name Plural");
+		this.requiredParameters.add("Currency Minor");
+		this.requiredParameters.add("Currency Minor Plural");
 		permFlag = ("Craftconomy.currency.create");
 		helpDescription = "Create a currency";
 	}
@@ -20,7 +23,7 @@ public class ConfigCurrencyAddCommand extends BaseCommand
 	{
 		if (!CurrencyHandler.exists(this.parameters.get(0), true))
 		{
-			if (CurrencyHandler.create(this.parameters.get(0)))
+			if (CurrencyHandler.create(this.parameters.get(0), this.parameters.get(1), this.parameters.get(2), this.parameters.get(3)))
 				sendMessage("Currency created!");
 			else sendMessage("A error occured!");
 		}
