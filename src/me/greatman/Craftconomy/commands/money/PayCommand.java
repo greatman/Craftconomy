@@ -58,7 +58,7 @@ public class PayCommand extends BaseCommand
 				}
 				senderAccount.substractMoney(amount, currency, player.getWorld());
 				receiverAccount.addMoney(amount, currency, player.getWorld());
-				sendMessage("You sended " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
+				sendMessage("You sent " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
 						+ " to " + ChatColor.WHITE + receiverAccount.getPlayerName());
 				sendMessage(receiverAccount.getPlayer(),
 						"You received " + ChatColor.WHITE + Craftconomy.format(amount, currency) + ChatColor.GREEN
