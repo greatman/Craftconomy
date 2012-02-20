@@ -107,6 +107,7 @@ public class Craftconomy extends JavaPlugin
 		commands.add(new ExchangeCommand());
 		commands.add(new ExchangeCalcCommand());
 		commands.add(new MoneyHelpCommand());
+		commands.add(new TopCommand());
 
 		for (BaseCommand CraftconomyCommand : this.commands)
 		{
@@ -283,7 +284,6 @@ public class Craftconomy extends JavaPlugin
 
 	public static List<String> format(List<BalanceCollection> list)
 	{
-		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 		BalanceCollection balance;
 		List<String> result = new ArrayList<String>();
 		if (list == null)
@@ -293,8 +293,7 @@ public class Craftconomy extends JavaPlugin
 		while (iterator.hasNext())
 		{
 			balance = iterator.next();
-			result.add(balance.getWorldName() + ": " + decimalFormat.format(balance.getBalance()) + " "
-					+ balance.getCurrencyName());
+			result.add(balance.getWorldName() + ": " + format(balance.getBalance(), balance.getCurrency()));
 		}
 
 		return result;
@@ -302,15 +301,28 @@ public class Craftconomy extends JavaPlugin
 
 	public static String format(double amount, Currency currency)
 	{
+		ILogger.info(amount + "");
 		String name = currency.getName();
 		String minor = currency.getNameMinor();
-		String[] theAmount = Double.toString(amount).split(".");
-
+		ILogger.info("array: " + Arrays.toString(Double.toString(amount).split("\\.")));
+		String[] theAmount = Double.toString(amount).split("\\.");
+		
 		if (Integer.parseInt(theAmount[0]) > 1)
 		{
 			name = currency.getNamePlural();
 		}
-		if(Integer.parseInt(theAmount[1]) > 0.01)
+		
+		
+		if (theAmount[1].matches("0[1-9]"))
+		{
+			theAmount[1] = theAmount[1].replaceFirst("0", "");
+		}
+		else if (theAmount[1].matches("[1-9]"))
+		{
+			theAmount[1] = theAmount[1] + "0";
+		}
+		
+		if(Integer.parseInt(theAmount[1]) > 1)
 		{
 			minor = currency.getNameMinorPlural();
 		}

@@ -54,7 +54,8 @@ public class Currency
 		HashMap<String,String> map = DatabaseHandler.getCurrencyNames(name, true);
 		namePlural = map.get("plural");
 		nameMinor = map.get("minor");
-		nameMinorPlural = map.get("minorPlural");
+		nameMinorPlural = map.get("minorplural");
+		ILogger.info(namePlural + nameMinor + nameMinorPlural);
 	}
 
 	/**
