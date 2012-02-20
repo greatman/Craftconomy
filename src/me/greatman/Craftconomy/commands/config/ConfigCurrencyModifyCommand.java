@@ -22,9 +22,9 @@ public class ConfigCurrencyModifyCommand extends BaseCommand
 	{
 		if (CurrencyHandler.exists(this.parameters.get(1), true))
 		{
-			if (CurrencyHandler.editType.valueOf(this.parameters.get(0)) != null)
+			if (CurrencyHandler.editType.valueOf(this.parameters.get(0).toUpperCase()) != null)
 			{
-				if (CurrencyHandler.rename(CurrencyHandler.editType.valueOf(this.parameters.get(0)),this.parameters.get(1), this.parameters.get(2)))
+				if (CurrencyHandler.rename(CurrencyHandler.editType.valueOf(this.parameters.get(0).toUpperCase()),this.parameters.get(1), this.parameters.get(2)))
 					sendMessage("Currency modified!");
 				else 
 					sendMessage(ChatColor.RED + "A error occured!");

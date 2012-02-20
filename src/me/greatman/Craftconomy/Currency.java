@@ -52,9 +52,29 @@ public class Currency
 		name = currencyName;
 		databaseId = DatabaseHandler.getCurrencyId(name);
 		HashMap<String,String> map = DatabaseHandler.getCurrencyNames(name, true);
-		namePlural = map.get("plural");
-		nameMinor = map.get("minor");
-		nameMinorPlural = map.get("minorplural");
+		setNamePlural(map.get("plural"));
+		setNameMinor(map.get("minor"));
+		setNameMinorPlural(map.get("minorplural"));
+	}
+	
+	public void setName(String currencyName)
+	{
+		name = currencyName;
+	}
+	
+	public void setNamePlural(String currencyName)
+	{
+		namePlural = currencyName;
+	}
+	
+	public void setNameMinor(String currencyName)
+	{
+		nameMinor = currencyName;
+	}
+	
+	public void setNameMinorPlural(String currencyName)
+	{
+		nameMinorPlural = currencyName;
 	}
 
 	/**

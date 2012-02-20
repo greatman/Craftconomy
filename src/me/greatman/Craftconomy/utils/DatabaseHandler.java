@@ -679,21 +679,25 @@ public class DatabaseHandler
 			String query = "";
 			if (type == CurrencyHandler.editType.NAME)
 			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setName(newCurrencyName);
 				query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName
 						+ "' WHERE name='" + oldCurrencyName + "'";
 			}
 			else if (type == CurrencyHandler.editType.NAMEPLURAL)
 			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setNamePlural(newCurrencyName);
 				query = "UPDATE " + Config.databaseCurrencyTable + " SET plural='" + newCurrencyName
 						+ "' WHERE name='" + oldCurrencyName + "'";
 			}
 			else if (type == CurrencyHandler.editType.MINOR)
 			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setNameMinor(newCurrencyName);
 				query = "UPDATE " + Config.databaseCurrencyTable + " SET minor='" + newCurrencyName
 						+ "' WHERE name='" + oldCurrencyName + "'";
 			}
 			else if (type == CurrencyHandler.editType.MINORPLURAL)
 			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setNameMinorPlural(newCurrencyName);
 				query = "UPDATE " + Config.databaseCurrencyTable + " SET minorplural='" + newCurrencyName
 						+ "' WHERE name='" + oldCurrencyName + "'";
 			}
