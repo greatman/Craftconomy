@@ -20,7 +20,7 @@ public class ConfigCurrencyModifyCommand extends BaseCommand
 
 	public void perform()
 	{
-		if (CurrencyHandler.exists(this.parameters.get(0), true))
+		if (CurrencyHandler.exists(this.parameters.get(1), true))
 		{
 			if (CurrencyHandler.editType.valueOf(this.parameters.get(0)) != null)
 			{

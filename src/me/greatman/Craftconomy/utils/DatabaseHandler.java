@@ -1037,7 +1037,6 @@ public class DatabaseHandler
 			if (result != null)
 			{
 				result.next();
-				ILogger.info(result.getString("name") + result.getString("plural") + result.getString("minor") + result.getString("minorplural"));
 				map.put("name", result.getString("name"));
 				map.put("plural", result.getString("plural"));
 				map.put("minor", result.getString("minor"));
