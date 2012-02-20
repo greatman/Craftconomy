@@ -301,10 +301,8 @@ public class Craftconomy extends JavaPlugin
 
 	public static String format(double amount, Currency currency)
 	{
-		ILogger.info(amount + "");
 		String name = currency.getName();
 		String minor = currency.getNameMinor();
-		ILogger.info("array: " + Arrays.toString(Double.toString(amount).split("\\.")));
 		String[] theAmount = Double.toString(amount).split("\\.");
 		
 		if (Integer.parseInt(theAmount[0]) > 1)
