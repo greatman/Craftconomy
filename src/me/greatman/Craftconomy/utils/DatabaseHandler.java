@@ -54,9 +54,9 @@ public class DatabaseHandler
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-							+ "name VARCHAR(30) UNIQUE NOT NULL)"
-							+ "plural VARCHAR(30) UNIQUE NOT NULL)"
-							+ "minor VARCHAR(30) UNIQUE NOT NULL)"
+							+ "name VARCHAR(30) UNIQUE NOT NULL,"
+							+ "plural VARCHAR(30) UNIQUE NOT NULL,"
+							+ "minor VARCHAR(30) UNIQUE NOT NULL,"
 							+ "minorplural VARCHAR(30) UNIQUE NOT NULL)", false);
 					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
 							+ "'" + Config.currencyDefault + "',"
@@ -77,7 +77,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
-							+ "src VARCHAR ( 30 ) NOT NULL , " + "dest VARCHAR ( 30 ) NOT NULL , "
+							+ "src VARCHAR ( 30 ) NOT NULL , " 
+							+ "dest VARCHAR ( 30 ) NOT NULL , "
 							+ "rate DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
 				} catch (SQLException e)
@@ -91,8 +92,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "username_id INTEGER NOT NULL,"
-							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
+							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," 
+							+ "username_id INTEGER NOT NULL,"
+							+ "currency_id INTEGER NOT NULL," 
+							+ "worldName VARCHAR(30) NOT NULL,"
 							+ "balance DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -106,7 +109,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
-							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + "name VARCHAR(30)  UNIQUE NOT NULL,"
+							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," 
+							+ "name VARCHAR(30)  UNIQUE NOT NULL,"
 							+ "owner VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e)
@@ -120,8 +124,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "bank_id INTEGER NOT NULL,"
-							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
+							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," 
+							+ "bank_id INTEGER NOT NULL,"
+							+ "currency_id INTEGER NOT NULL," 
+							+ "worldName VARCHAR(30) NOT NULL,"
 							+ "balance DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -155,7 +161,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseAccountTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username` VARCHAR( 30 ) NOT NULL "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
+							+ "`username` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseAccountTable + " table created!");
 				} catch (SQLException e)
@@ -169,8 +176,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username_id` INT NOT NULL ,"
-							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
+							+ "`username_id` INT NOT NULL ,"
+							+ "`currency_id` INT NOT NULL , " 
+							+ "`worldName` VARCHAR( 30 ) NOT NULL , "
 							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -185,9 +194,9 @@ public class DatabaseHandler
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , "
-							+ "`name` VARCHAR( 30 ) NOT NULL "
-							+ "`plural` VARCHAR( 30 ) NOT NULL "
-							+ "`minor` VARCHAR( 30 ) NOT NULL "
+							+ "`name` VARCHAR( 30 ) NOT NULL, "
+							+ "`plural` VARCHAR( 30 ) NOT NULL, "
+							+ "`minor` VARCHAR( 30 ) NOT NULL, "
 							+ "`minorplural` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
 					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
@@ -207,7 +216,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
-							+ "`src` VARCHAR ( 30 ) NOT NULL , " + "`dest` VARCHAR ( 30 ) NOT NULL , "
+							+ "`src` VARCHAR ( 30 ) NOT NULL , " 
+							+ "`dest` VARCHAR ( 30 ) NOT NULL , "
 							+ "`rate` DOUBLE NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
 				} catch (SQLException e)
@@ -221,8 +231,9 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " + "`name` VARCHAR( 30 ) NOT NULL , "
-							+ "`owner` VARCHAR( 30 ) NOT NULL " + ") ENGINE = InnoDB;", false);
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " 
+							+ "`name` VARCHAR( 30 ) NOT NULL , "
+							+ "`owner` VARCHAR( 30 ) NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -235,8 +246,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`bank_id` INT NOT NULL ,"
-							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
+							+ "`bank_id` INT NOT NULL ,"
+							+ "`currency_id` INT NOT NULL , " 
+							+ "`worldName` VARCHAR( 30 ) NOT NULL , "
 							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -250,7 +263,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
-							+ "`bank_id` INT NOT NULL ," + "`playerName` INT NOT NULL " + ") ENGINE = InnoDB;", false);
+							+ "`bank_id` INT NOT NULL ," 
+							+ "`playerName` INT NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankMemberTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -998,6 +1012,7 @@ public class DatabaseHandler
 			if (result != null)
 			{
 				result.next();
+				ILogger.info(result.getString("name") + result.getString("plural") + result.getString("minor") + result.getString("minorplural"));
 				map.put("name", result.getString("name"));
 				map.put("plural", result.getString("plural"));
 				map.put("minor", result.getString("minor"));
@@ -1009,5 +1024,28 @@ public class DatabaseHandler
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static List<Account> getTopList(Currency source, World world) {
+		String query = "SELECT * FROM " + Config.databaseBalanceTable +"" +
+				" LEFT JOIN " + Config.databaseAccountTable + " ON " + Config.databaseBalanceTable
+				+ ".username_id = " + Config.databaseAccountTable + ".id WHERE currency_id=" + source.getdatabaseId() + " AND worldName='" + world.getName() + "' ORDER BY balance DESC" ;
+		List<Account> accountList = new ArrayList<Account>();
+		try{
+			ResultSet result = database.query(query,true);
+			if (result != null)
+			{
+				int i = 0;
+				while(result.next() && i < 10)
+				{
+					accountList.add(AccountHandler.getAccount(result.getString("username")));
+					i++;
+				}
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return accountList;
 	}
 }

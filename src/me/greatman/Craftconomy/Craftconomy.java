@@ -107,6 +107,7 @@ public class Craftconomy extends JavaPlugin
 		commands.add(new ExchangeCommand());
 		commands.add(new ExchangeCalcCommand());
 		commands.add(new MoneyHelpCommand());
+		commands.add(new TopCommand());
 
 		for (BaseCommand CraftconomyCommand : this.commands)
 		{
@@ -302,18 +303,22 @@ public class Craftconomy extends JavaPlugin
 
 	public static String format(double amount, Currency currency)
 	{
+		ILogger.info(amount + "");
 		String name = currency.getName();
 		String minor = currency.getNameMinor();
-		String[] theAmount = Double.toString(amount).split(".");
-
+		ILogger.info("array: " + Arrays.toString(Double.toString(amount).split("\\.")));
+		String[] theAmount = Double.toString(amount).split("\\.");
+		
 		if (Integer.parseInt(theAmount[0]) > 1)
 		{
 			name = currency.getNamePlural();
 		}
-		if(Integer.parseInt(theAmount[1]) > 0.01)
+		
+		if(Integer.parseInt(theAmount[1]) > 1)
 		{
 			minor = currency.getNameMinorPlural();
 		}
+		
 		return theAmount[0] + " " + name + " " + theAmount[1] + " " + minor;
 	}
 
