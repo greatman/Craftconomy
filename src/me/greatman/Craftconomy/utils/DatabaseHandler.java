@@ -109,7 +109,7 @@ public class DatabaseHandler
 							if(!map.get("minorplural"))
 							{
 								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minorplural VARCHAR(30)", false);
-								ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+								ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
 							}
 						}
 					}
