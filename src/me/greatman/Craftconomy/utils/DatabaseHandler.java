@@ -56,9 +56,9 @@ public class DatabaseHandler
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 							+ "name VARCHAR(30) UNIQUE NOT NULL,"
-							+ "plural VARCHAR(30) UNIQUE NOT NULL,"
-							+ "minor VARCHAR(30) UNIQUE NOT NULL,"
-							+ "minorplural VARCHAR(30) UNIQUE NOT NULL)", false);
+							+ "plural VARCHAR(30) NOT NULL,"
+							+ "minor VARCHAR(30) NOT NULL,"
+							+ "minorplural VARCHAR(30) NOT NULL)", false);
 					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
 							+ "'" + Config.currencyDefault + "',"
 							+ "'" + Config.currencyDefaultPlural + "',"
@@ -72,6 +72,51 @@ public class DatabaseHandler
 					return false;
 				}
 
+			}
+			else
+			{
+				HashMap<String,Boolean> map = new HashMap<String,Boolean>();
+				map.put("plural", false);
+				map.put("minor", false);
+				map.put("minorplural", false);
+				
+				//We check if it's the latest version
+				ResultSet result;
+				try {
+					result = database.query("PRAGMA table_info(" + Config.databaseCurrencyTable + ")", true);
+					if (result != null)
+					{
+						while(result.next())
+						{
+							if (map.containsKey(result.getString("name")))
+							{
+								map.put(result.getString("name"), true);
+							}
+						}
+						if (map.containsValue(false))
+						{
+							ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
+							if (!map.get("plural"))
+							{
+								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN plural VARCHAR(30)", false);
+								ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+							}
+							if (!map.get("minor"))
+							{
+								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minor VARCHAR(30)", false);
+								ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
+							}
+							if(!map.get("minorplural"))
+							{
+								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minorplural VARCHAR(30)", false);
+								ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+							}
+						}
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
 			}
 			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
 			{
@@ -209,6 +254,50 @@ public class DatabaseHandler
 				} catch (SQLException e)
 				{
 					ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
+					return false;
+				}
+			}
+			else
+			{
+				HashMap<String,Boolean> map = new HashMap<String,Boolean>();
+				map.put("plural", false);
+				map.put("minor", false);
+				map.put("minorplural", false);
+				ResultSet result;
+				
+				try {
+					result = database.query("SHOW COLUMNS FROM " + Config.databaseCurrencyTable, true);
+					while(result.next())
+					{
+						
+						if (map.containsKey(result.getString(1)))
+						{
+							map.put(result.getString(1), true);
+						}
+						
+					}
+					if (map.containsValue(false))
+					{
+						ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
+						if (!map.get("plural"))
+						{
+							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD plural VARCHAR(30) NOT NULL", false);
+							ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+						}
+						if (!map.get("minor"))
+						{
+							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minor VARCHAR(30) NOT NULL", false);
+							ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
+						}
+						if(!map.get("minorplural"))
+						{
+							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minorplural VARCHAR(30) NOT NULL", false);
+							ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
+						}
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 					return false;
 				}
 			}
@@ -490,7 +579,6 @@ public class DatabaseHandler
 	 */
 	public static ResultSet getAllBalance(Account account)
 	{
-		// TODO: Probably doesn't work
 		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable
 				+ " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBalanceTable
 				+ ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId()
@@ -891,7 +979,6 @@ public class DatabaseHandler
 
 	public static ResultSet getAllBankBalance(Bank bank)
 	{
-		// TODO: Probably doesn't work
 		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBankBalanceTable
 				+ " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBankBalanceTable
 				+ ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE bank_id=" + bank.getId()
