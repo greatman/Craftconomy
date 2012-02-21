@@ -129,6 +129,6 @@ public class CurrencyHandler
 	}
 	
 	public enum editType {
-		NAME, NAMEPLURAL, MINOR, MINORPLURAL
+		NAME, PLURAL, MINOR, MINORPLURAL
 	}
 }

@@ -19,5 +19,7 @@ public class SpoutListener implements Listener
 		long time = (1 * 60) * 1000L;
 		Timer timer = new Timer();
 		timer.schedule(new SpoutHandler(event.getPlayer()), 0, time);
+		timerList.add(timer);
 	}
+	
 }

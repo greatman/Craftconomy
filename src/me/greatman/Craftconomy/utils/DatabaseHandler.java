@@ -771,7 +771,7 @@ public class DatabaseHandler
 				query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName
 						+ "' WHERE name='" + oldCurrencyName + "'";
 			}
-			else if (type == CurrencyHandler.editType.NAMEPLURAL)
+			else if (type == CurrencyHandler.editType.PLURAL)
 			{
 				CurrencyHandler.getCurrency(oldCurrencyName, true).setNamePlural(newCurrencyName);
 				query = "UPDATE " + Config.databaseCurrencyTable + " SET plural='" + newCurrencyName

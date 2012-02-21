@@ -22,15 +22,22 @@ public class ConfigCurrencyModifyCommand extends BaseCommand
 	{
 		if (CurrencyHandler.exists(this.parameters.get(1), true))
 		{
-			if (CurrencyHandler.editType.valueOf(this.parameters.get(0).toUpperCase()) != null)
+			try
 			{
-				if (CurrencyHandler.rename(CurrencyHandler.editType.valueOf(this.parameters.get(0).toUpperCase()),this.parameters.get(1), this.parameters.get(2)))
-					sendMessage("Currency modified!");
-				else 
-					sendMessage(ChatColor.RED + "A error occured!");
+				if (CurrencyHandler.editType.valueOf(this.parameters.get(0).toUpperCase()) != null)
+				{
+					if (CurrencyHandler.rename(CurrencyHandler.editType.valueOf(this.parameters.get(0).toUpperCase()),this.parameters.get(1), this.parameters.get(2)))
+						sendMessage("Currency modified!");
+					else 
+						sendMessage(ChatColor.RED + "A error occured!");
+				}
 			}
-			else
+			catch(IllegalArgumentException e)
+			{
 				sendMessage(ChatColor.RED + "Wrong edit type! The one accepted are name, plural, minor, minorplural");
+			}
+			
+				
 		}
 		else sendMessage(ChatColor.RED + "This currency doesn't exists!");
 	}
