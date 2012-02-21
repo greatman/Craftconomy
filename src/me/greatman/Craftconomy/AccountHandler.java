@@ -66,12 +66,13 @@ public class AccountHandler
 	 */
 	public static Account getAccount(String player)
 	{
+		player = player.toLowerCase();
 		List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(player);
 		if (playerList.size() == 1)
 		{
 			for (Account playerAccount : accounts)
 			{
-				if (playerAccount.getPlayerName().equals(playerList.get(0).getName()))
+				if (playerAccount.getPlayerName().equals(playerList.get(0).getName().toLowerCase()))
 					return playerAccount;
 			}
 		}
@@ -110,7 +111,7 @@ public class AccountHandler
 	{
 		for (Account playerAccount : accounts)
 		{
-			if (playerAccount.getPlayerName().equals(player.getName()))
+			if (playerAccount.getPlayerName().equals(player.getName().toLowerCase()))
 				return playerAccount;
 		}
 
@@ -134,6 +135,7 @@ public class AccountHandler
 	public static boolean exists(String player)
 	{
 		boolean exists = false;
+		player = player.toLowerCase();
 		if (!DatabaseHandler.exists(player))
 		{
 			List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(player);
@@ -152,7 +154,7 @@ public class AccountHandler
 	 */
 	public static boolean exists(Player player)
 	{
-		return DatabaseHandler.exists(player.getName());
+		return DatabaseHandler.exists(player.getName().toLowerCase());
 	}
 
 	public static void deleteAllInitialAccounts()
@@ -183,7 +185,7 @@ public class AccountHandler
 	 */
 	public static void delete(Account account)
 	{
-		DatabaseHandler.delete(account.getPlayerName());
+		DatabaseHandler.delete(account.getPlayerName().toLowerCase());
 		accounts.remove(account);
 	}
 

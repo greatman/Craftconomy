@@ -363,8 +363,30 @@ public class DatabaseHandler
 				}
 			}
 			ILogger.info("MySQL table loaded!");
+			if (Config.fixName)
+			{
+				try {
+					ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
+					if (result != null)
+					{
+						while(result.next())
+						{
+							if (result.getString("username") != null)
+							{
+								database.query("UPDATE " + Config.databaseAccountTable + " SET username='" + result.getString("username").toLowerCase() + "' WHERE username='" + result.getString("username") + "'",false);
+							}
+							
+						}
+						Craftconomy.plugin.getConfig().set("System.Debug.fixName", false);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			return true;
 		}
+		
 		return false;
 	}
 

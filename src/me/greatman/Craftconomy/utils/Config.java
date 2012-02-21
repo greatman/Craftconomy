@@ -16,7 +16,7 @@ public class Config
 
 	public static double defaultHoldings, bankPrice;
 
-	public static boolean multiWorld, transactionLogging, convertEnabled;
+	public static boolean multiWorld, transactionLogging, convertEnabled, fixName;
 
 	public static List<String> payDayList;
 
@@ -26,6 +26,8 @@ public class Config
 		plugin.getConfig().options().copyDefaults(true);
 		plugin.saveConfig();
 
+		fixName = plugin.getConfig().getBoolean("System.Debug.fixName");
+		
 		currencyDefault = plugin.getConfig().getString("System.Default.Currency.Name");
 		currencyDefaultPlural = plugin.getConfig().getString("System.Default.Currency.NamePlural");
 		currencyDefaultMinor = plugin.getConfig().getString("System.Default.Currency.Minor");
