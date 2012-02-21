@@ -31,7 +31,7 @@ public class Account
 	 */
 	public Account(String user)
 	{
-		playerName = user;
+		playerName = user.toLowerCase();
 		if (!DatabaseHandler.exists(playerName))
 			DatabaseHandler.create(playerName);
 		List<Player> playerList = Craftconomy.plugin.getServer().matchPlayer(user);
@@ -47,7 +47,7 @@ public class Account
 	 */
 	public Account(Player user)
 	{
-		playerName = user.getName();
+		playerName = user.getName().toLowerCase();
 		if (!DatabaseHandler.exists(playerName))
 			DatabaseHandler.create(playerName);
 		playerId = DatabaseHandler.getAccountId(playerName);

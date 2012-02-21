@@ -18,7 +18,7 @@ System:
   PayDay:
     Enabled: [default]
 
-  # Logs all monetary transactions passed through iConomy
+  # Logs all monetary transactions passed through CraftConomy (NOT WORKING)
   Logging:
     Enabled: false
 
@@ -52,6 +52,7 @@ System:
     BankBalanceTable: 'BankBalance'
     BankMemberTable: 'BankMember'
     
+    # The table used for currency
     CurrencyTable: 'Currency'
     CurrencyExchangeTable: 'CurrencyExchange'    
     
@@ -61,3 +62,5 @@ System:
     Username: 'root'
     Password: ''
     Db: 'Craftconomy'
+  Debug:
+    fixName: false

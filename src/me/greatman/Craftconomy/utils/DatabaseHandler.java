@@ -16,6 +16,7 @@ import me.greatman.Craftconomy.AccountHandler;
 import me.greatman.Craftconomy.Bank;
 import me.greatman.Craftconomy.Craftconomy;
 import me.greatman.Craftconomy.Currency;
+import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.ILogger;
 
 @SuppressWarnings("restriction")
@@ -28,6 +29,10 @@ public class DatabaseHandler
 	 * @param thePlugin The Craftconomy plugin
 	 * @return Success to everything or false.
 	 */
+	public static SQLLibrary getDatabase()
+	{
+		return database;
+	}
 	public static boolean load(Craftconomy thePlugin)
 	{
 		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
@@ -54,10 +59,10 @@ public class DatabaseHandler
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
 							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-							+ "name VARCHAR(30) UNIQUE NOT NULL)"
-							+ "plural VARCHAR(30) UNIQUE NOT NULL)"
-							+ "minor VARCHAR(30) UNIQUE NOT NULL)"
-							+ "minorplural VARCHAR(30) UNIQUE NOT NULL)", false);
+							+ "name VARCHAR(30) UNIQUE NOT NULL,"
+							+ "plural VARCHAR(30) NOT NULL,"
+							+ "minor VARCHAR(30) NOT NULL,"
+							+ "minorplural VARCHAR(30) NOT NULL)", false);
 					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
 							+ "'" + Config.currencyDefault + "',"
 							+ "'" + Config.currencyDefaultPlural + "',"
@@ -72,12 +77,58 @@ public class DatabaseHandler
 				}
 
 			}
+			else
+			{
+				HashMap<String,Boolean> map = new HashMap<String,Boolean>();
+				map.put("plural", false);
+				map.put("minor", false);
+				map.put("minorplural", false);
+				
+				//We check if it's the latest version
+				ResultSet result;
+				try {
+					result = database.query("PRAGMA table_info(" + Config.databaseCurrencyTable + ")", true);
+					if (result != null)
+					{
+						while(result.next())
+						{
+							if (map.containsKey(result.getString("name")))
+							{
+								map.put(result.getString("name"), true);
+							}
+						}
+						if (map.containsValue(false))
+						{
+							ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
+							if (!map.get("plural"))
+							{
+								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN plural VARCHAR(30)", false);
+								ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+							}
+							if (!map.get("minor"))
+							{
+								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minor VARCHAR(30)", false);
+								ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
+							}
+							if(!map.get("minorplural"))
+							{
+								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minorplural VARCHAR(30)", false);
+								ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
+							}
+						}
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+			}
 			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
 			{
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
-							+ "src VARCHAR ( 30 ) NOT NULL , " + "dest VARCHAR ( 30 ) NOT NULL , "
+							+ "src VARCHAR ( 30 ) NOT NULL , " 
+							+ "dest VARCHAR ( 30 ) NOT NULL , "
 							+ "rate DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
 				} catch (SQLException e)
@@ -91,8 +142,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "username_id INTEGER NOT NULL,"
-							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
+							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," 
+							+ "username_id INTEGER NOT NULL,"
+							+ "currency_id INTEGER NOT NULL," 
+							+ "worldName VARCHAR(30) NOT NULL,"
 							+ "balance DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -106,7 +159,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
-							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," + "name VARCHAR(30)  UNIQUE NOT NULL,"
+							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," 
+							+ "name VARCHAR(30)  UNIQUE NOT NULL,"
 							+ "owner VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e)
@@ -120,8 +174,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + "bank_id INTEGER NOT NULL,"
-							+ "currency_id INTEGER NOT NULL," + "worldName VARCHAR(30) NOT NULL,"
+							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," 
+							+ "bank_id INTEGER NOT NULL,"
+							+ "currency_id INTEGER NOT NULL," 
+							+ "worldName VARCHAR(30) NOT NULL,"
 							+ "balance DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -155,7 +211,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseAccountTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username` VARCHAR( 30 ) NOT NULL "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
+							+ "`username` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseAccountTable + " table created!");
 				} catch (SQLException e)
@@ -169,8 +226,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`username_id` INT NOT NULL ,"
-							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
+							+ "`username_id` INT NOT NULL ,"
+							+ "`currency_id` INT NOT NULL , " 
+							+ "`worldName` VARCHAR( 30 ) NOT NULL , "
 							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -185,9 +244,9 @@ public class DatabaseHandler
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( "
 							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , "
-							+ "`name` VARCHAR( 30 ) NOT NULL "
-							+ "`plural` VARCHAR( 30 ) NOT NULL "
-							+ "`minor` VARCHAR( 30 ) NOT NULL "
+							+ "`name` VARCHAR( 30 ) NOT NULL, "
+							+ "`plural` VARCHAR( 30 ) NOT NULL, "
+							+ "`minor` VARCHAR( 30 ) NOT NULL, "
 							+ "`minorplural` VARCHAR( 30 ) NOT NULL "
 							+ ") ENGINE = InnoDB;", false);
 					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
@@ -202,12 +261,57 @@ public class DatabaseHandler
 					return false;
 				}
 			}
+			else
+			{
+				HashMap<String,Boolean> map = new HashMap<String,Boolean>();
+				map.put("plural", false);
+				map.put("minor", false);
+				map.put("minorplural", false);
+				ResultSet result;
+				
+				try {
+					result = database.query("SHOW COLUMNS FROM " + Config.databaseCurrencyTable, true);
+					while(result.next())
+					{
+						
+						if (map.containsKey(result.getString(1)))
+						{
+							map.put(result.getString(1), true);
+						}
+						
+					}
+					if (map.containsValue(false))
+					{
+						ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
+						if (!map.get("plural"))
+						{
+							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD plural VARCHAR(30) NOT NULL", false);
+							ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+						}
+						if (!map.get("minor"))
+						{
+							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minor VARCHAR(30) NOT NULL", false);
+							ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
+						}
+						if(!map.get("minorplural"))
+						{
+							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minorplural VARCHAR(30) NOT NULL", false);
+							ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
+						}
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
+			}
 			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
 			{
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
-							+ "`src` VARCHAR ( 30 ) NOT NULL , " + "`dest` VARCHAR ( 30 ) NOT NULL , "
+							+ "`src` VARCHAR ( 30 ) NOT NULL , " 
+							+ "`dest` VARCHAR ( 30 ) NOT NULL , "
 							+ "`rate` DOUBLE NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
 				} catch (SQLException e)
@@ -221,8 +325,9 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " + "`name` VARCHAR( 30 ) NOT NULL , "
-							+ "`owner` VARCHAR( 30 ) NOT NULL " + ") ENGINE = InnoDB;", false);
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " 
+							+ "`name` VARCHAR( 30 ) NOT NULL , "
+							+ "`owner` VARCHAR( 30 ) NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -235,8 +340,10 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," + "`bank_id` INT NOT NULL ,"
-							+ "`currency_id` INT NOT NULL , " + "`worldName` VARCHAR( 30 ) NOT NULL , "
+							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
+							+ "`bank_id` INT NOT NULL ,"
+							+ "`currency_id` INT NOT NULL , " 
+							+ "`worldName` VARCHAR( 30 ) NOT NULL , "
 							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
 				} catch (SQLException e)
@@ -250,7 +357,8 @@ public class DatabaseHandler
 				try
 				{
 					database.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
-							+ "`bank_id` INT NOT NULL ," + "`playerName` INT NOT NULL " + ") ENGINE = InnoDB;", false);
+							+ "`bank_id` INT NOT NULL ," 
+							+ "`playerName` INT NOT NULL " + ") ENGINE = InnoDB;", false);
 					ILogger.info(Config.databaseBankMemberTable + " table created!");
 				} catch (SQLException e)
 				{
@@ -259,8 +367,32 @@ public class DatabaseHandler
 				}
 			}
 			ILogger.info("MySQL table loaded!");
+			if (Config.fixName)
+			{
+				ILogger.info("DEBUG: Put all names in lowerspace (2.X -> 2.3 convert)");
+				try {
+					ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
+					if (result != null)
+					{
+						while(result.next())
+						{
+							if (result.getString("username") != null)
+							{
+								database.query("UPDATE " + Config.databaseAccountTable + " SET username='" + result.getString("username").toLowerCase() + "' WHERE username='" + result.getString("username") + "'",false);
+							}
+							
+						}
+						Craftconomy.plugin.getConfig().set("System.Debug.fixName", false);
+						Craftconomy.plugin.saveConfig();
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			return true;
 		}
+		
 		return false;
 	}
 
@@ -475,7 +607,6 @@ public class DatabaseHandler
 	 */
 	public static ResultSet getAllBalance(Account account)
 	{
-		// TODO: Probably doesn't work
 		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable
 				+ " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBalanceTable
 				+ ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId()
@@ -633,12 +764,16 @@ public class DatabaseHandler
 		return null;
 	}
 
-	public static boolean createCurrency(String currencyName)
+	public static boolean createCurrency(String currencyName, String currencyNamePlural, String currencyMinor, String currencyMinorPlural)
 	{
 		boolean success = false;
 		if (!currencyExist(currencyName, true))
 		{
-			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name) VALUES('" + currencyName + "')";
+			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES(" +
+									"'" + currencyName + "'," +
+									"'" + currencyNamePlural + "'," +
+									"'" + currencyMinor + "'," +
+									"'" + currencyMinorPlural + "',)";
 			try
 			{
 				database.query(query, false);
@@ -652,13 +787,37 @@ public class DatabaseHandler
 
 	}
 
-	public static boolean modifyCurrency(String oldCurrencyName, String newCurrencyName)
+	public static boolean modifyCurrency(CurrencyHandler.editType type, String oldCurrencyName, String newCurrencyName)
 	{
 		boolean success = false;
 		if (currencyExist(oldCurrencyName, true))
 		{
-			String query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName
-					+ "' WHERE name='" + oldCurrencyName + "'";
+			String query = "";
+			if (type == CurrencyHandler.editType.NAME)
+			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setName(newCurrencyName);
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET name='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			else if (type == CurrencyHandler.editType.PLURAL)
+			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setNamePlural(newCurrencyName);
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET plural='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			else if (type == CurrencyHandler.editType.MINOR)
+			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setNameMinor(newCurrencyName);
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET minor='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			else if (type == CurrencyHandler.editType.MINORPLURAL)
+			{
+				CurrencyHandler.getCurrency(oldCurrencyName, true).setNameMinorPlural(newCurrencyName);
+				query = "UPDATE " + Config.databaseCurrencyTable + " SET minorplural='" + newCurrencyName
+						+ "' WHERE name='" + oldCurrencyName + "'";
+			}
+			 
 			try
 			{
 				database.query(query, false);
@@ -848,7 +1007,6 @@ public class DatabaseHandler
 
 	public static ResultSet getAllBankBalance(Bank bank)
 	{
-		// TODO: Probably doesn't work
 		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBankBalanceTable
 				+ " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBankBalanceTable
 				+ ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE bank_id=" + bank.getId()
@@ -1009,5 +1167,28 @@ public class DatabaseHandler
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static List<Account> getTopList(Currency source, World world) {
+		String query = "SELECT * FROM " + Config.databaseBalanceTable +"" +
+				" LEFT JOIN " + Config.databaseAccountTable + " ON " + Config.databaseBalanceTable
+				+ ".username_id = " + Config.databaseAccountTable + ".id WHERE currency_id=" + source.getdatabaseId() + " AND worldName='" + world.getName() + "' ORDER BY balance DESC" ;
+		List<Account> accountList = new ArrayList<Account>();
+		try{
+			ResultSet result = database.query(query,true);
+			if (result != null)
+			{
+				int i = 0;
+				while(result.next() && i < 10)
+				{
+					accountList.add(AccountHandler.getAccount(result.getString("username")));
+					i++;
+				}
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return accountList;
 	}
 }

@@ -23,9 +23,9 @@ public class BalanceCollection
 	{
 		return balance;
 	}
-
-	public String getCurrencyName()
+	
+	public Currency getCurrency()
 	{
-		return currency.getName();
+		return currency;
 	}
 }

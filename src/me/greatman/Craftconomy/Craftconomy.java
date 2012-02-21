@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -107,6 +106,7 @@ public class Craftconomy extends JavaPlugin
 		commands.add(new ExchangeCommand());
 		commands.add(new ExchangeCalcCommand());
 		commands.add(new MoneyHelpCommand());
+		commands.add(new TopCommand());
 
 		for (BaseCommand CraftconomyCommand : this.commands)
 		{
@@ -157,14 +157,18 @@ public class Craftconomy extends JavaPlugin
 				groupName = iterator.next();
 				if (PayDayConfig.exists(groupName))
 				{
-					perm = new Permission("Craftconomy.payday." + groupName);
-					perm.setDefault(PermissionDefault.FALSE);
-					getServer().getPluginManager().addPermission(perm);
-					payDay = new Timer();
-					long time = (PayDayConfig.getInterval(groupName) * 60) * 1000L;
-					payDay.schedule(new PayDay(groupName), time, time);
-					timerMap.add(payDay);
-					ILogger.info("Payday for " + groupName + " loaded!");
+					if (!PayDayConfig.isDisabled(groupName))
+					{
+						perm = new Permission("Craftconomy.payday." + groupName);
+						perm.setDefault(PermissionDefault.FALSE);
+						getServer().getPluginManager().addPermission(perm);
+						payDay = new Timer();
+						long time = (PayDayConfig.getInterval(groupName) * 60) * 1000L;
+						payDay.schedule(new PayDay(groupName), time, time);
+						timerMap.add(payDay);
+						ILogger.info("Payday for " + groupName + " loaded!");
+					}
+					
 				}
 			}
 			ILogger.info("PayDay system loaded.");
@@ -200,6 +204,12 @@ public class Craftconomy extends JavaPlugin
 				iterator.next().cancel();
 			}
 		}
+		Iterator<Timer> spoutTimer = SpoutListener.timerList.values().iterator();
+		while(spoutTimer.hasNext())
+		{
+			spoutTimer.next().cancel();
+		}
+		DatabaseHandler.getDatabase().closeMySQL();
 		ILogger.info("Craftconomy unloaded!");
 		getServer().getPluginManager().disablePlugin(this);
 
@@ -283,7 +293,6 @@ public class Craftconomy extends JavaPlugin
 
 	public static List<String> format(List<BalanceCollection> list)
 	{
-		DecimalFormat decimalFormat = new DecimalFormat("#0.00");
 		BalanceCollection balance;
 		List<String> result = new ArrayList<String>();
 		if (list == null)
@@ -293,8 +302,7 @@ public class Craftconomy extends JavaPlugin
 		while (iterator.hasNext())
 		{
 			balance = iterator.next();
-			result.add(balance.getWorldName() + ": " + decimalFormat.format(balance.getBalance()) + " "
-					+ balance.getCurrencyName());
+			result.add(balance.getWorldName() + ": " + format(balance.getBalance(), balance.getCurrency()));
 		}
 
 		return result;
@@ -304,13 +312,24 @@ public class Craftconomy extends JavaPlugin
 	{
 		String name = currency.getName();
 		String minor = currency.getNameMinor();
-		String[] theAmount = Double.toString(amount).split(".");
-
+		String[] theAmount = Double.toString(amount).split("\\.");
+		
 		if (Integer.parseInt(theAmount[0]) > 1)
 		{
 			name = currency.getNamePlural();
 		}
-		if(Integer.parseInt(theAmount[1]) > 0.01)
+		
+		
+		if (theAmount[1].matches("0[1-9]"))
+		{
+			theAmount[1] = theAmount[1].replaceFirst("0", "");
+		}
+		else if (theAmount[1].matches("[1-9]"))
+		{
+			theAmount[1] = theAmount[1] + "0";
+		}
+		
+		if(Integer.parseInt(theAmount[1]) > 1)
 		{
 			minor = currency.getNameMinorPlural();
 		}
@@ -386,13 +405,40 @@ public class Craftconomy extends JavaPlugin
 						if (result != null)
 						{
 							int i = 0;
+							int currencyId = CurrencyHandler.getCurrency(Config.currencyDefault, true).getdatabaseId();
+							String worldName = Craftconomy.plugin.getServer().getWorlds().get(0).getName();
+							String queryAccount = "INSERT INTO " + Config.databaseAccountTable + "(username) VALUES ";
+							String queryBalance = "INSERT INTO " + Config.databaseBalanceTable + "(username_id, currency_id, worldName, balance) VALUES ";
 							while (result.next())
 							{
-								account = AccountHandler.getAccount(result.getString("username"));
-								account.setBalance(result.getDouble("balance"));
+								queryAccount += ("('" + result.getString("username") + "')");
+								
+								if (!result.isLast())
+								{
+									queryAccount += ",";
+								}
 								i++;
 							}
+							DatabaseHandler.getDatabase().query(queryAccount, false);
+							
+							result.beforeFirst();
+							while(result.next())
+							{
+								ResultSet resultId = DatabaseHandler.getDatabase().query("SELECT id FROM " + Config.databaseAccountTable + " WHERE username='" + result.getString("username") + "'", true);
+								if (resultId != null)
+								{
+									resultId.next();
+									queryBalance += "(" + resultId.getInt("id") + "," + currencyId + ",'" + worldName + "'," + result.getDouble("balance") + ")";
+								}
+								if (!result.isLast())
+								{
+									queryBalance += ",";
+								}
+							}
+							DatabaseHandler.getDatabase().query(queryBalance, false);
 							ILogger.info(i + " accounts converted from the iConomy database to the Craftconomy database");
+							Craftconomy.plugin.getConfig().set("System.Convert.Enabled", false);
+							Craftconomy.plugin.saveConfig();
 							return;
 						}
 					} catch (SQLException e)

@@ -61,7 +61,7 @@ public class CurrencyHandler
 	 * @param src The source currency
 	 * @param dest The destination currency
 	 * @param amount The amount (as source currency)
-	 * @return
+	 * @return The conversion
 	 */
 	public static double convert(Currency src, Currency dest, double amount)
 	{
@@ -88,9 +88,9 @@ public class CurrencyHandler
 	 * @param currencyName The currency name
 	 * @return True if success else false
 	 */
-	public static boolean create(String currencyName)
+	public static boolean create(String currencyName, String currencyNamePlural, String currencyMinor, String currencyMinorPlural)
 	{
-		return DatabaseHandler.createCurrency(currencyName);
+		return DatabaseHandler.createCurrency(currencyName, currencyNamePlural, currencyMinor, currencyMinorPlural);
 	}
 
 	/**
@@ -100,9 +100,9 @@ public class CurrencyHandler
 	 * @param newCurrencyName The new currency name
 	 * @return True if success else false
 	 */
-	public static boolean rename(String oldCurrencyName, String newCurrencyName)
+	public static boolean rename(editType type, String oldCurrencyName, String newCurrencyName)
 	{
-		return DatabaseHandler.modifyCurrency(oldCurrencyName, newCurrencyName);
+		return DatabaseHandler.modifyCurrency(type,oldCurrencyName, newCurrencyName);
 	}
 
 	/**
@@ -126,5 +126,9 @@ public class CurrencyHandler
 	public static void setExchangeRate(Currency src, Currency dest, double rate)
 	{
 		DatabaseHandler.setExchangeRate(src, dest, rate);
+	}
+	
+	public enum editType {
+		NAME, PLURAL, MINOR, MINORPLURAL
 	}
 }
