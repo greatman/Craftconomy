@@ -159,14 +159,18 @@ public class Craftconomy extends JavaPlugin
 				groupName = iterator.next();
 				if (PayDayConfig.exists(groupName))
 				{
-					perm = new Permission("Craftconomy.payday." + groupName);
-					perm.setDefault(PermissionDefault.FALSE);
-					getServer().getPluginManager().addPermission(perm);
-					payDay = new Timer();
-					long time = (PayDayConfig.getInterval(groupName) * 60) * 1000L;
-					payDay.schedule(new PayDay(groupName), time, time);
-					timerMap.add(payDay);
-					ILogger.info("Payday for " + groupName + " loaded!");
+					if (!PayDayConfig.isDisabled(groupName))
+					{
+						perm = new Permission("Craftconomy.payday." + groupName);
+						perm.setDefault(PermissionDefault.FALSE);
+						getServer().getPluginManager().addPermission(perm);
+						payDay = new Timer();
+						long time = (PayDayConfig.getInterval(groupName) * 60) * 1000L;
+						payDay.schedule(new PayDay(groupName), time, time);
+						timerMap.add(payDay);
+						ILogger.info("Payday for " + groupName + " loaded!");
+					}
+					
 				}
 			}
 			ILogger.info("PayDay system loaded.");
