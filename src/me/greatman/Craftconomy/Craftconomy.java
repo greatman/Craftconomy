@@ -9,8 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 
 import me.greatman.Craftconomy.commands.*;
@@ -199,6 +201,11 @@ public class Craftconomy extends JavaPlugin
 			{
 				iterator.next().cancel();
 			}
+		}
+		Iterator<Timer> spoutTimer = SpoutListener.timerList.values().iterator();
+		while(spoutTimer.hasNext())
+		{
+			spoutTimer.next().cancel();
 		}
 		ILogger.info("Craftconomy unloaded!");
 		getServer().getPluginManager().disablePlugin(this);
