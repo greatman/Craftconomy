@@ -54,6 +54,7 @@ public class TopCommand extends BaseCommand {
 		{
 			Account account = theList.next();
 			sendMessage("" + ChatColor.WHITE + i + ". " + account.getPlayerName() + ChatColor.GREEN + " with "  + ChatColor.WHITE + Craftconomy.format(account.getBalance(source, world), source));
+			i++;
 		}
 	}
 }
