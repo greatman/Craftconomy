@@ -9,10 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 
 import me.greatman.Craftconomy.commands.*;
@@ -211,6 +209,7 @@ public class Craftconomy extends JavaPlugin
 		{
 			spoutTimer.next().cancel();
 		}
+		DatabaseHandler.getDatabase().closeMySQL();
 		ILogger.info("Craftconomy unloaded!");
 		getServer().getPluginManager().disablePlugin(this);
 
@@ -406,13 +405,40 @@ public class Craftconomy extends JavaPlugin
 						if (result != null)
 						{
 							int i = 0;
+							int currencyId = CurrencyHandler.getCurrency(Config.currencyDefault, true).getdatabaseId();
+							String worldName = Craftconomy.plugin.getServer().getWorlds().get(0).getName();
+							String queryAccount = "INSERT INTO " + Config.databaseAccountTable + "(username) VALUES ";
+							String queryBalance = "INSERT INTO " + Config.databaseBalanceTable + "(username_id, currency_id, worldName, balance) VALUES ";
 							while (result.next())
 							{
-								account = AccountHandler.getAccount(result.getString("username"));
-								account.setBalance(result.getDouble("balance"));
+								queryAccount += ("('" + result.getString("username") + "')");
+								
+								if (!result.isLast())
+								{
+									queryAccount += ",";
+								}
 								i++;
 							}
+							DatabaseHandler.getDatabase().query(queryAccount, false);
+							
+							result.beforeFirst();
+							while(result.next())
+							{
+								ResultSet resultId = DatabaseHandler.getDatabase().query("SELECT id FROM " + Config.databaseAccountTable + " WHERE username='" + result.getString("username") + "'", true);
+								if (resultId != null)
+								{
+									resultId.next();
+									queryBalance += "(" + resultId.getInt("id") + "," + currencyId + ",'" + worldName + "'," + result.getDouble("balance") + ")";
+								}
+								if (!result.isLast())
+								{
+									queryBalance += ",";
+								}
+							}
+							DatabaseHandler.getDatabase().query(queryBalance, false);
 							ILogger.info(i + " accounts converted from the iConomy database to the Craftconomy database");
+							Craftconomy.plugin.getConfig().set("System.Convert.Enabled", false);
+							Craftconomy.plugin.saveConfig();
 							return;
 						}
 					} catch (SQLException e)

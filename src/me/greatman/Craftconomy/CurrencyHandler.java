@@ -61,7 +61,7 @@ public class CurrencyHandler
 	 * @param src The source currency
 	 * @param dest The destination currency
 	 * @param amount The amount (as source currency)
-	 * @return
+	 * @return The conversion
 	 */
 	public static double convert(Currency src, Currency dest, double amount)
 	{

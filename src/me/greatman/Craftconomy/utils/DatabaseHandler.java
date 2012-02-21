@@ -29,6 +29,10 @@ public class DatabaseHandler
 	 * @param thePlugin The Craftconomy plugin
 	 * @return Success to everything or false.
 	 */
+	public static SQLLibrary getDatabase()
+	{
+		return database;
+	}
 	public static boolean load(Craftconomy thePlugin)
 	{
 		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
@@ -365,6 +369,7 @@ public class DatabaseHandler
 			ILogger.info("MySQL table loaded!");
 			if (Config.fixName)
 			{
+				ILogger.info("DEBUG: Put all names in lowerspace (2.X -> 2.3 convert)");
 				try {
 					ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
 					if (result != null)
@@ -378,6 +383,7 @@ public class DatabaseHandler
 							
 						}
 						Craftconomy.plugin.getConfig().set("System.Debug.fixName", false);
+						Craftconomy.plugin.saveConfig();
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block

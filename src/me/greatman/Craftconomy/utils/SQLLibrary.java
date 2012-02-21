@@ -16,7 +16,7 @@ public class SQLLibrary
 
 	private String databaseUrl, username, password;
 	private DatabaseType type;
-
+	private Connection connection;
 	public SQLLibrary(String url, String databaseUsername, String databasePassword, DatabaseType dbtype)
 	{
 		setUrl(url);
@@ -42,17 +42,37 @@ public class SQLLibrary
 	public Connection createConnection()
 	{
 		Connection conn = null;
+		
 		try
 		{
+			
 			Class.forName("org.sqlite.JDBC");
 			Class.forName("com.mysql.jdbc.Driver");
-			if (type == DatabaseType.SQLITE)
-				conn = DriverManager.getConnection(databaseUrl);
-			else conn = DriverManager.getConnection(databaseUrl, username, password);
-
-			// conn = DriverManager.getConnection("jdbc:sqlite:" +
-			// iConomy.plugin.getDataFolder().getAbsolutePath() +
-			// "database.db");
+			if (connection != null)
+			{
+				if(connection.isClosed())
+				{
+					conn = DriverManager.getConnection(databaseUrl, username, password);
+					connection = conn;
+				}
+				else
+				{
+					conn = connection;
+				}
+			}
+			else
+			{
+				if (type == DatabaseType.SQLITE)
+				{
+					conn = DriverManager.getConnection(databaseUrl);
+				}
+				else 
+				{
+					conn = DriverManager.getConnection(databaseUrl, username, password);
+					connection = conn;
+				}
+					
+			}			
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -75,7 +95,8 @@ public class SQLLibrary
 		}
 
 		else sqlStatement.executeUpdate(query);
-		conn.close();
+		if(type == DatabaseType.SQLITE)
+			conn.close();
 		return crs;
 		// return rs;
 	}
@@ -97,6 +118,22 @@ public class SQLLibrary
 		return result;
 	}
 
+	public void closeMySQL()
+	{
+		try
+		{
+			if (connection != null && !connection.isClosed())
+			{
+				connection.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void truncateTable(String string)
 	{
 		try
