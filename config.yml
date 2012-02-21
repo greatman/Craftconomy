@@ -18,6 +18,20 @@ System:
   PayDay:
     Enabled: [default]
 
+  Interest:
+    # Enables the interest system
+    Enabled: false
+    # The interval of the system - in seconds
+    # 60 => 1 minute
+    Interval: 60
+    # The currencys which shall get interest
+    Currencys: [A,B]
+    # Which currency shall gain what Percentage
+    Percentage: [1,2]
+    # The maximum amount of each currency, more a user
+    # can't reach through interest
+    EndMax: [1000, 1000]
+    
   # Logs all monetary transactions passed through CraftConomy (NOT WORKING)
   Logging:
     Enabled: false

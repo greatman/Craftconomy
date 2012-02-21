@@ -16,10 +16,14 @@ public class Config
 
 	public static double defaultHoldings, bankPrice;
 
-	public static boolean multiWorld, transactionLogging, convertEnabled, fixName;
+	public static boolean multiWorld, transactionLogging, convertEnabled, fixName, interestEnabled;
 
-	public static List<String> payDayList;
+	public static List<String> payDayList, interestCurrencys;
 
+	public static List<Integer> interestInterval;
+	
+	public static List<Double> interestPercentage, interestEndMax;
+	
 	public static void load(Craftconomy thePlugin)
 	{
 		plugin = thePlugin;
@@ -68,5 +72,11 @@ public class Config
 		convertDatabaseUsername = plugin.getConfig().getString("System.Convert.Username");
 		convertDatabasePassword = plugin.getConfig().getString("System.Convert.Password");
 		convertDatabaseDb = plugin.getConfig().getString("System.Convert.Database");
+	
+		interestEnabled = plugin.getConfig().getBoolean("System.Interest.Enabled");
+		interestInterval = plugin.getConfig().getIntegerList("System.Interest.Interval");
+		interestCurrencys = plugin.getConfig().getStringList("System.Interest.Currencys");
+		interestPercentage = plugin.getConfig().getDoubleList("System.Interest.Percentage");
+		interestEndMax = plugin.getConfig().getDoubleList("System.Interest.EndMax");
 	}
 }

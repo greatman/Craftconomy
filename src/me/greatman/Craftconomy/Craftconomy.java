@@ -9,8 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Timer;
 
 import me.greatman.Craftconomy.commands.*;
@@ -18,6 +20,7 @@ import me.greatman.Craftconomy.commands.bank.*;
 import me.greatman.Craftconomy.commands.config.*;
 import me.greatman.Craftconomy.commands.money.*;
 import me.greatman.Craftconomy.listeners.CCPlayerListener;
+import me.greatman.Craftconomy.listeners.InterestSystem;
 import me.greatman.Craftconomy.listeners.SpoutListener;
 import me.greatman.Craftconomy.utils.Config;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
@@ -46,6 +49,7 @@ public class Craftconomy extends JavaPlugin
 	public Timer payDay;
 	public static Craftconomy plugin;
 	public List<Timer> timerMap = new ArrayList<Timer>();
+	private static Timer interestTimer;
 	public static boolean spoutEnabled = false;
 
 	public void onEnable()
@@ -172,6 +176,20 @@ public class Craftconomy extends JavaPlugin
 				}
 			}
 			ILogger.info("PayDay system loaded.");
+		}
+		
+		//Interest System
+		//TODO: Make it possible, to also store custom interest rates in accounts
+		if(Config.interestEnabled) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					interestTimer = new Timer();
+					interestTimer.scheduleAtFixedRate(new InterestSystem(), 1000L , 1000L); 
+				}
+			
+			}).start();
+			ILogger.info("InterestSystem initialized.");
 		}
 
 		// Loads the players after a /reload;
