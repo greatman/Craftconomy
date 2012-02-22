@@ -200,6 +200,29 @@ public class DatabaseHandler
 				}
 			}
 			ILogger.info("SQLite database loaded!");
+			if (Config.fixName)
+			{
+				ILogger.info("DEBUG: Put all names in lowerspace (2.X -> 2.3 convert)");
+				try {
+					ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
+					if (result != null)
+					{
+						while(result.next())
+						{
+							if (result.getString("username") != null)
+							{
+								database.query("UPDATE " + Config.databaseAccountTable + " SET username='" + result.getString("username").toLowerCase() + "' WHERE username='" + result.getString("username") + "'",false);
+							}
+							
+						}
+						Craftconomy.plugin.getConfig().set("System.Debug.fixName", false);
+						Craftconomy.plugin.saveConfig();
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			return true;
 		}
 		else if (Config.databaseType.equalsIgnoreCase("mysql"))
