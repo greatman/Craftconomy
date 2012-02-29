@@ -9,10 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Timer;
 
 import me.greatman.Craftconomy.commands.*;
@@ -331,6 +329,10 @@ public class Craftconomy extends JavaPlugin
 		String name = currency.getName();
 		String minor = currency.getNameMinor();
 		String[] theAmount = Double.toString(amount).split("\\.");
+		if (theAmount[1].length() > 3)
+		{
+			theAmount[1].substring(0, 3);
+		}
 		
 		if (Integer.parseInt(theAmount[0]) > 1)
 		{

@@ -35,19 +35,29 @@ public class DatabaseHandler
 	}
 	public static boolean load(Craftconomy thePlugin)
 	{
+		HashMap<String, FieldType> map = new HashMap<String, FieldType>();
+		
 		if (Config.databaseType.equalsIgnoreCase("SQLite") || Config.databaseType.equalsIgnoreCase("minidb"))
 		{
 			database = new SQLLibrary("jdbc:sqlite:" + Craftconomy.plugin.getDataFolder().getAbsolutePath() + File.separator
 					+ "database.db","","", DatabaseType.SQLITE);
+		}
+		else if (Config.databaseType.equalsIgnoreCase("MySQL"))
+		{
+			database = new SQLLibrary("jdbc:mysql://" + Config.databaseAddress + ":" + Config.databasePort + "/"
+					+ Config.databaseDb, Config.databaseUsername, Config.databasePassword, DatabaseType.MYSQL);
+		}
+		if (database != null)
+		{
 			if (!database.checkTable(Config.databaseAccountTable))
 			{
-				try
+				map.put("id", FieldType.PRIMARY);
+				map.put("username", FieldType.VARCHAR);
+				if (database.createTable(Config.databaseAccountTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseAccountTable + " ("
-							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,"
-							+ "username VARCHAR(30)  UNIQUE NOT NULL)", false);
 					ILogger.info(Config.databaseAccountTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseAccountTable + " table!");
 					return false;
@@ -55,34 +65,42 @@ public class DatabaseHandler
 			}
 			if (!database.checkTable(Config.databaseCurrencyTable))
 			{
-				try
+				map.clear();
+				map.put("id", FieldType.PRIMARY);
+				map.put("name", FieldType.VARCHAR);
+				map.put("plural", FieldType.VARCHAR);
+				map.put("minor", FieldType.VARCHAR);
+				map.put("minorplural", FieldType.VARCHAR);
+				if (database.createTable(Config.databaseCurrencyTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-							+ "name VARCHAR(30) UNIQUE NOT NULL,"
-							+ "plural VARCHAR(30) NOT NULL,"
-							+ "minor VARCHAR(30) NOT NULL,"
-							+ "minorplural VARCHAR(30) NOT NULL)", false);
-					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
-							+ "'" + Config.currencyDefault + "',"
-							+ "'" + Config.currencyDefaultPlural + "',"
-							+ "'" + Config.currencyDefaultMinor + "'," 
-							+ "'" + Config.currencyDefaultMinorPlural + "')", false);
+					try
+					{
+						database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
+								+ "'" + Config.currencyDefault + "',"
+								+ "'" + Config.currencyDefaultPlural + "',"
+								+ "'" + Config.currencyDefaultMinor + "'," 
+								+ "'" + Config.currencyDefaultMinorPlural + "')", false);
+					}
+					catch (SQLException e)
+					{
+						ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
+						return false;
+					}
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
-					e.printStackTrace();
 					return false;
 				}
 
 			}
 			else
 			{
-				HashMap<String,Boolean> map = new HashMap<String,Boolean>();
-				map.put("plural", false);
-				map.put("minor", false);
-				map.put("minorplural", false);
+				HashMap<String,Boolean> updateCheck = new HashMap<String,Boolean>();
+				updateCheck.put("plural", false);
+				updateCheck.put("minor", false);
+				updateCheck.put("minorplural", false);
 				
 				//We check if it's the latest version
 				ResultSet result;
@@ -92,25 +110,25 @@ public class DatabaseHandler
 					{
 						while(result.next())
 						{
-							if (map.containsKey(result.getString("name")))
+							if (updateCheck.containsKey(result.getString("name")))
 							{
-								map.put(result.getString("name"), true);
+								updateCheck.put(result.getString("name"), true);
 							}
 						}
-						if (map.containsValue(false))
+						if (updateCheck.containsValue(false))
 						{
 							ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
-							if (!map.get("plural"))
+							if (!updateCheck.get("plural"))
 							{
 								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN plural VARCHAR(30)", false);
 								ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
 							}
-							if (!map.get("minor"))
+							if (!updateCheck.get("minor"))
 							{
 								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minor VARCHAR(30)", false);
 								ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
 							}
-							if(!map.get("minorplural"))
+							if(!updateCheck.get("minorplural"))
 							{
 								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minorplural VARCHAR(30)", false);
 								ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
@@ -124,31 +142,34 @@ public class DatabaseHandler
 			}
 			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
 			{
-				try
+				map.clear();
+				map.put("src", FieldType.VARCHAR);
+				map.put("dest", FieldType.VARCHAR);
+				map.put("rate", FieldType.DOUBLE);
+				if (database.createTable(Config.databaseCurrencyExchangeTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
-							+ "src VARCHAR ( 30 ) NOT NULL , " 
-							+ "dest VARCHAR ( 30 ) NOT NULL , "
-							+ "rate DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseCurrencyExchangeTable + " table!");
 					return false;
 				}
 			}
+			
 			if (!database.checkTable(Config.databaseBalanceTable))
 			{
-				try
+				map.clear();
+				map.put("id", FieldType.PRIMARY);
+				map.put("username_id", FieldType.INT);
+				map.put("currency_id", FieldType.INT);
+				map.put("worldName", FieldType.VARCHAR);
+				map.put("balance", FieldType.DOUBLE);
+				if (database.createTable(Config.databaseBalanceTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," 
-							+ "username_id INTEGER NOT NULL,"
-							+ "currency_id INTEGER NOT NULL," 
-							+ "worldName VARCHAR(30) NOT NULL,"
-							+ "balance DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseBalanceTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseBalanceTable + " table!");
 					return false;
@@ -156,14 +177,15 @@ public class DatabaseHandler
 			}
 			if (!database.checkTable(Config.databaseBankTable))
 			{
-				try
+				map.clear();
+				map.put("id", FieldType.PRIMARY);
+				map.put("name", FieldType.VARCHAR);
+				map.put("owner", FieldType.VARCHAR);
+				if (database.createTable(Config.databaseBankTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
-							+ "id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," 
-							+ "name VARCHAR(30)  UNIQUE NOT NULL,"
-							+ "owner VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
 					return false;
@@ -171,16 +193,17 @@ public class DatabaseHandler
 			}
 			if (!database.checkTable(Config.databaseBankBalanceTable))
 			{
-				try
+				map.clear();
+				map.put("id", FieldType.PRIMARY);
+				map.put("bank_id", FieldType.INT);
+				map.put("currency_id", FieldType.INT);
+				map.put("worldName", FieldType.VARCHAR);
+				map.put("balance", FieldType.DOUBLE);
+				if (database.createTable(Config.databaseBankBalanceTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ("
-							+ "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," 
-							+ "bank_id INTEGER NOT NULL,"
-							+ "currency_id INTEGER NOT NULL," 
-							+ "worldName VARCHAR(30) NOT NULL,"
-							+ "balance DOUBLE NOT NULL)", false);
 					ILogger.info(Config.databaseBankBalanceTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseBankBalanceTable + " table!");
 					return false;
@@ -188,18 +211,20 @@ public class DatabaseHandler
 			}
 			if (!database.checkTable(Config.databaseBankMemberTable))
 			{
-				try
+				map.clear();
+				map.put("bank_id", FieldType.INT);
+				map.put("playerName", FieldType.VARCHAR);
+				if (database.createTable(Config.databaseBankMemberTable, map))
 				{
-					database.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
-							+ "bank_id INTEGER  NOT NULL," + "playerName VARCHAR(30) NOT NULL)", false);
 					ILogger.info(Config.databaseBankMemberTable + " table created!");
-				} catch (SQLException e)
+				}
+				else
 				{
 					ILogger.error("Unable to create the " + Config.databaseBankMemberTable + " table!");
 					return false;
 				}
 			}
-			ILogger.info("SQLite database loaded!");
+			ILogger.info("Database loaded!");
 			if (Config.fixName)
 			{
 				ILogger.info("DEBUG: Put all names in lowerspace (2.X -> 2.3 convert)");
@@ -225,232 +250,28 @@ public class DatabaseHandler
 			}
 			return true;
 		}
-		else if (Config.databaseType.equalsIgnoreCase("mysql"))
-		{
-			database = new SQLLibrary("jdbc:mysql://" + Config.databaseAddress + ":" + Config.databasePort + "/"
-					+ Config.databaseDb, Config.databaseUsername, Config.databasePassword, DatabaseType.MYSQL);
-			if (!database.checkTable(Config.databaseAccountTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseAccountTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
-							+ "`username` VARCHAR( 30 ) NOT NULL "
-							+ ") ENGINE = InnoDB;", false);
-					ILogger.info(Config.databaseAccountTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseAccountTable + " table!");
-					return false;
-				}
-			}
-			if (!database.checkTable(Config.databaseBalanceTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseBalanceTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
-							+ "`username_id` INT NOT NULL ,"
-							+ "`currency_id` INT NOT NULL , " 
-							+ "`worldName` VARCHAR( 30 ) NOT NULL , "
-							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
-					ILogger.info(Config.databaseBalanceTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseBalanceTable + " table!");
-					return false;
-				}
-			}
-			if (!database.checkTable(Config.databaseCurrencyTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseCurrencyTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , "
-							+ "`name` VARCHAR( 30 ) NOT NULL, "
-							+ "`plural` VARCHAR( 30 ) NOT NULL, "
-							+ "`minor` VARCHAR( 30 ) NOT NULL, "
-							+ "`minorplural` VARCHAR( 30 ) NOT NULL "
-							+ ") ENGINE = InnoDB;", false);
-					database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
-							+ "'" + Config.currencyDefault + "',"
-							+ "'" + Config.currencyDefaultPlural + "',"
-							+ "'" + Config.currencyDefaultMinor + "'," 
-							+ "'" + Config.currencyDefaultMinorPlural + "')", false);
-					ILogger.info(Config.databaseCurrencyTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
-					return false;
-				}
-			}
-			else
-			{
-				HashMap<String,Boolean> map = new HashMap<String,Boolean>();
-				map.put("plural", false);
-				map.put("minor", false);
-				map.put("minorplural", false);
-				ResultSet result;
-				
-				try {
-					result = database.query("SHOW COLUMNS FROM " + Config.databaseCurrencyTable, true);
-					while(result.next())
-					{
-						
-						if (map.containsKey(result.getString(1)))
-						{
-							map.put(result.getString(1), true);
-						}
-						
-					}
-					if (map.containsValue(false))
-					{
-						ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
-						if (!map.get("plural"))
-						{
-							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD plural VARCHAR(30) NOT NULL", false);
-							ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
-						}
-						if (!map.get("minor"))
-						{
-							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minor VARCHAR(30) NOT NULL", false);
-							ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
-						}
-						if(!map.get("minorplural"))
-						{
-							database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minorplural VARCHAR(30) NOT NULL", false);
-							ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
-						}
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				}
-			}
-			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseCurrencyExchangeTable + " ( "
-							+ "`src` VARCHAR ( 30 ) NOT NULL , " 
-							+ "`dest` VARCHAR ( 30 ) NOT NULL , "
-							+ "`rate` DOUBLE NOT NULL " + ") ENGINE = InnoDB;", false);
-					ILogger.info(Config.databaseCurrencyExchangeTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseCurrencyExchangeTable + " table!");
-					return false;
-				}
-			}
-			if (!database.checkTable(Config.databaseBankTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseBankTable + " ("
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , " 
-							+ "`name` VARCHAR( 30 ) NOT NULL , "
-							+ "`owner` VARCHAR( 30 ) NOT NULL) ENGINE = InnoDB;", false);
-					ILogger.info(Config.databaseBankTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseBankTable + " table!");
-					return false;
-				}
-			}
-			if (!database.checkTable(Config.databaseBankBalanceTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseBankBalanceTable + " ( "
-							+ "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ," 
-							+ "`bank_id` INT NOT NULL ,"
-							+ "`currency_id` INT NOT NULL , " 
-							+ "`worldName` VARCHAR( 30 ) NOT NULL , "
-							+ "`balance` DOUBLE NOT NULL) ENGINE = InnoDB;", false);
-					ILogger.info(Config.databaseBankBalanceTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseBankBalanceTable + " table!");
-					return false;
-				}
-			}
-			if (!database.checkTable(Config.databaseBankMemberTable))
-			{
-				try
-				{
-					database.query("CREATE TABLE " + Config.databaseBankMemberTable + " ("
-							+ "`bank_id` INT NOT NULL ," 
-							+ "`playerName` INT NOT NULL " + ") ENGINE = InnoDB;", false);
-					ILogger.info(Config.databaseBankMemberTable + " table created!");
-				} catch (SQLException e)
-				{
-					ILogger.error("Unable to create the " + Config.databaseBankMemberTable + " table!");
-					return false;
-				}
-			}
-			ILogger.info("MySQL table loaded!");
-			if (Config.fixName)
-			{
-				ILogger.info("DEBUG: Put all names in lowerspace (2.X -> 2.3 convert)");
-				try {
-					ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
-					if (result != null)
-					{
-						while(result.next())
-						{
-							if (result.getString("username") != null)
-							{
-								database.query("UPDATE " + Config.databaseAccountTable + " SET username='" + result.getString("username").toLowerCase() + "' WHERE username='" + result.getString("username") + "'",false);
-							}
-							
-						}
-						Craftconomy.plugin.getConfig().set("System.Debug.fixName", false);
-						Craftconomy.plugin.saveConfig();
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			return true;
-		}
-		
 		return false;
 	}
 
 	public static boolean exists(String account)
 	{
-		ResultSet result = null;
-		boolean exists = false;
-		String query = "SELECT * FROM " + Config.databaseAccountTable + " WHERE username='" + account + "'";
-		try
-		{
-			result = database.query(query, true);
-			if (result.next())
-				exists = true;
-		} catch (SQLException e)
-		{
-		}
-		return exists;
+		HashMap<String, String> map = new HashMap<String,String>();
+		map.put("username", account);
+		return database.entryExist(Config.databaseAccountTable,map);
 	}
 
 	public static void create(String accountName)
 	{
-		String query = "INSERT INTO " + Config.databaseAccountTable + "(username) VALUES('" + accountName + "')";
-		try
-		{
-			database.query(query, false);
-			Account account = AccountHandler.getAccount(accountName);
-			query = "INSERT INTO " + Config.databaseBalanceTable
-					+ "(username_id,worldName,currency_id,balance) VALUES(" + account.getPlayerId() + "," + "'"
-					+ Craftconomy.plugin.getServer().getWorlds().get(0).getName() + "',"
-					+ getCurrencyId(Config.currencyDefault) + "," + Config.defaultHoldings + ")";
-			database.query(query, false);
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("username", accountName);
+		database.createEntry(Config.databaseAccountTable, map);
+		map.clear();
+		Account account = AccountHandler.getAccount(accountName);
+		map.put("username_id", account.getPlayerId() + "");
+		map.put("worldName", Craftconomy.plugin.getServer().getWorlds().get(0).getName());
+		map.put("currency_id", getCurrencyId(Config.currencyDefault) + "");
+		map.put("balance", Config.defaultHoldings + "");
+		database.createEntry(Config.databaseBalanceTable, map);
 	}
 
 	public static void deleteAll()
@@ -476,18 +297,16 @@ public class DatabaseHandler
 
 	}
 
+	
+	//TODO: Fix that
 	public static void deleteAllInitialAccounts()
 	{
-		String query = "DELETE FROM " + Config.databaseAccountTable + " WHERE balance=" + Config.defaultHoldings;
-		try
-		{
-			database.query(query, false);
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("balance", Config.defaultHoldings + "");
+		database.deleteEntry(Config.databaseAccountTable, map);
 	}
 
+	//TODO: FIX that
 	public static ResultSet getAllInitialAccounts()
 	{
 		String query = "SELECT * FROM " + Config.databaseAccountTable + " WHERE balance=" + Config.defaultHoldings;
@@ -504,25 +323,20 @@ public class DatabaseHandler
 	// TODO: Make that it verify if he is a bank owner
 	public static void delete(String playerName)
 	{
-		String query = "DELETE FROM " + Config.databaseAccountTable + " WHERE username='" + playerName + "'";
-		try
-		{
-			int accountId = getAccountId(playerName);
-			database.query(query, false);
-			if (accountId != 0)
-			{
-				query = "DELETE FROM " + Config.databaseBalanceTable + " WHERE username_id=" + accountId;
-				database.query(query, false);
-			}
-
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		int accountId = getAccountId(playerName);
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("username", playerName);
+		database.deleteEntry(Config.databaseAccountTable, map);
+		
+		map.clear();
+		map.put("username_id", accountId + "");
+		database.deleteEntry(Config.databaseBalanceTable, map);
 	}
 
 	public static int getAccountId(String playerName)
 	{
+		
 		int accountId = 0;
 		try
 		{
@@ -736,25 +550,14 @@ public class DatabaseHandler
 	 */
 	public static boolean currencyExist(String currency, boolean exact)
 	{
-		String query;
-		if (exact)
-			query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name='" + currency + "'";
-		else query = "SELECT * FROM " + Config.databaseCurrencyTable + " WHERE name LIKE '%" + currency + "%'";
-		try
+		boolean ok = false;
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("name", currency);
+		if (database.entryExist(Config.databaseCurrencyTable, map))
 		{
-			CachedRowSetImpl result = database.query(query, true);
-			if (result != null)
-			{
-				if (result.size() == 1)
-				{
-					return true;
-				}
-			}
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
+			ok = true;
 		}
-		return false;
+		return ok;
 	}
 
 	// TODO: ???????????????????????
@@ -790,20 +593,17 @@ public class DatabaseHandler
 	public static boolean createCurrency(String currencyName, String currencyNamePlural, String currencyMinor, String currencyMinorPlural)
 	{
 		boolean success = false;
+		
 		if (!currencyExist(currencyName, true))
 		{
-			String query = "INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES(" +
-									"'" + currencyName + "'," +
-									"'" + currencyNamePlural + "'," +
-									"'" + currencyMinor + "'," +
-									"'" + currencyMinorPlural + "',)";
-			try
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("name", currencyName);
+			map.put("plural", currencyNamePlural);
+			map.put("minor", currencyMinor);
+			map.put("minorplural", currencyMinorPlural);
+			if (database.createEntry(Config.databaseCurrencyTable, map))
 			{
-				database.query(query, false);
 				success = true;
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
 			}
 		}
 		return success;
@@ -858,20 +658,17 @@ public class DatabaseHandler
 		boolean success = false;
 		if (currencyExist(currencyName, true))
 		{
-			String query2 = "DELETE FROM " + Config.databaseBalanceTable + " WHERE currency_id="
-					+ getCurrencyId(currencyName);
-			String query = "DELETE FROM " + Config.databaseCurrencyTable + " WHERE name='" + currencyName + "'";
-			try
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("currency_id", getCurrencyId(currencyName) + "");
+			if (database.deleteEntry(Config.databaseBalanceTable, map))
 			{
-				database.query(query, false);
-
-				database.query(query2, false);
-				success = true;
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
+				map.clear();
+				map.put("name", currencyName);
+				if(database.deleteEntry(Config.databaseCurrencyTable, map))
+				{
+					success = true;
+				}
 			}
-
 		}
 		return success;
 	}
@@ -913,10 +710,12 @@ public class DatabaseHandler
 			}
 			else
 			{
-				query = "INSERT INTO " + Config.databaseBankBalanceTable
-						+ "(bank_id,worldName,currency_id,balance) VALUES(" + bank.getId() + "," + "'"
-						+ world.getName() + "'," + currency.getdatabaseId() + "," + balance + ")";
-				database.query(query, false);
+				HashMap<String,String> map = new HashMap<String,String>();
+				map.put("bank_id", bank.getId() + "");
+				map.put("worldName", world.getName());
+				map.put("currency_id", currency.getdatabaseId() + "");
+				map.put("balance", balance + "");
+				database.createEntry(Config.databaseBankBalanceTable, map);
 			}
 
 		} catch (SQLException e)
@@ -997,15 +796,12 @@ public class DatabaseHandler
 	public static boolean createBank(String bankName, String playerName)
 	{
 		boolean result = false;
-		String query = "INSERT INTO " + Config.databaseBankTable + "(name,owner) VALUES('" + bankName + "','"
-				+ playerName + "')";
-		try
+		HashMap<String,String> map = new HashMap<String, String>();
+		map.put("name", bankName);
+		map.put("owner", playerName);
+		if(database.createEntry(Config.databaseBankTable, map))
 		{
-			database.query(query, false);
 			result = true;
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
 		}
 		return result;
 	}
@@ -1015,14 +811,11 @@ public class DatabaseHandler
 		boolean result = false;
 		if (bankExists(bankName))
 		{
-			String query = "DELETE FROM " + Config.databaseBankTable + " WHERE name='" + bankName + "'";
-			try
+			HashMap<String,String> map = new HashMap<String, String>();
+			map.put("name", bankName);
+			if (database.deleteEntry(Config.databaseBankTable, map))
 			{
-				database.query(query, false);
 				result = true;
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
 			}
 		}
 		return result;
@@ -1094,28 +887,18 @@ public class DatabaseHandler
 
 	public static void addBankMember(Bank bank, String playerName)
 	{
-		String query = "INSERT INTO " + Config.databaseBankMemberTable + " VALUES(" + bank.getId() + ",'" + playerName
-				+ "')";
-		try
-		{
-			database.query(query, false);
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("bank_id", bank.getId() + "");
+		map.put("playerName", playerName);
+		database.createEntry(Config.databaseBankMemberTable, map);
 	}
 
 	public static void removeBankMember(Bank bank, String playerName)
 	{
-		String query = "DELETE FROM " + Config.databaseBankMemberTable + " WHERE bank_id=" + bank.getId()
-				+ " AND playerName='" + playerName + "'";
-		try
-		{
-			database.query(query, false);
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("bank_id", bank.getId() + "");
+		map.put("playerName", playerName);
+		database.deleteEntry(Config.databaseBankMemberTable, map);
 	}
 
 	public static void setExchangeRate(Currency src, Currency dest, double rate)
@@ -1134,10 +917,11 @@ public class DatabaseHandler
 			}
 			else
 			{
-				// create new
-				query = "INSERT INTO " + Config.databaseCurrencyExchangeTable + " (src, dest, rate) VALUES ('"
-						+ src.getName() + "','" + dest.getName() + "'," + String.valueOf(rate) + ")";
-				database.query(query, false);
+				HashMap<String,String> map = new HashMap<String,String>();
+				map.put("src", src.getName());
+				map.put("dest", dest.getName());
+				map.put("rate", rate + "");
+				database.createEntry(Config.databaseCurrencyExchangeTable, map);
 			}
 		} catch (SQLException e)
 		{
