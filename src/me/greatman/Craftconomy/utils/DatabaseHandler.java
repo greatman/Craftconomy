@@ -73,19 +73,12 @@ public class DatabaseHandler
 				map.put("minorplural", FieldType.VARCHAR);
 				if (database.createTable(Config.databaseCurrencyTable, map))
 				{
-					try
-					{
-						database.query("INSERT INTO " + Config.databaseCurrencyTable + "(name,plural,minor,minorplural) VALUES("
-								+ "'" + Config.currencyDefault + "',"
-								+ "'" + Config.currencyDefaultPlural + "',"
-								+ "'" + Config.currencyDefaultMinor + "'," 
-								+ "'" + Config.currencyDefaultMinorPlural + "')", false);
-					}
-					catch (SQLException e)
-					{
-						ILogger.error("Unable to create the " + Config.databaseCurrencyTable + " table!");
-						return false;
-					}
+					HashMap<String,String> insertMap = new HashMap<String, String>();
+					insertMap.put("name", Config.currencyDefault);
+					insertMap.put("plural", Config.currencyDefaultPlural);
+					insertMap.put("minor", Config.currencyDefaultMinor);
+					insertMap.put("minorplural", Config.currencyDefaultMinorPlural);
+					database.createEntry(Config.databaseCurrencyTable, insertMap);
 					ILogger.info(Config.databaseCurrencyTable + " table created!");
 				}
 				else
