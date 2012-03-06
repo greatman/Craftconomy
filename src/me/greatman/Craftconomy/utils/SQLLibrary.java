@@ -303,6 +303,10 @@ public class SQLLibrary
 			{
 				table += entry.getKey() + " VARCHAR";
 			}
+			else if (entry.getValue() == FieldType.BOOLEAN)
+			{
+				table += entry.getKey() + " BOOLEAN";
+			}
 			else if (entry.getValue() == FieldType.PRIMARY)
 			{
 				table += entry.getKey() + " INTEGER NOT NULL";
@@ -417,17 +421,5 @@ public class SQLLibrary
 		catch (NumberFormatException e)
 		{}
 		return ok;
-	}
-	
-	public static void main(String[] args)
-	{
-		HashMap<String,String> map = new HashMap<String, String>();
-		map.put("Test","Wow");
-		map.put("Super","omg");
-		map.put("WWWWW", 140 + "");
-		map.put("oaehfof", 193.30 + "");
-		System.out.println("LE 0:" + seperator(map,0));
-		System.out.println("LE 1:" +seperator(map,1));
-		System.out.println("LE 2:" +seperator(map,2));
 	}
 }
