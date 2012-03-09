@@ -105,4 +105,16 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>GreatmanCode Repo</id>
+			<name>GreatmanCode Repo-releases</name>
+			<url>http://repo.greatmancode.com/artifactory/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>GreatmanCode Repo</id>
+			<name>GreatmanCode Repo-snapshots</name>
+			<url>http://repo.greatmancode.com/artifactory/releases</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
