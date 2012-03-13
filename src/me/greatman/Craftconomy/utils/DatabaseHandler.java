@@ -97,40 +97,82 @@ public class DatabaseHandler
 				
 				//We check if it's the latest version
 				ResultSet result;
-				try {
-					result = database.query("PRAGMA table_info(" + Config.databaseCurrencyTable + ")", true);
-					if (result != null)
-					{
-						while(result.next())
-						{
-							if (updateCheck.containsKey(result.getString("name")))
-							{
-								updateCheck.put(result.getString("name"), true);
-							}
-						}
-						if (updateCheck.containsValue(false))
-						{
-							ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
-							if (!updateCheck.get("plural"))
-							{
-								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN plural VARCHAR(30)", false);
-								ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
-							}
-							if (!updateCheck.get("minor"))
-							{
-								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minor VARCHAR(30)", false);
-								ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
-							}
-							if(!updateCheck.get("minorplural"))
-							{
-								database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minorplural VARCHAR(30)", false);
-								ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
-							}
-						}
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
+				if (database.getType() == DatabaseType.SQLITE)
+				{
+				    try {
+	                    result = database.query("PRAGMA table_info(" + Config.databaseCurrencyTable + ")", true);
+	                    if (result != null)
+	                    {
+	                        while(result.next())
+	                        {
+	                            if (updateCheck.containsKey(result.getString("name")))
+	                            {
+	                                updateCheck.put(result.getString("name"), true);
+	                            }
+	                        }
+	                        if (updateCheck.containsValue(false))
+	                        {
+	                            ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
+	                            if (!updateCheck.get("plural"))
+	                            {
+	                                database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN plural VARCHAR(30)", false);
+	                                ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+	                            }
+	                            if (!updateCheck.get("minor"))
+	                            {
+	                                database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minor VARCHAR(30)", false);
+	                                ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
+	                            }
+	                            if(!updateCheck.get("minorplural"))
+	                            {
+	                                database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD COLUMN minorplural VARCHAR(30)", false);
+	                                ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
+	                            }
+	                        }
+	                    }
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
 				}
+				else
+				{
+				    try {
+	                    result = database.query("SHOW COLUMNS FROM " + Config.databaseCurrencyTable, true);
+	                    while(result.next())
+	                    {
+	                        
+	                        if (map.containsKey(result.getString(1)))
+	                        {
+	                            updateCheck.put(result.getString(1), true);
+	                        }
+	                        
+	                    }
+	                    if (map.containsValue(false))
+	                    {
+	                        ILogger.info("Updating " + Config.databaseCurrencyTable + " table");
+	                        if (!updateCheck.get("plural"))
+	                        {
+	                            database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD plural VARCHAR(30) NOT NULL", false);
+	                            ILogger.info("Column plural added in " + Config.databaseCurrencyTable + " table");
+	                        }
+	                        if (!updateCheck.get("minor"))
+	                        {
+	                            database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minor VARCHAR(30) NOT NULL", false);
+	                            ILogger.info("Column minor added in " + Config.databaseCurrencyTable + " table");
+	                        }
+	                        if(!updateCheck.get("minorplural"))
+	                        {
+	                            database.query("ALTER TABLE " + Config.databaseCurrencyTable + " ADD minorplural VARCHAR(30) NOT NULL", false);
+	                            ILogger.info("Column minorplural added in " + Config.databaseCurrencyTable + " table");
+	                        }
+	                    }
+	                } catch (SQLException e) {
+	                    // TODO Auto-generated catch block
+	                    e.printStackTrace();
+	                    return false;
+	                }
+				}
+				
 				
 			}
 			if (!database.checkTable(Config.databaseCurrencyExchangeTable))
@@ -222,14 +264,14 @@ public class DatabaseHandler
 			{
 				ILogger.info("DEBUG: Put all names in lowerspace (2.X -> 2.3 convert)");
 				try {
-					ResultSet result = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
-					if (result != null)
+					ResultSet result2 = database.query("SELECT username FROM " + Config.databaseAccountTable + "", true);
+					if (result2 != null)
 					{
-						while(result.next())
+						while(result2.next())
 						{
-							if (result.getString("username") != null)
+							if (result2.getString("username") != null)
 							{
-								database.query("UPDATE " + Config.databaseAccountTable + " SET username='" + result.getString("username").toLowerCase() + "' WHERE username='" + result.getString("username") + "'",false);
+								database.query("UPDATE " + Config.databaseAccountTable + " SET username='" + result2.getString("username").toLowerCase() + "' WHERE username='" + result2.getString("username") + "'",false);
 							}
 							
 						}
