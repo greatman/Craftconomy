@@ -479,7 +479,7 @@ public class DatabaseHandler
 	 */
 	public static ResultSet getAllBalance(Account account)
 	{
-		String query = "SELECT balance,currency_id,worldName,Currency.name FROM " + Config.databaseBalanceTable
+		String query = "SELECT balance,currency_id,worldName," + Config.databaseCurrencyTable + ".name FROM " + Config.databaseBalanceTable
 				+ " LEFT JOIN " + Config.databaseCurrencyTable + " ON " + Config.databaseBalanceTable
 				+ ".currency_id = " + Config.databaseCurrencyTable + ".id WHERE username_id=" + account.getPlayerId()
 				+ " ORDER BY worldName";
