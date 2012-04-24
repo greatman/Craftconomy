@@ -86,10 +86,8 @@ public class Craftconomy extends JavaPlugin
 		try
 		{
 			// create a new metrics object
-			Metrics metrics = new Metrics();
-
-			// 'this' in this context is the Plugin object
-			metrics.beginMeasuringPlugin(this);
+			Metrics metrics = new Metrics(this);
+			metrics.start();
 		} catch (IOException e)
 		{
 			ILogger.error("A error occured while starting the plugin stats");
