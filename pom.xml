@@ -27,14 +27,14 @@
 		</repository>
 		<repository>
 			<id>spout-repo</id>
-			<url>http://nexus.getspout.org/content/groups/public/</url>
+			<url>http://nexus.spout.org/content/groups/public/</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.1-R5-SNAPSHOT</version>
+			<version>1.2.5-R4.0</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -196,7 +197,7 @@ public class Craftconomy extends JavaPlugin
 				AccountHandler.getAccount(playerList[i]);
 		}
 		ILogger.info("Started!");
-
+		format(293.23904587348756345345, new Currency("Dollar"));
 	}
 
 	@Override
@@ -347,11 +348,11 @@ public class Craftconomy extends JavaPlugin
 			theAmount[1] = theAmount[1] + "0";
 		}
 		
-		if(Integer.parseInt(theAmount[1]) > 1)
+		if(Long.parseLong(theAmount[1]) > 1)
 		{
 			minor = currency.getNameMinorPlural();
 		}
-		return theAmount[0] + " " + name + " " + theAmount[1] + " " + minor;
+		return theAmount[0] + " " + name + " " + theAmount[1].substring(0, 2) + " " + minor;
 	}
 
 	public static boolean isValidAmount(String amount)
