@@ -1,6 +1,6 @@
 name: Craftconomy
 main: me.greatman.Craftconomy.Craftconomy
-version: 2.3.1-b${BUILD_NUMBER}
+version: 2.3.5-b${BUILD_NUMBER}
 author: Greatman
 softdepend: [Spout]
 commands:
