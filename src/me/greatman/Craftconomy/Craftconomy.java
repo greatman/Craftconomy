@@ -352,7 +352,16 @@ public class Craftconomy extends JavaPlugin
 		{
 			minor = currency.getNameMinorPlural();
 		}
-		return theAmount[0] + " " + name + " " + theAmount[1].substring(0, 2) + " " + minor;
+		String coin;
+		try
+		{
+		    coin = theAmount[1].substring(0,2);
+		}
+		catch(Exception e)
+		{
+		    coin = theAmount[1];
+		}
+		return theAmount[0] + " " + name + " " + coin + " " + minor;
 	}
 
 	public static boolean isValidAmount(String amount)
