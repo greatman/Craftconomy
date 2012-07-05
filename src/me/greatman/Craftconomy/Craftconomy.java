@@ -216,18 +216,20 @@ public class Craftconomy extends JavaPlugin
 			Iterator<Timer> iterator = timerMap.iterator();
 			while (iterator.hasNext())
 			{
-				iterator.next().cancel();
+			    iterator.next().cancel();
 			}
 		}
-		Iterator<Timer> spoutTimer = SpoutListener.timerList.values().iterator();
-		while(spoutTimer.hasNext())
+		if(SpoutListener.timerList != null)
 		{
-			spoutTimer.next().cancel();
-		}
-		DatabaseHandler.getDatabase().closeMySQL();
-		ILogger.info("Craftconomy unloaded!");
-		getServer().getPluginManager().disablePlugin(this);
-
+			Iterator<Timer> spoutTimer = SpoutListener.timerList.values().iterator();
+			while(spoutTimer.hasNext())
+			{
+				spoutTimer.next().cancel();
+			}
+			DatabaseHandler.getDatabase().closeMySQL();
+			ILogger.info("Craftconomy unloaded!");
+			getServer().getPluginManager().disablePlugin(this);
+		}	
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)

@@ -11,12 +11,13 @@ import me.greatman.Craftconomy.Currency;
 import me.greatman.Craftconomy.CurrencyHandler;
 import me.greatman.Craftconomy.commands.BaseCommand;
 import me.greatman.Craftconomy.utils.DatabaseHandler;
+import me.greatman.Craftconomy.utils.Config;
 
 public class TopCommand extends BaseCommand {
 
 	public TopCommand() {
 		this.command.add("top");
-		this.requiredParameters.add("Currency Name");
+		this.optionalParameters.add("Currency Name");
 		this.optionalParameters.add("World");
 		this.permFlag = "Craftconomy.money.top";
 		this.helpDescription = "Show the toplist";
@@ -25,17 +26,22 @@ public class TopCommand extends BaseCommand {
 	public void perform() {
 		Currency source;
 		World world = player.getWorld();
-		if (CurrencyHandler.exists(this.parameters.get(0), false))
-		{
-			 source = CurrencyHandler.getCurrency(this.parameters.get(0), false);
-		}
+		
+		if(this.parameters.size() > 0)
+			if (CurrencyHandler.exists(this.parameters.get(0), false))
+			{
+				source = CurrencyHandler.getCurrency(this.parameters.get(0), false);
+			}
+			else
+			{
+				sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED
+					+ " does not exist!");
+				return;
+			}
 		else
 		{
-			sendMessage(ChatColor.RED + "Currency " + ChatColor.WHITE + this.parameters.get(0) + ChatColor.RED
-					+ " does not exist!");
-			return;
+			source = CurrencyHandler.getCurrency(Config.currencyDefault, true);
 		}
-		
 		if (this.parameters.size() == 2)
 		{
 			World worldtest = Craftconomy.plugin.getServer().getWorld(this.parameters.get(1));
